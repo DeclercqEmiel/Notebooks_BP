@@ -1,0 +1,769 @@
+\chapter{}
+\label{ch:Broncode}
+
+
+\section{Broncode} % The \section*{} command stops section numbering
+\label{sec:Broncode}
+
+\lstset{language=Python}
+\lstset{frame=lines}
+\lstset{caption={Code gebruikt voor de voorspelling}}
+\lstset{label={lst:code_direct}}
+\lstset{basicstyle=\footnotesize}
+\begin{lstlisting}
+
+#!/usr/bin/env python
+# coding: utf-8
+
+# In[1]:
+
+
+get_ipython().system('jupyter nbconvert --to script "Regression model Belgium.ipynb"')
+
+-Specifieker definieren van gebruikte data en !onderzoeksvraag
+-LSTM toelichten in code
+# In[2]:
+
+
+import pandas as pd
+import matplotlib.pyplot as plt
+import matplotlib
+import numpy as np
+from datetime import datetime
+
+Time based
+
+regressietechnieken
+polynomial regression
+Probleemstelling(en)
+Focus op 1 om een eenvoudig model op te stellen
+features en output identificeren
+Lopend gemiddelde van de vorige 7 dagen op pieken uit te vlakken
+Datums per row, dagen relatief nummeren
+Alles onder de 10 gevallen niet gebruiken
+Per dag een nieuwe waarde dagen sinds lockdown, -1 of 0 voor de dagen voor lockdown
+Population density
+Total population
+
+Mean age of the population
+Literatuurstudie:
+Recurrente neurale netwerken, keras tijdsreeksen
+https://hogent-my.sharepoint.com/personal/johan_decorte_hogent_be/Documents/Chatbestanden%20van%20Microsoft%20Teams/RNN_Sentiment_Analysis.ipynb
+
+https://www.vrt.be/vrtnws/nl/2020/04/22/belgische-corona-aanpak-door-de-ogen-van-de-internationale-pers/?fbclid=IwAR2f8RG09CeLFgiE0dxSdWDWdaOH9k4l-W1UX03Ox1o8HnVV-ovF7abitXM
+https://www.demorgen.be/nieuws/oversterfte-door-covid-19-groter-dan-tijdens-voorbije-griepseizoenen-of-hittegolven~bee1a2ea/?fbclid=IwAR23Cff9T6ChYHM_7OmTVvV4NsdZiFA_-BnjibstU1vuIZzylhLdDuMFfng
+landen voorbij de piek gebruiken als trainingsdata
+
+
+# # Intresting parameters
+-Mean of how many values
+-Polynomial degree
+# In[3]:
+
+
+# Minimum voor bp:
+# Model en evaluatie van het model
+
+
+# In[4]:
+
+
+pd.set_option('display.max_columns', 500)
+
+
+# In[ ]:
+
+
+
+
+
+# # Retrieval
+
+# In[5]:
+
+
+confirmed = pd.read_csv("https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_global.csv",index_col=0,parse_dates=[0]).reset_index()
+deaths = pd.read_csv("https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_global.csv",index_col=0,parse_dates=[0]).reset_index()
+recovered = pd.read_csv("https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_recovered_global.csv",index_col=0,parse_dates=[0]).reset_index()
+
+
+# # Formatting
+
+# ### Select most reliable countries
+
+# In[6]:
+
+
+confirmed.sort_values('Country/Region').head(120).tail(60)
+
+
+# In[7]:
+
+
+confirmed[confirmed['Province/State'] == 'New South Wales']
+
+
+# In[8]:
+
+
+confirmed[confirmed['Province/State'] == 'Hubei']
+
+
+# In[9]:
+
+
+eu = ['Belgium', 
+'Netherlands', 
+'Spain',
+'Italy',
+'Sweden',
+'United Kingdom',
+'Germany',
+'France',
+'Switzerland',
+'Portugal',
+'Austria',
+'Ireland',
+'Norway',
+'Denmark',
+'Slovenia',
+'Czechia',
+'Belarus',
+'Singapore',
+'Thailand'
+]
+
+confirmedDataEu = confirmed[(confirmed['Country/Region'].isin(eu)) & (confirmed['Province/State'].isnull()) ]
+
+confirmedDataEu = confirmedDataEu.set_index('Country/Region').drop(['Lat','Long','Province/State'],axis=1)
+
+
+# In[10]:
+
+
+# Replace values bellow 10 with -1
+def to_min_1(v): 
+if v < 10 :
+return -1
+return v
+
+
+# In[11]:
+
+
+population = [9006398, 9449323,11589623,10708981,5792202,65273511,
+83783942,4937786,60461826,17134872,5421241,10196709,
+2078938,46754778,10099265,8654622,67886011,5639000, 69799978
+]
+confirmedDataEuPM = confirmedDataEu.T / population * 1000000
+confirmedDataEuPM = confirmedDataEuPM.T
+
+
+# In[12]:
+
+
+for date in confirmedDataEuPM.columns:
+confirmedDataEuPM[date] = confirmedDataEuPM[date].map(to_min_1)
+
+
+# ### Shift starting point to minimum of 10 cases
+
+# In[13]:
+
+
+(4926.130902-4947.701923
+)*11.5
+
+
+# In[14]:
+
+
+confirmedDataEuPM
+
+
+# In[15]:
+
+
+for countryLoc in confirmedDataEuPM.index:
+
+coronaFreeDays = confirmedDataEuPM.T[countryLoc].value_counts()[-1]
+print(coronaFreeDays)
+confirmedDataEuPM.loc[countryLoc, confirmedDataEuPM.columns] = confirmedDataEuPM.loc[countryLoc, confirmedDataEuPM.columns].shift(periods=-coronaFreeDays)
+
+
+# In[16]:
+
+
+confirmedDataEuPM
+
+
+# In[17]:
+
+
+np.arange(1, confirmedDataEuPM.columns[3:].size-1)
+
+
+# In[18]:
+
+
+confirmedDataEuPM
+
+
+# In[19]:
+
+
+# Rename columns
+seq = np.arange(1, confirmedDataEuPM.columns.size+1)
+seq = [ 'day_' + str(s) for s in seq]
+confirmedDataEuPM.rename(columns=dict(zip(confirmedDataEuPM.columns, seq)),inplace=True)
+
+
+# In[20]:
+
+
+# Remove unnecessary days
+confirmedDataEuPM.dropna(axis = 1, how = 'all', inplace = True)
+
+
+# In[21]:
+
+
+confirmedDataEuPM
+
+
+# In[22]:
+
+
+confirmedDataEuPMT = confirmedDataEuPM.T
+
+
+# In[23]:
+
+
+confirmedDataEuPMT
+
+
+# ### Replace values with mean of value from last 7 days
+
+# In[24]:
+
+
+# confirmedDataEuT.ewm(span = 7, min_periods = 7).mean().head(50)
+confirmedDataEuPMTFlattened = confirmedDataEuPMT.rolling(7).mean()
+
+# confirmedDataEuPMTFlattened = confirmedDataEuPMT
+
+
+# In[25]:
+
+
+confirmedDataEuPMT
+
+
+# ### Cumulative values to relative values
+
+# In[26]:
+
+
+confirmedDataEuPMTFlattened = confirmedDataEuPMTFlattened - confirmedDataEuPMTFlattened.shift(1)
+confirmedDataEuPMT = confirmedDataEuPMT - confirmedDataEuPMT.shift(1)
+
+
+# In[27]:
+
+
+confirmedDataEuPMTFlattened.columns
+
+
+# In[ ]:
+
+
+
+
+
+# In[28]:
+
+
+confirmedDataEuPMTFlattened.tail(50)
+
+
+# In[29]:
+
+
+confirmedDataEuPMTFlattened.tail(60)
+
+
+# In[30]:
+
+
+
+plt.plot(confirmedDataEuPMTFlattened.index, confirmedDataEuPMTFlattened['Belgium'], label = "Belgium")
+plt.plot(confirmedDataEuPMTFlattened.index, confirmedDataEuPMTFlattened['Italy'], label = "Italy")
+plt.plot(confirmedDataEuPMTFlattened.index, confirmedDataEuPMTFlattened['France'], label = "France")
+plt.plot(confirmedDataEuPMTFlattened.index, confirmedDataEuPMTFlattened['Thailand'], label = "Thailand")
+plt.xlabel('Dates')
+plt.ylabel('Amount')
+
+plt.title('Combined chart per million inhabitants')
+plt.xticks(np.arange(-1, 120, step=10))
+
+plt.legend()
+plt.show()
+
+fig=plt.figure(figsize=(20, 20))
+
+
+# In[31]:
+
+
+confirmedDataEuPM.columns[41:]
+
+
+# In[32]:
+
+
+confirmedDataEuPMTFlattened['Belgium'].head(50)
+
+
+# In[33]:
+
+
+confirmedDataEuPMTFlattened.columns
+
+
+# # Modelling 
+
+# In[34]:
+
+
+# 1 vgl tussen verschillende landen
+# 2 Curve per land individueel doortrekken
+#   veeltermvgl
+#   times series
+
+
+# ### Polynomial
+
+# #### Example
+https://towardsdatascience.com/machine-learning-polynomial-regression-with-python-5328e4e8a386
+# In[35]:
+
+
+# import numpy as np
+# import matplotlib.pyplot as plt
+# import pandas as pd
+
+# # Importing the dataset
+# dataset = pd.read_csv('https://s3.us-west-2.amazonaws.com/public.gamelab.fun/dataset/position_salaries.csv')
+# X = dataset.iloc[:, 1:2].values
+# y = dataset.iloc[:, 2].values
+
+# # Splitting the dataset into the Training set and Test set
+# from sklearn.model_selection import train_test_split 
+# X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=0)
+
+# # Fitting Linear Regression to the dataset
+# from sklearn.linear_model import LinearRegression
+# lin_reg = LinearRegression()
+# lin_reg.fit(X, y)
+
+# # Visualizing the Linear Regression results
+# def viz_linear():
+#     plt.scatter(X, y, color='red')
+#     plt.plot(X, lin_reg.predict(X), color='blue')
+#     plt.title('Truth or Bluff (Linear Regression)')
+#     plt.xlabel('Position level')
+#     plt.ylabel('Salary')
+#     plt.show()
+#     return
+# viz_linear()
+
+# # Fitting Polynomial Regression to the dataset
+# from sklearn.preprocessing import PolynomialFeatures
+# poly_reg = PolynomialFeatures(degree=4)
+# X_poly = poly_reg.fit_transform(X)
+# pol_reg = LinearRegression()
+# pol_reg.fit(X_poly, y)
+
+# # Visualizing the Polymonial Regression results
+# def viz_polymonial():
+#     plt.scatter(X, y, color='red')
+#     plt.plot(X, pol_reg.predict(poly_reg.fit_transform(X)), color='blue')
+#     plt.title('Truth or Bluff (Linear Regression)')
+#     plt.xlabel('Position level')
+#     plt.ylabel('Salary')
+#     plt.show()
+#     return
+# viz_polymonial()
+
+# # Predicting a new result with Linear Regression
+# lin_reg.predict([[5.5]])
+# #output should be 249500
+
+# # Predicting a new result with Polymonial Regression
+# pol_reg.predict(poly_reg.fit_transform([[5.5]]))
+# #output should be 132148.43750003
+
+
+# #### Actual
+
+# In[36]:
+
+
+BEPrep = confirmedDataEuPMTFlattened.Belgium.shift(-7).dropna().reset_index().reset_index()
+ITPrep = confirmedDataEuPMTFlattened.Italy.shift(-7).dropna().reset_index().reset_index()
+
+BEPrep.columns = ['day_nr','day','confirmed_cases']
+BEPrep['day_nr'] += 1
+
+ITPrep.columns = ['day_nr','day','confirmed_cases']
+ITPrep['day_nr'] += 1
+
+BEPrep = BEPrep.drop('day',axis=1)
+ITPrep = ITPrep.drop('day',axis=1)
+
+
+# In[37]:
+
+
+confirmedDataEuPMTFlattened.Belgium.dropna().reset_index().reset_index()
+
+
+# In[38]:
+
+
+y = BEPrep.iloc[:, 1].values
+X = BEPrep.iloc[:, 0].values
+
+# Splitting the dataset into the Training set and Test set
+from sklearn.model_selection import train_test_split 
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=0)
+
+
+# In[39]:
+
+
+degree = 2
+
+
+# In[40]:
+
+
+# Fitting Polynomial Regression to the dataset
+from sklearn.preprocessing import PolynomialFeatures
+from sklearn.linear_model import LinearRegression
+
+
+poly_reg = PolynomialFeatures(degree=degree)
+
+X_poly = poly_reg.fit_transform(X.reshape(-1,1))
+pol_reg = LinearRegression()
+pol_reg.fit(X_poly, y)
+
+# Visualizing the Polymonial Regression results
+def viz_polymonial():
+plt.scatter(X, y, color='red')
+plt.plot(X, pol_reg.predict(poly_reg.fit_transform(X.reshape(-1,1))), color='blue')
+plt.title('')
+plt.xlabel('Day')
+plt.ylabel('New Cases')
+plt.ylim(bottom=0)
+plt.xlim(right=100)
+plt.show()
+return
+viz_polymonial()
+
+
+# In[41]:
+
+
+# Predicting a new result with Polymonial Regression
+pol_reg.predict(poly_reg.fit_transform([[12]]))[0]
+
+
+# In[42]:
+
+
+i = BEPrep.shape[0]+1
+BEPred = BEPrep
+while i <= 100 :
+BEPred = BEPred.append({'day_nr':i,'confirmed_cases': pol_reg.predict(poly_reg.fit_transform([[i]]))[0]}, ignore_index=True)
+i += 1
+
+
+# In[43]:
+
+
+y = BEPred.iloc[:, 1].values
+X = BEPred.iloc[:, 0].values
+
+
+# Visualizing the Polymonial Regression results
+def viz_polymonial():
+plt.scatter(X, y, color='red')
+plt.plot(X, pol_reg.predict(poly_reg.fit_transform(X.reshape(-1,1))), color='blue')
+plt.title('')
+plt.xlabel('Day')
+plt.ylabel('New Cases')
+plt.ylim(bottom=0,top=200)
+plt.xlim(right=100)
+plt.show()
+return
+viz_polymonial()
+
+
+# In[44]:
+
+
+BEPred
+
+# In[45]:
+
+
+BEPrep['confirmed_cases'].to_list()
+
+
+# In[46]:
+
+
+# univariate lstm example
+from numpy import array
+from keras.models import Sequential
+from keras.layers import LSTM
+from keras.layers import Dense
+
+# split a univariate sequence into samples
+def split_sequence(sequence, n_steps):
+X, y = list(), list()
+for i in range(len(sequence)):
+# find the end of this pattern
+end_ix = i + n_steps
+# check if we are beyond the sequence
+if end_ix > len(sequence)-1:
+break
+# gather input and output parts of the pattern
+seq_x, seq_y = sequence[i:end_ix], sequence[end_ix]
+X.append(seq_x)
+y.append(seq_y)
+return array(X), array(y)
+
+# choose a number of time steps
+n_steps = 7
+# split into samples
+X, y = split_sequence(ITPrep['confirmed_cases'].to_list(), n_steps)
+# reshape from [samples, timesteps] into [samples, timesteps, features]
+n_features = 1
+X = X.reshape((X.shape[0], X.shape[1], n_features))
+# define model
+model = Sequential()
+model.add(LSTM(50, activation='relu', input_shape=(n_steps, n_features)))
+model.add(Dense(1))
+model.compile(optimizer='adam', loss='mse')
+# fit model
+model.fit(X, y, epochs=300, verbose=2)
+
+
+# In[47]:
+
+
+a = 2
+
+# In[49]:
+
+
+model.summary()
+
+
+# In[50]:
+
+
+X
+
+
+# In[51]:
+
+
+BEPrep
+
+
+# In[52]:
+
+
+BEPredLSTM = BEPrep
+
+while BEPredLSTM.shape[0] < ITPrep.shape[0]+90:
+counter = BEPredLSTM.shape[0]
+
+x_input = array(BEPredLSTM['confirmed_cases'].tail(7).to_list())
+x_input = x_input.reshape((1, n_steps, n_features))
+
+predicted_value = model.predict(x_input, verbose=2).item(0)
+print(predicted_value)
+BEPredLSTM = BEPredLSTM.append({'confirmed_cases': predicted_value,'day_nr':counter +1 }, ignore_index=True)
+
+
+# In[53]:
+
+
+BEPredLSTM.tail(100)
+
+
+# In[54]:
+
+
+# # Fitting Polynomial Regression to the dataset
+# from sklearn.preprocessing import PolynomialFeatures
+# from sklearn.linear_model import LinearRegression
+
+
+# poly_reg = PolynomialFeatures(degree=8)
+
+# X_poly = poly_reg.fit_transform(X.reshape(-1,1))
+# pol_reg = LinearRegression()
+# pol_reg.fit(X_poly, y)
+
+# # Visualizing the Polymonial Regression results
+# def viz_polymonial():
+#     plt.scatter(X, y, color='red')
+#     plt.plot(X, pol_reg.predict(poly_reg.fit_transform(X.reshape(-1,1))), color='blue')
+#     plt.title('')
+#     plt.xlabel('Day')
+#     plt.ylabel('New Cases')
+#     plt.ylim(bottom=0)
+#     plt.show()
+#     return
+# viz_polymonial()
+
+
+# In[55]:
+
+
+plt.plot(BEPredLSTM.index, BEPredLSTM['confirmed_cases'], label = "Belgium")
+plt.xlabel('Dates')
+plt.ylabel('Amount')
+plt.ylim(bottom=0)
+plt.legend()
+plt.show()
+
+fig=plt.figure(figsize=(20, 20))
+
+
+# In[56]:
+
+
+BEPrep.shape[0]
+
+
+# In[57]:
+
+
+ITPrep.shape[0]
+
+
+# In[58]:
+
+
+BEPredLSTM['confirmed_cases']= BEPredLSTM['confirmed_cases'].multiply(11,589623)
+
+
+# In[59]:
+
+
+plt.plot(BEPredLSTM.index, BEPredLSTM['confirmed_cases'])
+plt.xlabel('Dates')
+plt.ylabel('Amount')
+plt.ylim(bottom=0)
+plt.xlim(right=200)
+
+plt.show()
+
+fig=plt.figure(figsize=(20, 20))
+
+
+# In[60]:
+
+
+BEPredLSTM['confirmed_cases']= BEPredLSTM['confirmed_cases'].divide(11,589623)
+BEPrepLSTMTail = BEPredLSTM[40:90]
+
+
+# In[77]:
+
+
+BEPrepLSTMTail
+
+
+# ## Define Polynomial
+
+# In[137]:
+
+
+y = BEPrepLSTMTail.iloc[:, 1].values
+X = BEPrepLSTMTail.iloc[:, 0].values
+
+
+# In[138]:
+
+
+degree = 2
+
+
+# In[139]:
+
+
+# Fitting Polynomial Regression to the dataset
+from sklearn.preprocessing import PolynomialFeatures
+from sklearn.linear_model import LinearRegression
+
+
+poly_reg = PolynomialFeatures(degree=degree)
+
+X_poly = poly_reg.fit_transform(X.reshape(-1,1))
+pol_reg = LinearRegression()
+pol_reg.fit(X_poly, y)
+
+
+# In[140]:
+
+
+
+
+# Fitting Polynomial Regression to the dataset
+from sklearn.preprocessing import PolynomialFeatures
+from sklearn.linear_model import LinearRegression
+
+
+poly_reg = PolynomialFeatures(degree=degree)
+
+X_poly = poly_reg.fit_transform(X.reshape(-1,1))
+pol_reg = LinearRegression(fit_intercept=True)
+pol_reg.fit(X_poly, y)
+
+i = BEPrepLSTMTail.shape[0]+40
+BEPredLSTMTail = BEPrepLSTMTail
+while i <= 150 :
+BEPredLSTMTail = BEPredLSTMTail.append({'day_nr':i,'confirmed_cases': pol_reg.predict(poly_reg.fit_transform([[i]]))[0]}, ignore_index=True)
+i += 1
+
+
+# In[141]:
+
+
+y = BEPredLSTMTail.iloc[:, 1].values
+X = BEPredLSTMTail.iloc[:, 0].values
+
+
+# In[142]:
+
+
+plt.scatter(X, y, color='red')
+plt.plot(X, pol_reg.predict(poly_reg.fit_transform(X.reshape(-1,1))), color='blue')
+plt.title('')
+plt.xlabel('Day')
+plt.ylabel('New Cases')
+plt.ylim(bottom=0)
+plt.xlim(right=150)
+plt.show()
+
+\end{lstlisting}
+

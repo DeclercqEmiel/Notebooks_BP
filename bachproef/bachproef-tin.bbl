@@ -1,0 +1,720 @@
+% $ biblatex auxiliary file $
+% $ biblatex bbl format version 3.0 $
+% Do not modify the above lines!
+%
+% This is an auxiliary file used by the 'biblatex' package.
+% This file may safely be deleted. It will be recreated by
+% biber as required.
+%
+\begingroup
+\makeatletter
+\@ifundefined{ver@biblatex.sty}
+  {\@latex@error
+     {Missing 'biblatex' package}
+     {The bibliography requires the 'biblatex' package.}
+      \aftergroup\endinput}
+  {}
+\endgroup
+
+
+\refsection{0}
+  \datalist[entry]{apa/global//global/global}
+    \entry{Brown2020}{online}{}
+      \name{author}{1}{}{%
+        {{uniquename=0,uniquepart=base,hash=dd80fd9def4428398237289315d41e3d}{%
+           family={Brown},
+           familyi={B\bibinitperiod},
+           given={Stan},
+           giveni={S\bibinitperiod},
+           givenun=0}}%
+      }
+      \strng{namehash}{dd80fd9def4428398237289315d41e3d}
+      \strng{fullhash}{dd80fd9def4428398237289315d41e3d}
+      \strng{bibnamehash}{dd80fd9def4428398237289315d41e3d}
+      \strng{authorbibnamehash}{dd80fd9def4428398237289315d41e3d}
+      \strng{authornamehash}{dd80fd9def4428398237289315d41e3d}
+      \strng{authorfullhash}{dd80fd9def4428398237289315d41e3d}
+      \field{sortinit}{B}
+      \field{sortinithash}{276475738cc058478c1677046f857703}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{}
+      \true{uniqueprimaryauthor}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{Least Squares --- the Gory Details}
+      \field{year}{2020}
+      \field{dateera}{ce}
+      \verb{urlraw}
+      \verb https://brownmath.com/stat/leastsq.htm
+      \endverb
+      \verb{url}
+      \verb https://brownmath.com/stat/leastsq.htm
+      \endverb
+      \warn{\item Entry 'Brown2020' (bachproef-tin.bib): Invalid format '26-11-20' of date field 'urldate' - ignoring}
+    \endentry
+    \entry{Brownlee2017a}{article}{}
+      \name{author}{1}{}{%
+        {{uniquename=0,uniquepart=base,hash=915af163e2107106fced5dd3164d9a8e}{%
+           family={Brownlee},
+           familyi={B\bibinitperiod},
+           given={Jason},
+           giveni={J\bibinitperiod},
+           givenun=0}}%
+      }
+      \strng{namehash}{915af163e2107106fced5dd3164d9a8e}
+      \strng{fullhash}{915af163e2107106fced5dd3164d9a8e}
+      \strng{bibnamehash}{915af163e2107106fced5dd3164d9a8e}
+      \strng{authorbibnamehash}{915af163e2107106fced5dd3164d9a8e}
+      \strng{authornamehash}{915af163e2107106fced5dd3164d9a8e}
+      \strng{authorfullhash}{915af163e2107106fced5dd3164d9a8e}
+      \field{extraname}{1}
+      \field{sortinit}{B}
+      \field{sortinithash}{276475738cc058478c1677046f857703}
+      \field{extradate}{1}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{year}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{Encoder-Decoder Long Short-Term Memory Networks}
+      \field{urlday}{24}
+      \field{urlmonth}{11}
+      \field{urlyear}{2020}
+      \field{year}{2017}
+      \field{urldateera}{ce}
+      \verb{urlraw}
+      \verb https://machinelearningmastery.com/encoder-decoder-long-short-term-memory-networks/
+      \endverb
+      \verb{url}
+      \verb https://machinelearningmastery.com/encoder-decoder-long-short-term-memory-networks/
+      \endverb
+    \endentry
+    \entry{Brownlee2017}{article}{}
+      \name{author}{1}{}{%
+        {{uniquename=0,uniquepart=base,hash=915af163e2107106fced5dd3164d9a8e}{%
+           family={Brownlee},
+           familyi={B\bibinitperiod},
+           given={Jason},
+           giveni={J\bibinitperiod},
+           givenun=0}}%
+      }
+      \strng{namehash}{915af163e2107106fced5dd3164d9a8e}
+      \strng{fullhash}{915af163e2107106fced5dd3164d9a8e}
+      \strng{bibnamehash}{915af163e2107106fced5dd3164d9a8e}
+      \strng{authorbibnamehash}{915af163e2107106fced5dd3164d9a8e}
+      \strng{authornamehash}{915af163e2107106fced5dd3164d9a8e}
+      \strng{authorfullhash}{915af163e2107106fced5dd3164d9a8e}
+      \field{extraname}{2}
+      \field{sortinit}{B}
+      \field{sortinithash}{276475738cc058478c1677046f857703}
+      \field{extradate}{2}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{year}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{Gentle Introduction to the Adam Optimization Algorithm for Deep Learning}
+      \field{urlday}{24}
+      \field{urlmonth}{11}
+      \field{urlyear}{2020}
+      \field{year}{2017}
+      \field{urldateera}{ce}
+      \verb{urlraw}
+      \verb https://machinelearningmastery.com/adam-optimization-algorithm-for-deep-learning/
+      \endverb
+      \verb{url}
+      \verb https://machinelearningmastery.com/adam-optimization-algorithm-for-deep-learning/
+      \endverb
+    \endentry
+    \entry{Brownlee2017b}{article}{}
+      \name{author}{1}{}{%
+        {{uniquename=0,uniquepart=base,hash=915af163e2107106fced5dd3164d9a8e}{%
+           family={Brownlee},
+           familyi={B\bibinitperiod},
+           given={Jason},
+           giveni={J\bibinitperiod},
+           givenun=0}}%
+      }
+      \strng{namehash}{915af163e2107106fced5dd3164d9a8e}
+      \strng{fullhash}{915af163e2107106fced5dd3164d9a8e}
+      \strng{bibnamehash}{915af163e2107106fced5dd3164d9a8e}
+      \strng{authorbibnamehash}{915af163e2107106fced5dd3164d9a8e}
+      \strng{authornamehash}{915af163e2107106fced5dd3164d9a8e}
+      \strng{authorfullhash}{915af163e2107106fced5dd3164d9a8e}
+      \field{extraname}{3}
+      \field{sortinit}{B}
+      \field{sortinithash}{276475738cc058478c1677046f857703}
+      \field{extradate}{3}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{year}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{Stacked Long Short-Term Memory Networks}
+      \field{year}{2017}
+      \verb{urlraw}
+      \verb https://machinelearningmastery.com/stacked-long-short-term-memory-networks/#:~:text=A%20Stacked%20LSTM%20architecture%20can,for%20all%20input%20time%20steps.
+      \endverb
+      \verb{url}
+      \verb https://machinelearningmastery.com/stacked-long-short-term-memory-networks/#:~:text=A%20Stacked%20LSTM%20architecture%20can,for%20all%20input%20time%20steps.
+      \endverb
+      \warn{\item Entry 'Brownlee2017b' (bachproef-tin.bib): Invalid format '2020-12-1' of date field 'urldate' - ignoring}
+    \endentry
+    \entry{Brownlee2018}{article}{}
+      \name{author}{1}{}{%
+        {{uniquename=0,uniquepart=base,hash=915af163e2107106fced5dd3164d9a8e}{%
+           family={Brownlee},
+           familyi={B\bibinitperiod},
+           given={Jason},
+           giveni={J\bibinitperiod},
+           givenun=0}}%
+      }
+      \strng{namehash}{915af163e2107106fced5dd3164d9a8e}
+      \strng{fullhash}{915af163e2107106fced5dd3164d9a8e}
+      \strng{bibnamehash}{915af163e2107106fced5dd3164d9a8e}
+      \strng{authorbibnamehash}{915af163e2107106fced5dd3164d9a8e}
+      \strng{authornamehash}{915af163e2107106fced5dd3164d9a8e}
+      \strng{authorfullhash}{915af163e2107106fced5dd3164d9a8e}
+      \field{extraname}{4}
+      \field{sortinit}{B}
+      \field{sortinithash}{276475738cc058478c1677046f857703}
+      \field{extradate}{1}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{year}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{11 Classical Time Series Forecasting Methods in Python (Cheat Sheet)}
+      \field{urlday}{24}
+      \field{urlmonth}{11}
+      \field{urlyear}{2020}
+      \field{year}{2018}
+      \field{urldateera}{ce}
+      \verb{urlraw}
+      \verb https://machinelearningmastery.com/time-series-forecasting-methods-in-python-cheat-sheet/
+      \endverb
+      \verb{url}
+      \verb https://machinelearningmastery.com/time-series-forecasting-methods-in-python-cheat-sheet/
+      \endverb
+    \endentry
+    \entry{Brownlee2018a}{article}{}
+      \name{author}{1}{}{%
+        {{uniquename=0,uniquepart=base,hash=915af163e2107106fced5dd3164d9a8e}{%
+           family={Brownlee},
+           familyi={B\bibinitperiod},
+           given={Jason},
+           giveni={J\bibinitperiod},
+           givenun=0}}%
+      }
+      \strng{namehash}{915af163e2107106fced5dd3164d9a8e}
+      \strng{fullhash}{915af163e2107106fced5dd3164d9a8e}
+      \strng{bibnamehash}{915af163e2107106fced5dd3164d9a8e}
+      \strng{authorbibnamehash}{915af163e2107106fced5dd3164d9a8e}
+      \strng{authornamehash}{915af163e2107106fced5dd3164d9a8e}
+      \strng{authorfullhash}{915af163e2107106fced5dd3164d9a8e}
+      \field{extraname}{5}
+      \field{sortinit}{B}
+      \field{sortinithash}{276475738cc058478c1677046f857703}
+      \field{extradate}{2}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{year}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{A Gentle Introduction to SARIMA for Time Series Forecasting in Python}
+      \field{urlday}{24}
+      \field{urlmonth}{11}
+      \field{urlyear}{2020}
+      \field{year}{2018}
+      \field{urldateera}{ce}
+      \verb{urlraw}
+      \verb https://machinelearningmastery.com/sarima-for-time-series-forecasting-in-python/
+      \endverb
+      \verb{url}
+      \verb https://machinelearningmastery.com/sarima-for-time-series-forecasting-in-python/
+      \endverb
+    \endentry
+    \entry{Brownlee2018b}{online}{}
+      \name{author}{1}{}{%
+        {{uniquename=0,uniquepart=base,hash=915af163e2107106fced5dd3164d9a8e}{%
+           family={Brownlee},
+           familyi={B\bibinitperiod},
+           given={Jason},
+           giveni={J\bibinitperiod},
+           givenun=0}}%
+      }
+      \strng{namehash}{915af163e2107106fced5dd3164d9a8e}
+      \strng{fullhash}{915af163e2107106fced5dd3164d9a8e}
+      \strng{bibnamehash}{915af163e2107106fced5dd3164d9a8e}
+      \strng{authorbibnamehash}{915af163e2107106fced5dd3164d9a8e}
+      \strng{authornamehash}{915af163e2107106fced5dd3164d9a8e}
+      \strng{authorfullhash}{915af163e2107106fced5dd3164d9a8e}
+      \field{extraname}{6}
+      \field{sortinit}{B}
+      \field{sortinithash}{276475738cc058478c1677046f857703}
+      \field{extradate}{3}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{year}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{How to Develop LSTM Models for Time Series Forecasting}
+      \field{urlday}{20}
+      \field{urlmonth}{5}
+      \field{urlyear}{2020}
+      \field{year}{2018}
+      \field{urldateera}{ce}
+      \verb{urlraw}
+      \verb https://machinelearningmastery.com/how-to-develop-lstm-models-for-time-series-forecasting/
+      \endverb
+      \verb{url}
+      \verb https://machinelearningmastery.com/how-to-develop-lstm-models-for-time-series-forecasting/
+      \endverb
+    \endentry
+    \entry{Prophet2020}{online}{}
+      \field{sortinit}{F}
+      \field{sortinithash}{669c706c6f1fbf3b5a83d26f1d9e9e72}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{year}
+      \field{labeltitlesource}{title}
+      \field{title}{Forecasting at scale.}
+      \field{year}{2020}
+      \verb{urlraw}
+      \verb https://facebook.github.io/prophet/
+      \endverb
+      \verb{url}
+      \verb https://facebook.github.io/prophet/
+      \endverb
+      \warn{\item Entry 'Prophet2020' (bachproef-tin.bib): Invalid format '6-12-20' of date field 'urldate' - ignoring}
+    \endentry
+    \entry{Kampakis2020}{online}{}
+      \name{author}{1}{}{%
+        {{uniquename=0,uniquepart=base,hash=6924f8cee2d5e082d7ce26b543bdd1e6}{%
+           family={Kampakis},
+           familyi={K\bibinitperiod},
+           given={Stylianos},
+           giveni={S\bibinitperiod},
+           givenun=0}}%
+      }
+      \strng{namehash}{6924f8cee2d5e082d7ce26b543bdd1e6}
+      \strng{fullhash}{6924f8cee2d5e082d7ce26b543bdd1e6}
+      \strng{bibnamehash}{6924f8cee2d5e082d7ce26b543bdd1e6}
+      \strng{authorbibnamehash}{6924f8cee2d5e082d7ce26b543bdd1e6}
+      \strng{authornamehash}{6924f8cee2d5e082d7ce26b543bdd1e6}
+      \strng{authorfullhash}{6924f8cee2d5e082d7ce26b543bdd1e6}
+      \field{sortinit}{K}
+      \field{sortinithash}{9fd838a31ba64d981e8f44562bd33f89}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{year}
+      \true{uniqueprimaryauthor}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{Performance measures: RMSE and MAE}
+      \field{year}{2020}
+      \verb{urlraw}
+      \verb https://thedatascientist.com/performance-measures-rmse-mae/
+      \endverb
+      \verb{url}
+      \verb https://thedatascientist.com/performance-measures-rmse-mae/
+      \endverb
+      \warn{\item Entry 'Kampakis2020' (bachproef-tin.bib): Invalid format '6-12-20' of date field 'urldate' - ignoring}
+    \endentry
+    \entry{Kenton2020}{article}{}
+      \name{author}{1}{}{%
+        {{uniquename=0,uniquepart=base,hash=47a5d7268039bf86cea626bcaefd4877}{%
+           family={Kenton},
+           familyi={K\bibinitperiod},
+           given={Will},
+           giveni={W\bibinitperiod},
+           givenun=0}}%
+      }
+      \strng{namehash}{47a5d7268039bf86cea626bcaefd4877}
+      \strng{fullhash}{47a5d7268039bf86cea626bcaefd4877}
+      \strng{bibnamehash}{47a5d7268039bf86cea626bcaefd4877}
+      \strng{authorbibnamehash}{47a5d7268039bf86cea626bcaefd4877}
+      \strng{authornamehash}{47a5d7268039bf86cea626bcaefd4877}
+      \strng{authorfullhash}{47a5d7268039bf86cea626bcaefd4877}
+      \field{sortinit}{K}
+      \field{sortinithash}{9fd838a31ba64d981e8f44562bd33f89}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{year}
+      \true{uniqueprimaryauthor}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{Multiple Linear Regression (MLR)}
+      \field{urlday}{24}
+      \field{urlmonth}{11}
+      \field{urlyear}{2020}
+      \field{year}{2020}
+      \field{urldateera}{ce}
+      \verb{urlraw}
+      \verb https://www.investopedia.com/terms/m/mlr.asp
+      \endverb
+      \verb{url}
+      \verb https://www.investopedia.com/terms/m/mlr.asp
+      \endverb
+    \endentry
+    \entry{Nau2020}{online}{}
+      \name{author}{1}{}{%
+        {{uniquename=0,uniquepart=base,hash=e18b14d318f1050d916e194a432c8eb0}{%
+           family={Lau},
+           familyi={L\bibinitperiod},
+           given={Robert},
+           giveni={R\bibinitperiod},
+           givenun=0}}%
+      }
+      \strng{namehash}{e18b14d318f1050d916e194a432c8eb0}
+      \strng{fullhash}{e18b14d318f1050d916e194a432c8eb0}
+      \strng{bibnamehash}{e18b14d318f1050d916e194a432c8eb0}
+      \strng{authorbibnamehash}{e18b14d318f1050d916e194a432c8eb0}
+      \strng{authornamehash}{e18b14d318f1050d916e194a432c8eb0}
+      \strng{authorfullhash}{e18b14d318f1050d916e194a432c8eb0}
+      \field{sortinit}{L}
+      \field{sortinithash}{2c7981aaabc885868aba60f0c09ee20f}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{}
+      \true{uniqueprimaryauthor}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{Introduction to ARIMA: nonseasonal models}
+      \field{year}{2020}
+      \field{dateera}{ce}
+      \verb{urlraw}
+      \verb https://people.duke.edu/~rnau/411arim.htm
+      \endverb
+      \verb{url}
+      \verb https://people.duke.edu/~rnau/411arim.htm
+      \endverb
+      \warn{\item Entry 'Nau2020' (bachproef-tin.bib): Invalid format '2-12-20' of date field 'urldate' - ignoring}
+    \endentry
+    \entry{Lievens2018a}{article}{}
+      \name{author}{1}{}{%
+        {{uniquename=0,uniquepart=base,hash=8ff7a297e0f22fed85594cde4a7992d3}{%
+           family={Lievens},
+           familyi={L\bibinitperiod},
+           given={Stijn},
+           giveni={S\bibinitperiod},
+           givenun=0}}%
+      }
+      \strng{namehash}{8ff7a297e0f22fed85594cde4a7992d3}
+      \strng{fullhash}{8ff7a297e0f22fed85594cde4a7992d3}
+      \strng{bibnamehash}{8ff7a297e0f22fed85594cde4a7992d3}
+      \strng{authorbibnamehash}{8ff7a297e0f22fed85594cde4a7992d3}
+      \strng{authornamehash}{8ff7a297e0f22fed85594cde4a7992d3}
+      \strng{authorfullhash}{8ff7a297e0f22fed85594cde4a7992d3}
+      \field{sortinit}{L}
+      \field{sortinithash}{2c7981aaabc885868aba60f0c09ee20f}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{year}
+      \true{uniqueprimaryauthor}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{Artifici\"{e}le Intelligentie, lesnota's HOGENT}
+      \field{year}{2018}
+      \field{pages}{"147\bibrangedash 149"}
+      \range{pages}{-1}
+    \endentry
+    \entry{Liu2017}{article}{}
+      \name{author}{1}{}{%
+        {{uniquename=0,uniquepart=base,hash=dc0dbda9feb766b53608b6e835d9a595}{%
+           family={Liu},
+           familyi={L\bibinitperiod},
+           given={Danqing},
+           giveni={D\bibinitperiod},
+           givenun=0}}%
+      }
+      \strng{namehash}{dc0dbda9feb766b53608b6e835d9a595}
+      \strng{fullhash}{dc0dbda9feb766b53608b6e835d9a595}
+      \strng{bibnamehash}{dc0dbda9feb766b53608b6e835d9a595}
+      \strng{authorbibnamehash}{dc0dbda9feb766b53608b6e835d9a595}
+      \strng{authornamehash}{dc0dbda9feb766b53608b6e835d9a595}
+      \strng{authorfullhash}{dc0dbda9feb766b53608b6e835d9a595}
+      \field{sortinit}{L}
+      \field{sortinithash}{2c7981aaabc885868aba60f0c09ee20f}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{year}
+      \true{uniqueprimaryauthor}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{A Practical Guide to ReLU}
+      \field{urlday}{24}
+      \field{urlmonth}{11}
+      \field{urlyear}{2020}
+      \field{year}{2020}
+      \field{urldateera}{ce}
+      \verb{urlraw}
+      \verb https://medium.com/@danqing/a-practical-guide-to-relu-b83ca804f1f7
+      \endverb
+      \verb{url}
+      \verb https://medium.com/@danqing/a-practical-guide-to-relu-b83ca804f1f7
+      \endverb
+    \endentry
+    \entry{Olah2015}{online}{}
+      \name{author}{1}{}{%
+        {{uniquename=0,uniquepart=base,hash=dea937fb216bfbba25c1bfa1f36a63fe}{%
+           family={Olah},
+           familyi={O\bibinitperiod},
+           given={Christopher},
+           giveni={C\bibinitperiod},
+           givenun=0}}%
+      }
+      \strng{namehash}{dea937fb216bfbba25c1bfa1f36a63fe}
+      \strng{fullhash}{dea937fb216bfbba25c1bfa1f36a63fe}
+      \strng{bibnamehash}{dea937fb216bfbba25c1bfa1f36a63fe}
+      \strng{authorbibnamehash}{dea937fb216bfbba25c1bfa1f36a63fe}
+      \strng{authornamehash}{dea937fb216bfbba25c1bfa1f36a63fe}
+      \strng{authorfullhash}{dea937fb216bfbba25c1bfa1f36a63fe}
+      \field{sortinit}{O}
+      \field{sortinithash}{dad3efd0836470093a7b4a7bb756eb8c}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{year}
+      \true{uniqueprimaryauthor}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{Understanding LSTM Networks}
+      \field{urlday}{26}
+      \field{urlmonth}{5}
+      \field{urlyear}{2020}
+      \field{year}{2015}
+      \field{urldateera}{ce}
+      \verb{urlraw}
+      \verb https://colah.github.io/posts/2015-08-Understanding-LSTMs/
+      \endverb
+      \verb{url}
+      \verb https://colah.github.io/posts/2015-08-Understanding-LSTMs/
+      \endverb
+    \endentry
+    \entry{Hyndman2018}{online}{}
+      \name{author}{1}{}{%
+        {{uniquename=0,uniquepart=base,hash=0f97d6f13b13f3d90268c14bc02bee3d}{%
+           family={Rob\bibnamedelimb J\bibnamedelima Hyndman},
+           familyi={R\bibinitperiod\bibinitdelim J\bibinitperiod\bibinitdelim H\bibinitperiod},
+           given={George\bibnamedelima Athanasopoulos},
+           giveni={G\bibinitperiod\bibinitdelim A\bibinitperiod},
+           givenun=0}}%
+      }
+      \strng{namehash}{0f97d6f13b13f3d90268c14bc02bee3d}
+      \strng{fullhash}{0f97d6f13b13f3d90268c14bc02bee3d}
+      \strng{bibnamehash}{0f97d6f13b13f3d90268c14bc02bee3d}
+      \strng{authorbibnamehash}{0f97d6f13b13f3d90268c14bc02bee3d}
+      \strng{authornamehash}{0f97d6f13b13f3d90268c14bc02bee3d}
+      \strng{authorfullhash}{0f97d6f13b13f3d90268c14bc02bee3d}
+      \field{sortinit}{R}
+      \field{sortinithash}{da6b42bd3ab22fee61abed031ee405f7}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{}
+      \true{uniqueprimaryauthor}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{Forecasting: Principles and Practice}
+      \field{year}{2018}
+      \field{dateera}{ce}
+      \verb{urlraw}
+      \verb https://otexts.com/fpp2/
+      \endverb
+      \verb{url}
+      \verb https://otexts.com/fpp2/
+      \endverb
+      \warn{\item Entry 'Hyndman2018' (bachproef-tin.bib): Invalid format '27-11-20' of date field 'urldate' - ignoring}
+    \endentry
+    \entry{Shrivastava2020}{online}{}
+      \name{author}{1}{}{%
+        {{uniquename=0,uniquepart=base,hash=068f5885c3b24460738dd210cf9ceb77}{%
+           family={Shrivastava},
+           familyi={S\bibinitperiod},
+           given={Soumya},
+           giveni={S\bibinitperiod},
+           givenun=0}}%
+      }
+      \strng{namehash}{068f5885c3b24460738dd210cf9ceb77}
+      \strng{fullhash}{068f5885c3b24460738dd210cf9ceb77}
+      \strng{bibnamehash}{068f5885c3b24460738dd210cf9ceb77}
+      \strng{authorbibnamehash}{068f5885c3b24460738dd210cf9ceb77}
+      \strng{authornamehash}{068f5885c3b24460738dd210cf9ceb77}
+      \strng{authorfullhash}{068f5885c3b24460738dd210cf9ceb77}
+      \field{sortinit}{S}
+      \field{sortinithash}{322b1d5276f2f6c1bccdcd15920dbee6}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{year}
+      \true{uniqueprimaryauthor}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{Cross Validation in Time Series}
+      \field{year}{2020}
+      \verb{urlraw}
+      \verb https://medium.com/@soumyachess1496/cross-validation-in-time-series-566ae4981ce4
+      \endverb
+      \verb{url}
+      \verb https://medium.com/@soumyachess1496/cross-validation-in-time-series-566ae4981ce4
+      \endverb
+      \warn{\item Entry 'Shrivastava2020' (bachproef-tin.bib): Invalid format '8-12-20' of date field 'urldate' - ignoring}
+    \endentry
+    \entry{Sinha2019}{online}{}
+      \name{author}{1}{}{%
+        {{uniquename=0,uniquepart=base,hash=7f1054822399b1064a50f4d0711d3e6e}{%
+           family={Sinha},
+           familyi={S\bibinitperiod},
+           given={Preetam},
+           giveni={P\bibinitperiod},
+           givenun=0}}%
+      }
+      \strng{namehash}{7f1054822399b1064a50f4d0711d3e6e}
+      \strng{fullhash}{7f1054822399b1064a50f4d0711d3e6e}
+      \strng{bibnamehash}{7f1054822399b1064a50f4d0711d3e6e}
+      \strng{authorbibnamehash}{7f1054822399b1064a50f4d0711d3e6e}
+      \strng{authornamehash}{7f1054822399b1064a50f4d0711d3e6e}
+      \strng{authorfullhash}{7f1054822399b1064a50f4d0711d3e6e}
+      \field{sortinit}{S}
+      \field{sortinithash}{322b1d5276f2f6c1bccdcd15920dbee6}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{year}
+      \true{uniqueprimaryauthor}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{LINEAR REGRESSION,LEAST-SQUARES REGRESSION,OUTLIERS AND INFLUENTIAL OBSERVATIONS,RESIDUALS,LURKING VARIABLES,EXTRAPOLATION}
+      \field{year}{2019}
+      \verb{urlraw}
+      \verb https://cafepharmablog.wordpress.com/2019/02/20/linear-regressionleast-squares-regressionoutliers-and-influential-observationsresidualslurking-variablesextrapolation/
+      \endverb
+      \verb{url}
+      \verb https://cafepharmablog.wordpress.com/2019/02/20/linear-regressionleast-squares-regressionoutliers-and-influential-observationsresidualslurking-variablesextrapolation/
+      \endverb
+      \warn{\item Entry 'Sinha2019' (bachproef-tin.bib): Invalid format '11-12-20' of date field 'urldate' - ignoring}
+    \endentry
+    \entry{Srinivasan2019}{article}{}
+      \name{author}{1}{}{%
+        {{uniquename=0,uniquepart=base,hash=6cd8bcce6d2f5cd94064d267f9035af9}{%
+           family={Srinivasan},
+           familyi={S\bibinitperiod},
+           given={Aishwarya\bibnamedelima V},
+           giveni={A\bibinitperiod\bibinitdelim V\bibinitperiod},
+           givenun=0}}%
+      }
+      \strng{namehash}{6cd8bcce6d2f5cd94064d267f9035af9}
+      \strng{fullhash}{6cd8bcce6d2f5cd94064d267f9035af9}
+      \strng{bibnamehash}{6cd8bcce6d2f5cd94064d267f9035af9}
+      \strng{authorbibnamehash}{6cd8bcce6d2f5cd94064d267f9035af9}
+      \strng{authornamehash}{6cd8bcce6d2f5cd94064d267f9035af9}
+      \strng{authorfullhash}{6cd8bcce6d2f5cd94064d267f9035af9}
+      \field{sortinit}{S}
+      \field{sortinithash}{322b1d5276f2f6c1bccdcd15920dbee6}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{year}
+      \true{uniqueprimaryauthor}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{Stochastic Gradient Descent --- Clearly Explained !!}
+      \field{urlday}{24}
+      \field{urlmonth}{11}
+      \field{urlyear}{2020}
+      \field{year}{2019}
+      \field{urldateera}{ce}
+      \verb{urlraw}
+      \verb https://towardsdatascience.com/stochastic-gradient-descent-clearly-explained-53d239905d31
+      \endverb
+      \verb{url}
+      \verb https://towardsdatascience.com/stochastic-gradient-descent-clearly-explained-53d239905d31
+      \endverb
+    \endentry
+    \entry{Starmer2019}{online}{}
+      \name{author}{1}{}{%
+        {{uniquename=0,uniquepart=base,hash=009afe4c233fc533e35e74c44b25a27f}{%
+           family={Starmer},
+           familyi={S\bibinitperiod},
+           given={Josh},
+           giveni={J\bibinitperiod},
+           givenun=0}}%
+      }
+      \list{organization}{1}{%
+        {Youtube}%
+      }
+      \strng{namehash}{009afe4c233fc533e35e74c44b25a27f}
+      \strng{fullhash}{009afe4c233fc533e35e74c44b25a27f}
+      \strng{bibnamehash}{009afe4c233fc533e35e74c44b25a27f}
+      \strng{authorbibnamehash}{009afe4c233fc533e35e74c44b25a27f}
+      \strng{authornamehash}{009afe4c233fc533e35e74c44b25a27f}
+      \strng{authorfullhash}{009afe4c233fc533e35e74c44b25a27f}
+      \field{sortinit}{S}
+      \field{sortinithash}{322b1d5276f2f6c1bccdcd15920dbee6}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{}
+      \true{uniqueprimaryauthor}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{Gradient Descent, Step-by-Step}
+      \field{year}{2019}
+      \field{dateera}{ce}
+      \verb{urlraw}
+      \verb https://www.youtube.com/watch?v=sDv4f4s2SB8&ab_channel=StatQuestwithJoshStarmer
+      \endverb
+      \verb{url}
+      \verb https://www.youtube.com/watch?v=sDv4f4s2SB8&ab_channel=StatQuestwithJoshStarmer
+      \endverb
+    \endentry
+    \entry{Swaminathan2018}{online}{}
+      \name{author}{1}{}{%
+        {{uniquename=0,uniquepart=base,hash=e54fc98f6d632e678bc48d39b7fc56b1}{%
+           family={Swaminathan},
+           familyi={S\bibinitperiod},
+           given={Saishruthi},
+           giveni={S\bibinitperiod},
+           givenun=0}}%
+      }
+      \strng{namehash}{e54fc98f6d632e678bc48d39b7fc56b1}
+      \strng{fullhash}{e54fc98f6d632e678bc48d39b7fc56b1}
+      \strng{bibnamehash}{e54fc98f6d632e678bc48d39b7fc56b1}
+      \strng{authorbibnamehash}{e54fc98f6d632e678bc48d39b7fc56b1}
+      \strng{authornamehash}{e54fc98f6d632e678bc48d39b7fc56b1}
+      \strng{authorfullhash}{e54fc98f6d632e678bc48d39b7fc56b1}
+      \field{sortinit}{S}
+      \field{sortinithash}{322b1d5276f2f6c1bccdcd15920dbee6}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{}
+      \true{uniqueprimaryauthor}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{Logistic Regression --- Detailed Overview}
+      \field{year}{2018}
+      \field{dateera}{ce}
+      \verb{urlraw}
+      \verb https://towardsdatascience.com/logistic-regression-detailed-overview-46c4da4303bc
+      \endverb
+      \verb{url}
+      \verb https://towardsdatascience.com/logistic-regression-detailed-overview-46c4da4303bc
+      \endverb
+      \warn{\item Entry 'Swaminathan2018' (bachproef-tin.bib): Invalid format '26-11-20' of date field 'urldate' - ignoring}
+    \endentry
+    \entry{Rahman2019}{article}{}
+      \name{author}{1}{}{%
+        {{uniquename=0,uniquepart=base,hash=5c33d1ff4ec4c9ad08fbf6c313eae92a}{%
+           family={Syed\bibnamedelimb Ashiqur\bibnamedelima Rahman},
+           familyi={S\bibinitperiod\bibinitdelim A\bibinitperiod\bibinitdelim R\bibinitperiod},
+           given={Donald\bibnamedelimb A.\bibnamedelimi Adjeroh},
+           giveni={D\bibinitperiod\bibinitdelim A\bibinitperiod\bibinitdelim A\bibinitperiod},
+           givenun=0}}%
+      }
+      \strng{namehash}{5c33d1ff4ec4c9ad08fbf6c313eae92a}
+      \strng{fullhash}{5c33d1ff4ec4c9ad08fbf6c313eae92a}
+      \strng{bibnamehash}{5c33d1ff4ec4c9ad08fbf6c313eae92a}
+      \strng{authorbibnamehash}{5c33d1ff4ec4c9ad08fbf6c313eae92a}
+      \strng{authornamehash}{5c33d1ff4ec4c9ad08fbf6c313eae92a}
+      \strng{authorfullhash}{5c33d1ff4ec4c9ad08fbf6c313eae92a}
+      \field{sortinit}{S}
+      \field{sortinithash}{322b1d5276f2f6c1bccdcd15920dbee6}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{}
+      \true{uniqueprimaryauthor}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{Deep Learning using Convolutional LSTM estimates Biological Age from Physical Activity}
+      \field{year}{2019}
+      \field{dateera}{ce}
+      \verb{urlraw}
+      \verb https://www.nature.com/articles/s41598-019-46850-0
+      \endverb
+      \verb{url}
+      \verb https://www.nature.com/articles/s41598-019-46850-0
+      \endverb
+      \warn{\item Entry 'Rahman2019' (bachproef-tin.bib): Invalid format '1-12-20' of date field 'urldate' - ignoring}
+    \endentry
+  \enddatalist
+  \missing{Colah2015}
+  \missing{Pant2019}
+  \missing{Salvi2020}
+\endrefsection
+\endinput
+

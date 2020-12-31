@@ -1,0 +1,174 @@
+% Encoding: UTF-8
+
+@Online{Overheid2020,
+  author  = {Belgische Overheid},
+  title   = {Infowebsite Belgische overheid},
+  year    = {2020},
+  url     = {https://www.info-coronavirus.be/nl/contactopvolging/},
+  urldate = {2020-05-23},
+}
+
+@Online{Chiou2020,
+    author  = {Chiou, Christine},
+    title   = {How Taiwan Battles the Coronavirus},
+    year    = {2020},
+    url     = {https://thediplomat.com/2020/04/how-taiwan-battles-the-coronavirus/},
+    urldate = {2020-05-23},
+}
+
+@Online{Olah2015,
+    author  = {Olah, Christopher},
+    title   = {Understanding LSTM Networks},
+    year    = {2015},
+    url     = {https://colah.github.io/posts/2015-08-Understanding-LSTMs/},
+    urldate = {2020-05-26},
+}
+
+@Online{Pandas2020,
+    author  = {Pandas},
+    title   = {About page},
+    year    = {2020},
+    url     = {https://pandas.pydata.org/about/},
+    urldate = {2020-05-26},
+}
+
+@Online{Matplotlib2020,
+    author  = {Matplotlib},
+    title   = {About page},
+    year    = {2020},
+    url     = {https://matplotlib.org/},
+    urldate = {2020-05-26},
+}
+
+@Online{Numpy2020,
+    author  = {Numpy},
+    title   = {About page},
+    year    = {2020},
+    url     = {https://numpy.org/about/},
+    urldate = {2020-05-26},
+}
+
+@Online{Sciensano2020,
+    author  = {Sciensano},
+    title   = {FACT SHEET COVID-19 disease (SARS-CoV-2 virus) },
+    year    = {2020},
+    url     = {https://covid-19.sciensano.be/sites/default/files/Covid19/COVID-19_fact_sheet_ENG.pdf},
+    urldate = {2020-05-27},
+}
+
+@Online{Sciensano2020a,
+    author  = {Sciensano},
+    title   = {COVID-19 Data},
+    year    = {2020},
+    url     = {https://epistat.wiv-isp.be/Covid/},
+    urldate = {2020-05-27},
+}
+
+@Online{JonHopkinsUniversity2020,
+    author  = {Jon Hopkins University},
+    title   = {COVID-19 Data Repository by the Center for Systems Science and Engineering (CSSE) at Johns Hopkins University},
+    year    = {2020},
+    url     = {https://github.com/CSSEGISandData/COVID-19},
+    urldate = {2020-05-27},
+}
+
+@Online{Python2020,
+  author  = {Datetime Python},
+  title   = {Python Documentation},
+  year    = {2020},
+  url     = {https://docs.python.org/2/library/datetime.html},
+  urldate = {2020-05-26},
+}
+
+@Online{Tran2019,
+    author  = {Nhan Tran},
+    title   = {Machine Learning: Polynomial Regression with Python},
+    year    = {2019},
+    url     = {https://towardsdatascience.com/machine-learning-polynomial-regression-with-python-5328e4e8a386},
+    urldate = {2020-05-27},
+}
+
+@Online{Datetime2020,
+    author  = {Datetime Python},
+    title   = {Machine Learning: Polynomial Regression with Python},
+    year    = {2019},
+    url     = {https://towardsdatascience.com/machine-learning-polynomial-regression-with-python-5328e4e8a386},
+    urldate = {2020-05-27},
+}
+
+@Online{Keras2020,
+    author  = {Keras},
+    title   = {The Sequential class},
+    year    = {2020},
+    url     = {https://keras.io/api/models/sequential/},
+    urldate = {2020-05-26},
+}
+
+@Article{Lixiang2020,
+    author  = {Lixiang, Li and Zihang, Yang and Zhongkai, Dang and Cui, Meng and Jingze, Huang and Haotian, Meng and Deyu, Wang and Guanhua, Chen and Jiaxuan, Zhang and Haipeng, Peng and Yiming, Shaob},
+    title   = {Propagation analysis and prediction of the COVID-19},
+    year    = {2020},
+    journal = {Infectious Disease Modelling},
+    url     = {https://www.sciencedirect.com/science/article/pii/S2468042720300087#fig1},
+    volume  = {5},
+    pages   = {282--292},   
+    urldate = {2020-05-26},
+}
+
+@Article{Hens2020,
+  author       = {Hens, Niel and Vranck, Pascal and Molenberghs, Geert},
+  title        = {The COVID-19 epidemic, its mortality, and the role of nonpharmaceutical interventions},
+  journal      = {European Heart Journal Acute Cardiovascular Care},
+  journaltitle = {European Heart Journal Acute Cardiovascular Care},
+  year         = {2020},
+  date         = {2020-04-20},
+  url          = {https://wet.kuleuven.be/hens-molenberghs},
+  urldate      = {2020-05-26},
+}
+
+
+@Article{Tomar2020,
+    author  = {Tomar, Anuradha and Gupta, Neeraj},
+    title   = {Prediction for the spread of COVID-19 in India and effectiveness of preventive measures},
+    year    = {2020},
+    journal = {Science of The Total Environment},
+    volume  = {5},
+    url     = {https://www.sciencedirect.com/science/article/pii/S0048969720322798} 
+}
+
+@Article{Maleki2020,
+  author       = {Maleki, Mohsen and Mahmoudi Reza, Mohammad and Wraith, Darren and Pho, Kim-Hung},
+  title        = {Time series modelling to forecast the confirmed and recovered cases of COVID-19},
+  journal      = {Travel Medicine and Infectious Disease},
+  journaltitle = {Travel Medicine and Infectious Disease},
+  year         = {2020},
+  date         = {2020-05-13},
+  url          = {https://www.sciencedirect.com/science/article/pii/S1477893920302210#bib27},
+  tilte        = {Time series modelling to forecast the confirmed and recovered cases of COVID-19},
+}
+
+@Article{Ribeiro2020,
+  author       = {Ribeiro, Matheus Henrique Dal Molin and da Silva, Ramon Gomes and Mariani, Cocco Viviana and Coulho, Leandro dos Santos},
+  title        = {Short-term forecasting COVID-19 cumulative confirmed cases: Perspectives for Brazil},
+  journal      = {Chaos, Solitons \& Fractals},
+  journaltitle = {Chaos, Solitons \& Fractals},
+  year         = {2020},
+  date         = {2020-06-01},
+  volume       = {135},
+  url          = {https://www.sciencedirect.com/science/article/abs/pii/S0960077920302538},
+  tilte        = {Short-term forecasting COVID-19 cumulative confirmed cases: Perspectives for Brazil},
+}
+
+@Article{Ahmar2020,
+  author       = {Ahmar, Ansari Saleh and del Val, Eva Boj},
+  title        = {SutteARIMA: Short-term forecasting method, a case: Covid-19 and stock market in Spain},
+  journal      = {Science of The Total Environment},
+  journaltitle = {Science of The Total Environment},
+  year         = {2020},
+  date         = {2020-08-10},
+  volume       = {729},
+  url          = {https://www.sciencedirect.com/science/article/pii/S0048969720324001},
+  tilte        = {SutteARIMA: Short-term forecasting method, a case: Covid-19 and stock market in Spain},
+}
+
+@Comment{jabref-meta: databaseType:biblatex;}

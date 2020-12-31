@@ -1,0 +1,20 @@
+%%=============================================================================
+%% Conclusie
+%%=============================================================================
+
+\chapter{Conclusie}
+\label{ch:conclusie}
+
+% TODO: Trek een duidelijke conclusie, in de vorm van een antwoord op de
+% onderzoeksvra(a)g(en). Wat was jouw bijdrage aan het onderzoeksdomein en
+% hoe biedt dit meerwaarde aan het vakgebied/doelgroep? 
+% Reflecteer kritisch over het resultaat. In Engelse teksten wordt deze sectie
+% ``Discussion'' genoemd. Had je deze uitkomst verwacht? Zijn er zaken die nog
+% niet duidelijk zijn?
+% Heeft het onderzoek geleid tot nieuwe vragen die uitnodigen tot verder 
+%onderzoek?
+
+Uit dit onderzoek blijkt dat een voorspelling op basis van polynomiale regressie of LSTM het einde van de coronacrisis moeilijk kan definiëren. Het einde van de crisis houdt in dat het aantal nieuwe geregistreerde coronagevallen in België gedurende 2 weken onder 55 zou blijven. Een betrouwbare voorspelling is slechts voor 1 maximum, 2 weken mogelijk met gebruik van LSTM wat een te kort tijdsinterval is om dit te bepalen. Dit wordt hoogstwaarschijnlijk veroorzaakt door het gebrek aan data om het LSTM model te trainen. 
+het model werd getraind met Italiaanse data, aangezien Italië    het meest nabije land dat al het langst voorbij het minimum van 10 gevallen per miljoen inwoners is. Dit komt neer op een voorloopperiode van een 7 tal dagen in vergelijking met België. Hierdoor kan het model slechts echt betrouwbare voorspellingen van iets meer dan 7 dagen maken.
+
+Mogelijke onderwerpen voor verder onderzoek zouden dezelfde vraag kunnen beantwoorden maar met gebruik van andere data en middelen. Zo zou een multivatiate timeseries ook voorspeld kunnen worden met LSTM, een andere zeer interessante parameter zou de besmettingsgraad zijn bij deze vraag. Een andere type model om autoregressieve voorspellingen te maken zou het TP-SMN-AT model zijn. Een methode en ook de methode die het nauwst aansluit bij dit onderzoek zou het fitten van een hyperbolisch-achtige functie op de staart, de metingen en eventueel voorspellingen na de piek. Ook hierbij kunnen de curves van andere landen in beschouwing genomen. Ook modellen die goed scoren op korte termijn zouden een misschien kunnen aangepast worden om betere resultaten te bekomen op lange termijn, hieronder vallen ondermeer SVR, het stacking ensemble ~\autocite{Ribeiro2020} en de SutteARIMA methode.

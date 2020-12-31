@@ -1,0 +1,37 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{n}{tt} \PYG{o}{=} \PYG{n}{pd}\PYG{o}{.}\PYG{n}{read\PYGZus{}csv}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}./data/Toronto\PYGZus{}temp.csv\PYGZsq{}}\PYG{p}{)}
+\PYG{n}{tt} \PYG{o}{=} \PYG{n}{tt}\PYG{p}{[}\PYG{n}{tt}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}Day\PYGZsq{}}\PYG{p}{]} \PYG{o}{==} \PYG{l+m+mi}{1}\PYG{p}{]}
+\PYG{n}{tt}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}Year\PYGZsq{}}\PYG{p}{]} \PYG{o}{=} \PYG{n}{tt}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}Year\PYGZsq{}}\PYG{p}{]}\PYG{o}{.}\PYG{n}{replace}\PYG{p}{(\PYGZob{}}\PYG{l+s+s1}{\PYGZsq{}2,013\PYGZsq{}}\PYG{p}{:}\PYG{l+s+s1}{\PYGZsq{}2013\PYGZsq{}}\PYG{p}{,}
+    \PYG{l+s+s1}{\PYGZsq{}2,014\PYGZsq{}}\PYG{p}{:}\PYG{l+s+s1}{\PYGZsq{}2014\PYGZsq{}}\PYG{p}{,}
+    \PYG{l+s+s1}{\PYGZsq{}2,015\PYGZsq{}}\PYG{p}{:}\PYG{l+s+s1}{\PYGZsq{}2015\PYGZsq{}}\PYG{p}{,}
+    \PYG{l+s+s1}{\PYGZsq{}2,016\PYGZsq{}}\PYG{p}{:}\PYG{l+s+s1}{\PYGZsq{}2016\PYGZsq{}}\PYG{p}{,}
+    \PYG{l+s+s1}{\PYGZsq{}2,017\PYGZsq{}}\PYG{p}{:}\PYG{l+s+s1}{\PYGZsq{}2017\PYGZsq{}}\PYG{p}{,}
+    \PYG{l+s+s1}{\PYGZsq{}2,018\PYGZsq{}}\PYG{p}{:}\PYG{l+s+s1}{\PYGZsq{}2018\PYGZsq{}}\PYG{p}{\PYGZcb{})}
+\PYG{c+c1}{\PYGZsh{} tt.groupby(\PYGZsq{}Year\PYGZsq{}).count()}
+\PYG{n}{tt} \PYG{o}{=} \PYG{n}{tt}\PYG{p}{[(}\PYG{n}{tt}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}Year\PYGZsq{}}\PYG{p}{]} \PYG{o}{!=} \PYG{l+s+s1}{\PYGZsq{}1937\PYGZsq{}}\PYG{p}{)]}
+\PYG{c+c1}{\PYGZsh{}ttt = tt.groupby(\PYGZsq{}Year\PYGZsq{}).count()}
+\PYG{c+c1}{\PYGZsh{}ttt.head(50)}
+\PYG{c+c1}{\PYGZsh{}tt.groupby(\PYGZsq{}Year\PYGZsq{}).count().tail(50)}
+\PYG{n}{meantt} \PYG{o}{=} \PYG{n}{tt}\PYG{o}{.}\PYG{n}{groupby}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}Year\PYGZsq{}}\PYG{p}{)}\PYG{o}{.}\PYG{n}{mean}\PYG{p}{()[}\PYG{l+s+s1}{\PYGZsq{}Mean Temp (C)\PYGZsq{}}\PYG{p}{]}
+\PYG{c+c1}{\PYGZsh{}meantt.index}
+\PYG{c+c1}{\PYGZsh{}meantt}
+\PYG{n}{meantt}\PYG{o}{.}\PYG{n}{sort\PYGZus{}index}\PYG{p}{(}\PYG{n}{inplace}\PYG{o}{=}\PYG{k+kc}{True}\PYG{p}{)}
+
+\PYG{n}{plt}\PYG{o}{.}\PYG{n}{xlabel}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}Years\PYGZsq{}}\PYG{p}{)}
+\PYG{n}{plt}\PYG{o}{.}\PYG{n}{ylabel}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}Temperature (C)\PYGZsq{}}\PYG{p}{)}
+\PYG{n}{plt}\PYG{o}{.}\PYG{n}{xticks}\PYG{p}{(}\PYG{n}{np}\PYG{o}{.}\PYG{n}{array}\PYG{p}{(}\PYG{n+nb}{range}\PYG{p}{(}\PYG{l+m+mi}{0}\PYG{p}{,}\PYG{n}{meantt}\PYG{o}{.}\PYG{n}{size}\PYG{p}{,}\PYG{l+m+mi}{10}\PYG{p}{)))}
+\PYG{n}{plt}\PYG{o}{.}\PYG{n}{scatter}\PYG{p}{(}\PYG{n}{meantt}\PYG{o}{.}\PYG{n}{index}\PYG{p}{,} \PYG{n}{meantt}\PYG{p}{)}
+
+\PYG{n+nb}{print}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}start : \PYGZsq{}} \PYG{o}{+} \PYG{n}{meantt}\PYG{o}{.}\PYG{n}{index}\PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{])}
+\PYG{n+nb}{print}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}end : \PYGZsq{}} \PYG{o}{+} \PYG{n}{meantt}\PYG{o}{.}\PYG{n}{index}\PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{])}
+
+\PYG{n}{new\PYGZus{}row} \PYG{o}{=} \PYG{n}{pd}\PYG{o}{.}\PYG{n}{Series}\PYG{p}{(\PYGZob{}}\PYG{l+s+s1}{\PYGZsq{}Mean Temp (C)\PYGZsq{}} \PYG{p}{:} \PYG{l+m+mf}{0.555556}\PYG{p}{,} \PYG{l+s+s1}{\PYGZsq{}Year\PYGZsq{}}\PYG{p}{:} \PYG{l+s+s1}{\PYGZsq{}2018\PYGZsq{}}\PYG{p}{,} \PYG{l+s+s1}{\PYGZsq{}Month\PYGZsq{}}\PYG{p}{:}\PYG{l+m+mi}{12}\PYG{p}{\PYGZcb{})}
+\PYG{n}{tt} \PYG{o}{=} \PYG{n}{tt}\PYG{o}{.}\PYG{n}{append}\PYG{p}{(}\PYG{n}{new\PYGZus{}row}\PYG{p}{,} \PYG{n}{ignore\PYGZus{}index}\PYG{o}{=}\PYG{k+kc}{True}\PYG{p}{)}
+\PYG{n}{tt}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}Year\PYGZsq{}}\PYG{p}{]} \PYG{o}{=} \PYG{n}{tt}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}Year\PYGZsq{}}\PYG{p}{]}\PYG{o}{.}\PYG{n}{astype}\PYG{p}{(}\PYG{n+nb}{int}\PYG{p}{)}
+\PYG{n}{mean\PYGZus{}temp\PYGZus{}monthly} \PYG{o}{=} \PYG{n}{tt}\PYG{p}{[[}\PYG{l+s+s1}{\PYGZsq{}Year\PYGZsq{}}\PYG{p}{,}\PYG{l+s+s1}{\PYGZsq{}Month\PYGZsq{}}\PYG{p}{,}\PYG{l+s+s1}{\PYGZsq{}Mean Temp (C)\PYGZsq{}}\PYG{p}{]]}\PYG{o}{.}\PYG{n}{set\PYGZus{}index}\PYG{p}{([}\PYG{l+s+s1}{\PYGZsq{}Year\PYGZsq{}}\PYG{p}{,}\PYG{l+s+s1}{\PYGZsq{}Month\PYGZsq{}}\PYG{p}{])}\PYG{o}{.}\PYG{n}{sort\PYGZus{}index}\PYG{p}{()}
+\PYG{c+c1}{\PYGZsh{} mean\PYGZus{}temp\PYGZus{}monthly}
+
+\PYG{n}{mean\PYGZus{}temp\PYGZus{}monthly} \PYG{o}{=} \PYG{n}{mean\PYGZus{}temp\PYGZus{}monthly}\PYG{p}{[}\PYG{n}{mean\PYGZus{}temp\PYGZus{}monthly}
+\PYG{o}{.}\PYG{n}{index}\PYG{o}{.}\PYG{n}{get\PYGZus{}level\PYGZus{}values}\PYG{p}{(}\PYG{l+m+mi}{0}\PYG{p}{)}\PYG{o}{.}\PYG{n}{astype}\PYG{p}{(}\PYG{n+nb}{int}\PYG{p}{)} \PYG{o}{\PYGZgt{}=} \PYG{l+m+mi}{1979} \PYG{p}{]}
+\PYG{n}{mean\PYGZus{}temp\PYGZus{}monthly}
+\end{Verbatim}
