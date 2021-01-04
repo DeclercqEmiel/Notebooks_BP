@@ -1,0 +1,6 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{c+c1}{\PYGZsh{} visualize results of last prediction}
+\PYG{n}{full\PYGZus{}graph}\PYG{p}{(}\PYG{n}{last\PYGZus{}prediction\PYGZus{}ARIMA}\PYG{p}{,} \PYG{l+s+s2}{\PYGZdq{}Last prediction ARIMA\PYGZdq{}}\PYG{p}{)}
+\PYG{n}{full\PYGZus{}graph}\PYG{p}{(}\PYG{n}{last\PYGZus{}prediction\PYGZus{}LSTM}\PYG{p}{,} \PYG{l+s+s2}{\PYGZdq{}Last prediction LSTM\PYGZdq{}}\PYG{p}{)}
+\PYG{n}{full\PYGZus{}graph}\PYG{p}{(}\PYG{n}{last\PYGZus{}prediction\PYGZus{}prophet}\PYG{p}{,} \PYG{l+s+s2}{\PYGZdq{}Last prediction Prophet\PYGZdq{}}\PYG{p}{)}
+\end{Verbatim}

@@ -1,0 +1,16 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{c+c1}{\PYGZsh{} initialize TimeSeriesSplit object}
+\PYG{n}{tscv} \PYG{o}{=} \PYG{n}{TimeSeriesSplit}\PYG{p}{(}\PYG{n}{n\PYGZus{}splits} \PYG{o}{=} \PYG{l+m+mi}{8}\PYG{p}{)}
+
+\PYG{c+c1}{\PYGZsh{} loop trough all split time series that have a trainingsset with more than 20 values}
+\PYG{k}{for} \PYG{n}{train\PYGZus{}index}\PYG{p}{,} \PYG{n}{test\PYGZus{}index} \PYG{o+ow}{in} \PYG{n}{tscv}\PYG{o}{.}\PYG{n}{split}\PYG{p}{(}\PYG{n}{ts\PYGZus{}diff}\PYG{p}{):}
+    \PYG{k}{if} \PYG{n}{train\PYGZus{}index}\PYG{o}{.}\PYG{n}{size} \PYG{o}{\PYGZgt{}} \PYG{l+m+mi}{20}\PYG{p}{:}
+
+        \PYG{c+c1}{\PYGZsh{} initialize cross validation train and test sets}
+        \PYG{n}{cv\PYGZus{}train}\PYG{p}{,} \PYG{n}{cv\PYGZus{}test} \PYG{o}{=} \PYG{n}{ts\PYGZus{}diff}\PYG{o}{.}\PYG{n}{iloc}\PYG{p}{[}\PYG{n}{train\PYGZus{}index}\PYG{p}{],} \PYG{n}{ts\PYGZus{}diff}\PYG{o}{.}\PYG{n}{iloc}\PYG{p}{[}\PYG{n}{test\PYGZus{}index}\PYG{p}{]}
+
+        \PYG{c+c1}{\PYGZsh{} visiualize cross\PYGZus{}validation structure for reference}
+        \PYG{n+nb}{print}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}TRAIN:\PYGZdq{}}\PYG{p}{,} \PYG{n}{train\PYGZus{}index}\PYG{o}{.}\PYG{n}{size}\PYG{p}{)}
+        \PYG{n+nb}{print}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}TEST:\PYGZdq{}}\PYG{p}{,} \PYG{n}{test\PYGZus{}index}\PYG{o}{.}\PYG{n}{size}\PYG{p}{)}
+        \PYG{n+nb}{print}\PYG{p}{()}
+\end{Verbatim}

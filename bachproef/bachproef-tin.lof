@@ -3,39 +3,35 @@
 \defcounter {refsection}{0}\relax 
 \addvspace {10\p@ }
 \defcounter {refsection}{0}\relax 
-\addvspace {10\p@ }
+\contentsline {figure}{\numberline {1.1}{\ignorespaces Ruwe invoerdata\relax }}{13}{figure.caption.5}% 
 \defcounter {refsection}{0}\relax 
-\contentsline {figure}{\numberline {2.1}{\ignorespaces Grafische weergave sum of least squares~\autocite {Brown2020}\relax }}{17}{figure.caption.5}% 
+\contentsline {figure}{\numberline {1.2}{\ignorespaces Grafische weergave jaarlijkse temperatuur\relax }}{13}{figure.caption.6}% 
 \defcounter {refsection}{0}\relax 
-\contentsline {figure}{\numberline {2.2}{\ignorespaces Grafische weergaven voorbeelddata voor lineaire regressie~\autocite {Pant2019}\relax }}{18}{figure.caption.7}% 
+\contentsline {figure}{\numberline {1.3}{\ignorespaces Resultaat van data formatting\relax }}{14}{figure.caption.7}% 
 \defcounter {refsection}{0}\relax 
-\contentsline {figure}{\numberline {2.3}{\ignorespaces Voorbeeldtijdreeksen~\autocite {Hyndman2018}\relax }}{20}{figure.caption.8}% 
+\contentsline {figure}{\numberline {1.4}{\ignorespaces Ruwe data van de jaarlijkse ijsdiktes\relax }}{16}{figure.caption.8}% 
 \defcounter {refsection}{0}\relax 
-\contentsline {figure}{\numberline {2.4}{\ignorespaces Voorstelling van een neuron die invoer ontvangt van 3 andere neuronen ~\autocite {Lievens2018a}\relax }}{28}{figure.caption.9}% 
+\contentsline {figure}{\numberline {1.5}{\ignorespaces Grafische weergave van de maandelijkse ijsdiktes\relax }}{17}{figure.caption.9}% 
 \defcounter {refsection}{0}\relax 
-\contentsline {figure}{\numberline {2.5}{\ignorespaces Cel in een neuraal netwerk dat gegevens van een andere cel gebruikt om een nieuw signaal uit te sturen~\autocite {Olah2015}\relax }}{30}{figure.caption.10}% 
+\contentsline {figure}{\numberline {1.6}{\ignorespaces Data van de maandelijks ijsdiktes\relax }}{17}{figure.caption.10}% 
 \defcounter {refsection}{0}\relax 
-\contentsline {figure}{\numberline {2.6}{\ignorespaces Gedetaileerdere figuur van een cel uit een neuraal netwerk dat informatie interpreteert uit een andere cel van het neurale netwerk~\autocite {Olah2015}\relax }}{30}{figure.caption.11}% 
+\contentsline {figure}{\numberline {1.7}{\ignorespaces Grafische weergave van de ijsdikte en de temperatuur van de laatste 2 jaar\relax }}{19}{figure.caption.11}% 
 \defcounter {refsection}{0}\relax 
-\contentsline {figure}{\numberline {2.7}{\ignorespaces Grafische weergave van de forget layer binnen het neuron~\autocite {Olah2015}\relax }}{31}{figure.caption.12}% 
+\contentsline {figure}{\numberline {1.8}{\ignorespaces Grafische weergave van de ijsdikte en de temperatuur\relax }}{19}{figure.caption.12}% 
 \defcounter {refsection}{0}\relax 
-\contentsline {figure}{\numberline {2.8}{\ignorespaces Grafische weergave van de input gate layer binnen het neuron~\autocite {Olah2015}\relax }}{31}{figure.caption.13}% 
+\contentsline {figure}{\numberline {1.9}{\ignorespaces Resultaat test stationarity\relax }}{21}{figure.caption.13}% 
 \defcounter {refsection}{0}\relax 
-\contentsline {figure}{\numberline {2.9}{\ignorespaces Grafische weergave van het $2^{de}$ deel van de input gateway~\autocite {Olah2015}\relax }}{31}{figure.caption.14}% 
+\contentsline {figure}{\numberline {1.10}{\ignorespaces Resultaat test stationarity na random walk differencing\relax }}{22}{figure.caption.14}% 
 \defcounter {refsection}{0}\relax 
-\contentsline {figure}{\numberline {2.10}{\ignorespaces Grafische weergave van het onderdeel van de cel waarin de input vermenigvuldigd wordt met de tanh van de celtoestand om de outputwaarde te bekomen~\autocite {Olah2015}\relax }}{32}{figure.caption.15}% 
+\contentsline {figure}{\numberline {1.11}{\ignorespaces Resultaat finale iteratie ARIMA\relax }}{26}{figure.caption.15}% 
 \defcounter {refsection}{0}\relax 
-\contentsline {figure}{\numberline {2.11}{\ignorespaces Parabolische functie\relax }}{34}{figure.caption.16}% 
+\contentsline {figure}{\numberline {1.12}{\ignorespaces Grafische weergave verschil in MAE's bij verschillende hyperparameters met MAE op de y-as\relax }}{30}{figure.caption.16}% 
 \defcounter {refsection}{0}\relax 
-\contentsline {figure}{\numberline {2.12}{\ignorespaces Een stacked LSTM~\autocite {Brownlee2017b}\relax }}{36}{figure.caption.17}% 
+\contentsline {figure}{\numberline {1.13}{\ignorespaces Resultaat finale iteratie LSTM\relax }}{32}{figure.caption.17}% 
 \defcounter {refsection}{0}\relax 
-\contentsline {figure}{\numberline {2.13}{\ignorespaces Weergave van een bidirectioneel LSTM model~\autocite {Colah2015}\relax }}{37}{figure.caption.18}% 
+\contentsline {figure}{\numberline {1.14}{\ignorespaces Resultaat finale iteratie Prophet\relax }}{35}{figure.caption.18}% 
 \defcounter {refsection}{0}\relax 
-\contentsline {figure}{\numberline {2.14}{\ignorespaces \textbf {(a)} Gewone LSTM cell, \textbf {(b)} Weergave van een ConvLSTM~\autocite {Rahman2019}\relax }}{37}{figure.caption.19}% 
+\contentsline {figure}{\numberline {1.15}{\ignorespaces Resultaat van de univariate non-seasonal analyse\relax }}{36}{figure.caption.19}% 
 \defcounter {refsection}{0}\relax 
-\contentsline {figure}{\numberline {2.15}{\ignorespaces Encoder-Decoder Model~\autocite {Brownlee2017a}\relax }}{39}{figure.caption.20}% 
-\defcounter {refsection}{0}\relax 
-\contentsline {figure}{\numberline {2.16}{\ignorespaces Grafische weergave van de structuur van een cross-validation tijdreeks~\autocite {Hyndman2018} waarbij 1 tijdreeks zal opgedeeld worden in 20 train- en testreeksen\relax }}{41}{figure.caption.21}% 
-\defcounter {refsection}{0}\relax 
-\addvspace {10\p@ }
+\contentsline {figure}{\numberline {1.16}{\ignorespaces Grafische weergave van de laatste voorspellingen van de univariate non-seasonal analyse\relax }}{37}{figure.caption.20}% 
 \contentsfinish 

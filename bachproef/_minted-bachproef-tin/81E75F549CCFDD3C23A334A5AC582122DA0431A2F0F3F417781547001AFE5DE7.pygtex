@@ -1,0 +1,19 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{c+c1}{\PYGZsh{} define method to visualise the stationarity of a time series}
+\PYG{k}{def} \PYG{n+nf}{test\PYGZus{}stationarity}\PYG{p}{(}\PYG{n}{timeseries}\PYG{p}{):}
+
+    \PYG{c+c1}{\PYGZsh{}Determing rolling statistics}
+    \PYG{n}{rolmean} \PYG{o}{=} \PYG{n}{timeseries}\PYG{o}{.}\PYG{n}{rolling}\PYG{p}{(}\PYG{l+m+mi}{12}\PYG{p}{)}\PYG{o}{.}\PYG{n}{mean}\PYG{p}{()}
+    \PYG{n}{rolstd} \PYG{o}{=} \PYG{n}{timeseries}\PYG{o}{.}\PYG{n}{rolling}\PYG{p}{(}\PYG{l+m+mi}{12}\PYG{p}{)}\PYG{o}{.}\PYG{n}{std}\PYG{p}{()}
+
+    \PYG{c+c1}{\PYGZsh{}Plot rolling statistics:}
+    \PYG{n}{orig} \PYG{o}{=} \PYG{n}{plt}\PYG{o}{.}\PYG{n}{plot}\PYG{p}{(}\PYG{n}{timeseries}\PYG{p}{,} \PYG{n}{color}\PYG{o}{=}\PYG{l+s+s1}{\PYGZsq{}blue\PYGZsq{}}\PYG{p}{,}\PYG{n}{label}\PYG{o}{=}\PYG{l+s+s1}{\PYGZsq{}Original\PYGZsq{}}\PYG{p}{)}
+    \PYG{n}{mean} \PYG{o}{=} \PYG{n}{plt}\PYG{o}{.}\PYG{n}{plot}\PYG{p}{(}\PYG{n}{rolmean}\PYG{p}{,} \PYG{n}{color}\PYG{o}{=}\PYG{l+s+s1}{\PYGZsq{}red\PYGZsq{}}\PYG{p}{,} \PYG{n}{label}\PYG{o}{=}\PYG{l+s+s1}{\PYGZsq{}Rolling Mean\PYGZsq{}}\PYG{p}{)}
+    \PYG{n}{std} \PYG{o}{=} \PYG{n}{plt}\PYG{o}{.}\PYG{n}{plot}\PYG{p}{(}\PYG{n}{rolstd}\PYG{p}{,} \PYG{n}{color}\PYG{o}{=}\PYG{l+s+s1}{\PYGZsq{}black\PYGZsq{}}\PYG{p}{,} \PYG{n}{label} \PYG{o}{=} \PYG{l+s+s1}{\PYGZsq{}Rolling Std\PYGZsq{}}\PYG{p}{)}
+    \PYG{n}{plt}\PYG{o}{.}\PYG{n}{legend}\PYG{p}{(}\PYG{n}{loc}\PYG{o}{=}\PYG{l+s+s1}{\PYGZsq{}best\PYGZsq{}}\PYG{p}{)}
+    \PYG{n}{plt}\PYG{o}{.}\PYG{n}{title}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}Rolling Mean \PYGZam{} Standard Deviation\PYGZsq{}}\PYG{p}{)}
+    \PYG{n}{plt}\PYG{o}{.}\PYG{n}{show}\PYG{p}{(}\PYG{n}{block}\PYG{o}{=}\PYG{k+kc}{False}\PYG{p}{)}
+
+\PYG{c+c1}{\PYGZsh{} check stationarity of time serie}
+\PYG{n}{test\PYGZus{}stationarity}\PYG{p}{(}\PYG{n}{ts}\PYG{p}{)}
+\end{Verbatim}

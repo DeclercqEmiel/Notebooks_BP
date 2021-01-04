@@ -1,0 +1,77 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{o}{\PYGZpc{}\PYGZpc{}}\PYG{n}{time}
+\PYG{c+c1}{\PYGZsh{} ARIMA}
+\PYG{k+kn}{from} \PYG{n+nn}{statsmodels.tsa.arima\PYGZus{}model} \PYG{k+kn}{import} \PYG{n}{ARIMA}
+\PYG{k+kn}{import} \PYG{n+nn}{itertools}
+\PYG{k+kn}{import} \PYG{n+nn}{warnings}
+\PYG{k+kn}{import} \PYG{n+nn}{sys}
+\PYG{k+kn}{from} \PYG{n+nn}{sklearn.metrics} \PYG{k+kn}{import} \PYG{n}{mean\PYGZus{}absolute\PYGZus{}error}
+
+\PYG{c+c1}{\PYGZsh{} Define the p, d and q parameters to take any value between 0 and 2}
+\PYG{n}{p} \PYG{o}{=} \PYG{n}{q} \PYG{o}{=} \PYG{n+nb}{range}\PYG{p}{(}\PYG{l+m+mi}{0}\PYG{p}{,} \PYG{l+m+mi}{5}\PYG{p}{)}
+\PYG{n}{d} \PYG{o}{=} \PYG{n+nb}{range}\PYG{p}{(}\PYG{l+m+mi}{0}\PYG{p}{,}\PYG{l+m+mi}{3}\PYG{p}{)}
+
+\PYG{c+c1}{\PYGZsh{} Generate all different combinations of p, q and q triplets}
+\PYG{n}{pdq} \PYG{o}{=} \PYG{n+nb}{list}\PYG{p}{(}\PYG{n}{itertools}\PYG{o}{.}\PYG{n}{product}\PYG{p}{(}\PYG{n}{p}\PYG{p}{,} \PYG{n}{d}\PYG{p}{,} \PYG{n}{q}\PYG{p}{))}
+
+\PYG{c+c1}{\PYGZsh{} initialize variables}
+\PYG{n}{best\PYGZus{}pdq} \PYG{o}{=} \PYG{n}{pdq}
+\PYG{n}{best\PYGZus{}mean\PYGZus{}mae} \PYG{o}{=} \PYG{n}{np}\PYG{o}{.}\PYG{n}{inf}
+
+\PYG{c+c1}{\PYGZsh{} specify to ignore warning messages to reduce visual clutter}
+\PYG{n}{warnings}\PYG{o}{.}\PYG{n}{filterwarnings}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}ignore\PYGZdq{}}\PYG{p}{)}
+
+\PYG{c+c1}{\PYGZsh{} loop trough all possible parameter combinations of pdq}
+\PYG{k}{for} \PYG{n}{param} \PYG{o+ow}{in} \PYG{n}{pdq}\PYG{p}{:}
+    \PYG{n+nb}{print}\PYG{p}{(}\PYG{n}{param}\PYG{p}{)}
+
+    \PYG{c+c1}{\PYGZsh{} some parametercombinations might lead to crash, so catch exceptions and continue}
+    \PYG{k}{try}\PYG{p}{:}
+
+        \PYG{c+c1}{\PYGZsh{} initialize the array which will contain the mean average errors}
+        \PYG{n}{maes} \PYG{o}{=} \PYG{p}{[]}
+
+        \PYG{c+c1}{\PYGZsh{} loop trough all split time series that have a trainingsset with more than 20 values}
+        \PYG{k}{for} \PYG{n}{train\PYGZus{}index}\PYG{p}{,} \PYG{n}{test\PYGZus{}index} \PYG{o+ow}{in} \PYG{n}{tscv}\PYG{o}{.}\PYG{n}{split}\PYG{p}{(}\PYG{n}{ts\PYGZus{}diff}\PYG{p}{):}
+            \PYG{k}{if} \PYG{n}{train\PYGZus{}index}\PYG{o}{.}\PYG{n}{size} \PYG{o}{\PYGZgt{}} \PYG{l+m+mi}{20}\PYG{p}{:}
+
+                \PYG{c+c1}{\PYGZsh{} initialize cross validation train and test sets}
+                \PYG{n}{cv\PYGZus{}train}\PYG{p}{,} \PYG{n}{cv\PYGZus{}test} \PYG{o}{=} \PYG{n}{ts\PYGZus{}diff}\PYG{o}{.}\PYG{n}{iloc}\PYG{p}{[}\PYG{n}{train\PYGZus{}index}\PYG{p}{],} \PYG{n}{ts\PYGZus{}diff}\PYG{o}{.}\PYG{n}{iloc}\PYG{p}{[}\PYG{n}{test\PYGZus{}index}\PYG{p}{]}
+
+                \PYG{c+c1}{\PYGZsh{} build model}
+                \PYG{n}{model} \PYG{o}{=} \PYG{n}{ARIMA}\PYG{p}{(}\PYG{n}{cv\PYGZus{}train}\PYG{p}{,} \PYG{n}{order}\PYG{o}{=}\PYG{p}{(}\PYG{n}{param}\PYG{p}{))}
+
+                \PYG{c+c1}{\PYGZsh{} fit model}
+                \PYG{n}{model\PYGZus{}fit} \PYG{o}{=} \PYG{n}{model}\PYG{o}{.}\PYG{n}{fit}\PYG{p}{()}
+
+                \PYG{c+c1}{\PYGZsh{} make predictions}
+                \PYG{n}{predictions} \PYG{o}{=}  \PYG{n}{model\PYGZus{}fit}\PYG{o}{.}\PYG{n}{predict}\PYG{p}{(}\PYG{n}{start}\PYG{o}{=}\PYG{n+nb}{len}\PYG{p}{(}\PYG{n}{cv\PYGZus{}train}\PYG{p}{),} \PYG{n}{end}\PYG{o}{=}\PYG{n+nb}{len}\PYG{p}{(}\PYG{n}{cv\PYGZus{}train}\PYG{p}{)}\PYG{o}{+}\PYG{n}{cv\PYGZus{}test}\PYG{o}{.}\PYG{n}{size}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{,} \PYG{n}{dynamic}\PYG{o}{=}\PYG{k+kc}{False}\PYG{p}{)}
+
+                \PYG{c+c1}{\PYGZsh{} renaming for clarity}
+                \PYG{n}{prediction\PYGZus{}values} \PYG{o}{=} \PYG{n}{predictions}\PYG{o}{.}\PYG{n}{values}
+                \PYG{n}{true\PYGZus{}values} \PYG{o}{=} \PYG{n}{cv\PYGZus{}test}\PYG{o}{.}\PYG{n}{values}
+
+                \PYG{c+c1}{\PYGZsh{} error calculation this part of the cross validation}
+                \PYG{n}{maes}\PYG{o}{.}\PYG{n}{append}\PYG{p}{(}\PYG{n}{mean\PYGZus{}absolute\PYGZus{}error}\PYG{p}{(}\PYG{n}{true\PYGZus{}values}\PYG{p}{,} \PYG{n}{prediction\PYGZus{}values}\PYG{p}{))}
+
+
+        \PYG{c+c1}{\PYGZsh{} error calculation for this parameter combination}
+        \PYG{n}{mean\PYGZus{}mae} \PYG{o}{=} \PYG{n}{np}\PYG{o}{.}\PYG{n}{mean}\PYG{p}{(}\PYG{n}{maes}\PYG{p}{)}
+        \PYG{n+nb}{print}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}MAE: \PYGZsq{}} \PYG{o}{+} \PYG{n+nb}{str}\PYG{p}{(}\PYG{n}{mean\PYGZus{}mae}\PYG{p}{))}
+
+        \PYG{c+c1}{\PYGZsh{} store parameters resulting in the lowest mean MAE}
+        \PYG{k}{if} \PYG{n}{mean\PYGZus{}mae} \PYG{o}{\PYGZlt{}} \PYG{n}{best\PYGZus{}mean\PYGZus{}mae}\PYG{p}{:}
+            \PYG{n}{best\PYGZus{}mean\PYGZus{}mae} \PYG{o}{=} \PYG{n}{mean\PYGZus{}mae}
+            \PYG{n}{best\PYGZus{}maes} \PYG{o}{=} \PYG{n}{maes}
+            \PYG{n}{best\PYGZus{}pdq} \PYG{o}{=} \PYG{n}{param}
+            \PYG{n}{best\PYGZus{}predictions} \PYG{o}{=} \PYG{n}{prediction\PYGZus{}values}
+
+    \PYG{k}{except} \PYG{n+ne}{Exception} \PYG{k}{as} \PYG{n}{e}\PYG{p}{:}
+    \PYG{n+nb}{print}\PYG{p}{(}\PYG{n}{e}\PYG{p}{)}
+    \PYG{k}{continue}
+
+\PYG{c+c1}{\PYGZsh{} logging}
+\PYG{n+nb}{print}\PYG{p}{()}
+\PYG{n+nb}{print}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}Best MAE = \PYGZsq{}} \PYG{o}{+} \PYG{n+nb}{str}\PYG{p}{(}\PYG{n}{best\PYGZus{}mean\PYGZus{}mae}\PYG{p}{))}
+\PYG{n+nb}{print}\PYG{p}{(}\PYG{n}{best\PYGZus{}pdq}\PYG{p}{)}
+\end{Verbatim}

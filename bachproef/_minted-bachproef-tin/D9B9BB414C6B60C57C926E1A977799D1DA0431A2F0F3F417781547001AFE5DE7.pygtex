@@ -1,0 +1,7 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{c+c1}{\PYGZsh{} formatting}
+\PYG{n}{results} \PYG{o}{=} \PYG{p}{[[}\PYG{n}{MAE\PYGZus{}ARIMA}\PYG{p}{,}\PYG{n}{time\PYGZus{}ARIMA}\PYG{p}{,}\PYG{n}{last\PYGZus{}MAE\PYGZus{}ARIMA}\PYG{p}{],[}\PYG{n}{MAE\PYGZus{}LSTM}\PYG{p}{,}\PYG{n}{time\PYGZus{}LSTM}\PYG{p}{,}\PYG{n}{last\PYGZus{}MAE\PYGZus{}LSTM}\PYG{p}{],[}\PYG{n}{MAE\PYGZus{}Prophet}\PYG{p}{,}\PYG{n}{time\PYGZus{}Prophet}\PYG{p}{,}\PYG{n}{last\PYGZus{}MAE\PYGZus{}Prophet}\PYG{p}{]]}
+
+\PYG{c+c1}{\PYGZsh{} display results}
+\PYG{n}{pd}\PYG{o}{.}\PYG{n}{DataFrame}\PYG{p}{(}\PYG{n}{results}\PYG{p}{,} \PYG{n}{columns}\PYG{o}{=}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}Mean MAE (x 1 000 000 km}\PYG{l+s+se}{\PYGZbs{}u00b2}\PYG{l+s+s1}{)\PYGZsq{}}\PYG{p}{,}\PYG{l+s+s1}{\PYGZsq{}Execution time (s)\PYGZsq{}}\PYG{p}{,}\PYG{l+s+s1}{\PYGZsq{}Last MAE (x 1 000 000 km}\PYG{l+s+se}{\PYGZbs{}u00b2}\PYG{l+s+s1}{)\PYGZsq{}}\PYG{p}{],}\PYG{n}{index}\PYG{o}{=}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}ARIMA\PYGZsq{}}\PYG{p}{,}\PYG{l+s+s1}{\PYGZsq{}LSTM\PYGZsq{}}\PYG{p}{,}\PYG{l+s+s1}{\PYGZsq{}Prophet\PYGZsq{}}\PYG{p}{])}\PYG{o}{.}\PYG{n}{round}\PYG{p}{(}\PYG{n}{decimals}\PYG{o}{=}\PYG{l+m+mi}{3}\PYG{p}{)}
+\end{Verbatim}

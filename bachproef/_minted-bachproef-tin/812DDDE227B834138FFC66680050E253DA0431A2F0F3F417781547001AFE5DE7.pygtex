@@ -1,0 +1,8 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{c+c1}{\PYGZsh{} take the random walk difference of the time serie}
+\PYG{n}{ts\PYGZus{}diff} \PYG{o}{=} \PYG{n}{ts} \PYG{o}{\PYGZhy{}} \PYG{n}{ts}\PYG{o}{.}\PYG{n}{shift}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{p}{)}
+\PYG{n}{ts\PYGZus{}diff} \PYG{o}{=} \PYG{n}{ts\PYGZus{}diff}\PYG{o}{.}\PYG{n}{dropna}\PYG{p}{()}
+
+\PYG{c+c1}{\PYGZsh{} display stationarity of the newly differenced time serie}
+\PYG{n}{test\PYGZus{}stationarity}\PYG{p}{(}\PYG{n}{ts\PYGZus{}diff}\PYG{p}{)}
+\end{Verbatim}

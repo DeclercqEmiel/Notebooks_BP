@@ -1,0 +1,26 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{n}{ice2\PYGZus{}monthly\PYGZus{}mean\PYGZus{}chron\PYGZus{}cut} \PYG{o}{=} \PYG{n}{ice2\PYGZus{}monthly\PYGZus{}mean\PYGZus{}chron}\PYG{p}{[:}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{12}\PYG{p}{]}
+\PYG{c+c1}{\PYGZsh{} ice2\PYGZus{}monthly\PYGZus{}mean\PYGZus{}chron}
+\PYG{c+c1}{\PYGZsh{} ice2\PYGZus{}monthly\PYGZus{}mean\PYGZus{}chron\PYGZus{}cut}
+\PYG{c+c1}{\PYGZsh{} mean\PYGZus{}temp\PYGZus{}monthly}
+\PYG{c+c1}{\PYGZsh{} ice2\PYGZus{}monthly\PYGZus{}mean\PYGZus{}chron\PYGZus{}cut}
+\PYG{n}{combined} \PYG{o}{=} \PYG{n}{mean\PYGZus{}temp\PYGZus{}monthly}\PYG{p}{[}\PYG{n}{mean\PYGZus{}temp\PYGZus{}monthly}\PYG{o}{.}\PYG{n}{index}\PYG{o}{.}\PYG{n}{get\PYGZus{}level\PYGZus{}values}\PYG{p}{(}\PYG{l+m+mi}{0}\PYG{p}{)} \PYG{o}{\PYGZgt{}=} \PYG{l+m+mi}{1979}\PYG{p}{]}
+\PYG{n}{combined}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}ice\PYGZus{}extent\PYGZsq{}}\PYG{p}{]} \PYG{o}{=} \PYG{n}{ice2\PYGZus{}monthly\PYGZus{}mean\PYGZus{}chron\PYGZus{}cut}\PYG{o}{.}\PYG{n}{values}
+\PYG{c+c1}{\PYGZsh{} combined}
+\PYG{n}{combined}\PYG{o}{.}\PYG{n}{rename}\PYG{p}{(}\PYG{n}{columns}\PYG{o}{=}\PYG{p}{\PYGZob{}}\PYG{l+s+s1}{\PYGZsq{}Mean Temp (C)\PYGZsq{}}\PYG{p}{:} \PYG{l+s+s1}{\PYGZsq{}mean\PYGZus{}temp\PYGZsq{}}\PYG{p}{\PYGZcb{},} \PYG{n}{inplace}\PYG{o}{=}\PYG{k+kc}{True}\PYG{p}{)}
+\PYG{n}{dataframe\PYGZus{}monthly} \PYG{o}{=} \PYG{n}{combined}
+\PYG{c+c1}{\PYGZsh{} dataframe\PYGZus{}monthly}
+\PYG{c+c1}{\PYGZsh{} dataframe\PYGZus{}monthly[[\PYGZsq{}mean\PYGZus{}temp\PYGZsq{}]]}
+\PYG{n}{plt}\PYG{o}{.}\PYG{n}{plot}\PYG{p}{(}\PYG{n}{dataframe\PYGZus{}monthly}\PYG{p}{[[}\PYG{l+s+s1}{\PYGZsq{}mean\PYGZus{}temp\PYGZsq{}}\PYG{p}{]]}\PYG{o}{.}\PYG{n}{values}\PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{24}\PYG{p}{:],}\PYG{n}{label}\PYG{o}{=}\PYG{l+s+s1}{\PYGZsq{}temperature\PYGZsq{}}\PYG{p}{)}
+\PYG{n}{plt}\PYG{o}{.}\PYG{n}{plot}\PYG{p}{(}\PYG{n}{dataframe\PYGZus{}monthly}\PYG{p}{[[}\PYG{l+s+s1}{\PYGZsq{}ice\PYGZus{}extent\PYGZsq{}}\PYG{p}{]]}\PYG{o}{.}\PYG{n}{values}\PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{24}\PYG{p}{:],}\PYG{n}{label}\PYG{o}{=}\PYG{l+s+s1}{\PYGZsq{}ice extent\PYGZsq{}}\PYG{p}{)}
+\PYG{n}{plt}\PYG{o}{.}\PYG{n}{legend}\PYG{p}{()}
+\PYG{n}{plt}\PYG{o}{.}\PYG{n}{show}\PYG{p}{()}
+\PYG{n}{dataframe\PYGZus{}yearly} \PYG{o}{=} \PYG{n}{combined}\PYG{o}{.}\PYG{n}{groupby}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}Year\PYGZsq{}}\PYG{p}{)}\PYG{o}{.}\PYG{n}{mean}\PYG{p}{()}
+\PYG{c+c1}{\PYGZsh{} dataframe\PYGZus{}yearly}
+\PYG{c+c1}{\PYGZsh{} dataframe\PYGZus{}monthly[[\PYGZsq{}mean\PYGZus{}temp\PYGZsq{}]].values}
+\PYG{n}{plt}\PYG{o}{.}\PYG{n}{plot}\PYG{p}{(}\PYG{n}{dataframe\PYGZus{}monthly}\PYG{p}{[[}\PYG{l+s+s1}{\PYGZsq{}mean\PYGZus{}temp\PYGZsq{}}\PYG{p}{]]}\PYG{o}{.}\PYG{n}{values}\PYG{p}{,}\PYG{n}{label}\PYG{o}{=}\PYG{l+s+s1}{\PYGZsq{}temperature\PYGZsq{}}\PYG{p}{)}
+\PYG{n}{plt}\PYG{o}{.}\PYG{n}{plot}\PYG{p}{(}\PYG{n}{dataframe\PYGZus{}monthly}\PYG{p}{[[}\PYG{l+s+s1}{\PYGZsq{}ice\PYGZus{}extent\PYGZsq{}}\PYG{p}{]]}\PYG{o}{.}\PYG{n}{values}\PYG{p}{,}\PYG{n}{label}\PYG{o}{=}\PYG{l+s+s1}{\PYGZsq{}ice extent\PYGZsq{}}\PYG{p}{)}
+\PYG{n}{plt}\PYG{o}{.}\PYG{n}{legend}\PYG{p}{()}
+\PYG{n}{dataframe\PYGZus{}monthly}\PYG{o}{.}\PYG{n}{to\PYGZus{}csv}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}./data/dataframe\PYGZus{}monthly.csv\PYGZsq{}}\PYG{p}{)}
+\PYG{n}{dataframe\PYGZus{}yearly}\PYG{o}{.}\PYG{n}{to\PYGZus{}csv}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}./data/dataframe\PYGZus{}yearly.csv\PYGZsq{}}\PYG{p}{)}
+\end{Verbatim}

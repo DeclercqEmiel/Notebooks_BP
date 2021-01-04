@@ -1,0 +1,49 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{n}{start\PYGZus{}time} \PYG{o}{=} \PYG{n}{timeit}\PYG{o}{.}\PYG{n}{default\PYGZus{}timer}\PYG{p}{()}
+
+\PYG{c+c1}{\PYGZsh{} specify to ignore warning messages}
+\PYG{n}{warnings}\PYG{o}{.}\PYG{n}{filterwarnings}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}ignore\PYGZdq{}}\PYG{p}{)}
+
+\PYG{n+nb}{print}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZdq{}}\PYG{p}{)}
+
+\PYG{c+c1}{\PYGZsh{} initialize the array which will contain the mean average errors}
+\PYG{n}{maes} \PYG{o}{=} \PYG{p}{[]}
+
+\PYG{c+c1}{\PYGZsh{} loop trough all split time series that have a trainingsset with more than 20 values}
+\PYG{k}{for} \PYG{n}{train\PYGZus{}index}\PYG{p}{,} \PYG{n}{test\PYGZus{}index} \PYG{o+ow}{in} \PYG{n}{tscv}\PYG{o}{.}\PYG{n}{split}\PYG{p}{(}\PYG{n}{ts\PYGZus{}diff}\PYG{p}{):}
+    \PYG{k}{if} \PYG{n}{train\PYGZus{}index}\PYG{o}{.}\PYG{n}{size} \PYG{o}{\PYGZgt{}} \PYG{l+m+mi}{20}\PYG{p}{:}
+
+        \PYG{c+c1}{\PYGZsh{} initialize cross validation train and test sets}
+        \PYG{n}{cv\PYGZus{}train}\PYG{p}{,} \PYG{n}{cv\PYGZus{}test} \PYG{o}{=} \PYG{n}{ts\PYGZus{}diff}\PYG{o}{.}\PYG{n}{iloc}\PYG{p}{[}\PYG{n}{train\PYGZus{}index}\PYG{p}{],} \PYG{n}{ts\PYGZus{}diff}\PYG{o}{.}\PYG{n}{iloc}\PYG{p}{[}\PYG{n}{test\PYGZus{}index}\PYG{p}{]}
+
+        \PYG{c+c1}{\PYGZsh{} build model}
+        \PYG{n}{arima} \PYG{o}{=} \PYG{n}{ARIMA}\PYG{p}{(}\PYG{n}{cv\PYGZus{}train}\PYG{p}{,} \PYG{n}{best\PYGZus{}pdq}\PYG{p}{)}\PYG{o}{.}\PYG{n}{fit}\PYG{p}{(}\PYG{n}{start\PYGZus{}ar\PYGZus{}lags}\PYG{o}{=}\PYG{l+m+mi}{1}\PYG{p}{,}\PYG{n}{disp}\PYG{o}{=}\PYG{k+kc}{False}\PYG{p}{)}
+
+        \PYG{c+c1}{\PYGZsh{} make predictions}
+        \PYG{n}{predictions} \PYG{o}{=} \PYG{n}{arima}\PYG{o}{.}\PYG{n}{forecast}\PYG{p}{(}\PYG{n}{steps}\PYG{o}{=}\PYG{l+m+mi}{4}\PYG{p}{)}
+        \PYG{n}{prediction\PYGZus{}values} \PYG{o}{=} \PYG{n}{predictions}\PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{]}
+        \PYG{n}{true\PYGZus{}values} \PYG{o}{=} \PYG{n}{cv\PYGZus{}test}\PYG{o}{.}\PYG{n}{values}
+
+        \PYG{c+c1}{\PYGZsh{} error calc}
+        \PYG{n}{maes}\PYG{o}{.}\PYG{n}{append}\PYG{p}{(}\PYG{n}{mean\PYGZus{}absolute\PYGZus{}error}\PYG{p}{(}\PYG{n}{true\PYGZus{}values}\PYG{p}{,} \PYG{n}{prediction\PYGZus{}values}\PYG{p}{))}
+
+        \PYG{c+c1}{\PYGZsh{} last actual prediction}
+        \PYG{n}{last\PYGZus{}prediction\PYGZus{}ARIMA} \PYG{o}{=} \PYG{n}{prediction\PYGZus{}values}
+
+        \PYG{n+nb}{print}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}I\PYGZdq{}}\PYG{p}{,}\PYG{n}{end}\PYG{o}{=}\PYG{l+s+s2}{\PYGZdq{}\PYGZdq{}}\PYG{p}{)}
+
+\PYG{c+c1}{\PYGZsh{} store results to variables}
+\PYG{n}{time\PYGZus{}ARIMA} \PYG{o}{=} \PYG{n}{timeit}\PYG{o}{.}\PYG{n}{default\PYGZus{}timer}\PYG{p}{()} \PYG{o}{\PYGZhy{}} \PYG{n}{start\PYGZus{}time}
+\PYG{n}{mae\PYGZus{}mean} \PYG{o}{=} \PYG{n}{np}\PYG{o}{.}\PYG{n}{mean}\PYG{p}{(}\PYG{n}{maes}\PYG{p}{)}
+\PYG{n}{MAE\PYGZus{}ARIMA} \PYG{o}{=} \PYG{n}{mae\PYGZus{}mean}
+\PYG{n}{last\PYGZus{}MAE\PYGZus{}ARIMA} \PYG{o}{=} \PYG{n}{maes}\PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{]}
+
+\PYG{c+c1}{\PYGZsh{} logging}
+\PYG{n+nb}{print}\PYG{p}{()}
+\PYG{n+nb}{print}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}Mean MAE: }\PYG{l+s+si}{\PYGZpc{}.3f}\PYG{l+s+s1}{ x 1 000 000 km}\PYG{l+s+se}{\PYGZbs{}u00b2}\PYG{l+s+s1}{\PYGZsq{}} \PYG{o}{\PYGZpc{}} \PYG{n}{MAE\PYGZus{}ARIMA}\PYG{p}{)}
+\PYG{n+nb}{print}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}MAE of last prediction: }\PYG{l+s+si}{\PYGZpc{}.3f}\PYG{l+s+s1}{ x 1 000 000 km}\PYG{l+s+se}{\PYGZbs{}u00b2}\PYG{l+s+s1}{\PYGZsq{}} \PYG{o}{\PYGZpc{}} \PYG{n}{last\PYGZus{}MAE\PYGZus{}ARIMA}\PYG{p}{)}
+\PYG{n+nb}{print}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}Execution time: }\PYG{l+s+si}{\PYGZpc{}.3f}\PYG{l+s+s1}{ seconds\PYGZsq{}} \PYG{o}{\PYGZpc{}} \PYG{n}{time\PYGZus{}ARIMA}\PYG{p}{)}
+\PYG{n}{full\PYGZus{}graph}\PYG{p}{(}\PYG{n}{last\PYGZus{}prediction\PYGZus{}ARIMA}\PYG{p}{,} \PYG{l+s+s1}{\PYGZsq{}Last prediction ARIMA\PYGZsq{}}\PYG{p}{)}
+\PYG{n+nb}{print}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}Mean average errors:\PYGZsq{}}\PYG{p}{)}
+\PYG{n+nb}{print}\PYG{p}{(}\PYG{n}{maes}\PYG{p}{)}
+\end{Verbatim}

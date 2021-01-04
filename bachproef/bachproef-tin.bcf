@@ -2146,62 +2146,6 @@
     <bcf:datasource type="file" datatype="bibtex">../voorstel/voorstel.bib</bcf:datasource>
   </bcf:bibdata>
   <bcf:section number="0">
-    <bcf:citekey order="31">Pant2019</bcf:citekey>
-    <bcf:citekey order="32">Brown2020</bcf:citekey>
-    <bcf:citekey order="33">Brown2020</bcf:citekey>
-    <bcf:citekey order="34">Pant2019</bcf:citekey>
-    <bcf:citekey order="35">Pant2019</bcf:citekey>
-    <bcf:citekey order="36">Pant2019</bcf:citekey>
-    <bcf:citekey order="37">Pant2019</bcf:citekey>
-    <bcf:citekey order="38">Pant2019</bcf:citekey>
-    <bcf:citekey order="39">Swaminathan2018</bcf:citekey>
-    <bcf:citekey order="40">Kenton2020</bcf:citekey>
-    <bcf:citekey order="41">Sinha2019</bcf:citekey>
-    <bcf:citekey order="42">Hyndman2018</bcf:citekey>
-    <bcf:citekey order="43">Hyndman2018</bcf:citekey>
-    <bcf:citekey order="44">Hyndman2018</bcf:citekey>
-    <bcf:citekey order="45">Brownlee2018</bcf:citekey>
-    <bcf:citekey order="46">Nau2020</bcf:citekey>
-    <bcf:citekey order="47">Salvi2020</bcf:citekey>
-    <bcf:citekey order="48">Brownlee2018a</bcf:citekey>
-    <bcf:citekey order="49">Lievens2018a</bcf:citekey>
-    <bcf:citekey order="50">Lievens2018a</bcf:citekey>
-    <bcf:citekey order="51">Lievens2018a</bcf:citekey>
-    <bcf:citekey order="52">Lievens2018a</bcf:citekey>
-    <bcf:citekey order="53">Olah2015</bcf:citekey>
-    <bcf:citekey order="54">Olah2015</bcf:citekey>
-    <bcf:citekey order="55">Olah2015</bcf:citekey>
-    <bcf:citekey order="56">Olah2015</bcf:citekey>
-    <bcf:citekey order="57">Olah2015</bcf:citekey>
-    <bcf:citekey order="58">Olah2015</bcf:citekey>
-    <bcf:citekey order="59">Olah2015</bcf:citekey>
-    <bcf:citekey order="60">Olah2015</bcf:citekey>
-    <bcf:citekey order="61">Olah2015</bcf:citekey>
-    <bcf:citekey order="62">Olah2015</bcf:citekey>
-    <bcf:citekey order="63">Olah2015</bcf:citekey>
-    <bcf:citekey order="64">Olah2015</bcf:citekey>
-    <bcf:citekey order="65">Brownlee2018b</bcf:citekey>
-    <bcf:citekey order="66">Liu2017</bcf:citekey>
-    <bcf:citekey order="67">Srinivasan2019</bcf:citekey>
-    <bcf:citekey order="68">Starmer2019</bcf:citekey>
-    <bcf:citekey order="69">Brownlee2017</bcf:citekey>
-    <bcf:citekey order="70">Brownlee2017b</bcf:citekey>
-    <bcf:citekey order="71">Brownlee2017b</bcf:citekey>
-    <bcf:citekey order="72">Brownlee2017b</bcf:citekey>
-    <bcf:citekey order="73">Brownlee2017a</bcf:citekey>
-    <bcf:citekey order="74">Colah2015</bcf:citekey>
-    <bcf:citekey order="75">Colah2015</bcf:citekey>
-    <bcf:citekey order="76">Rahman2019</bcf:citekey>
-    <bcf:citekey order="77">Rahman2019</bcf:citekey>
-    <bcf:citekey order="78">Brownlee2017a</bcf:citekey>
-    <bcf:citekey order="79">Brownlee2017a</bcf:citekey>
-    <bcf:citekey order="80">Brownlee2017a</bcf:citekey>
-    <bcf:citekey order="81">Prophet2020</bcf:citekey>
-    <bcf:citekey order="82">Hyndman2018</bcf:citekey>
-    <bcf:citekey order="83">Kampakis2020</bcf:citekey>
-    <bcf:citekey order="84">Shrivastava2020</bcf:citekey>
-    <bcf:citekey order="85">Hyndman2018</bcf:citekey>
-    <bcf:citekey order="86">Hyndman2018</bcf:citekey>
   </bcf:section>
   <!-- SORTING TEMPLATES -->
   <bcf:sortingtemplate name="apa">
@@ -2241,13 +2185,4 @@
     </bcf:sort>
   </bcf:sortingtemplate>
   <!-- DATALISTS -->
-  <bcf:datalist section="0"
-                name="apa/global//global/global"
-                type="entry"
-                sortingtemplatename="apa"
-                sortingnamekeytemplatename="global"
-                labelprefix=""
-                uniquenametemplatename="global"
-                labelalphanametemplatename="global">
-  </bcf:datalist>
 </bcf:controlfile>

@@ -1,0 +1,89 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{o}{\PYGZpc{}\PYGZpc{}}\PYG{n}{time}
+
+\PYG{c+c1}{\PYGZsh{} Disabled tf warning because of visual clutter}
+\PYG{n}{tf}\PYG{o}{.}\PYG{n}{compat}\PYG{o}{.}\PYG{n}{v1}\PYG{o}{.}\PYG{n}{logging}\PYG{o}{.}\PYG{n}{set\PYGZus{}verbosity}\PYG{p}{(}\PYG{n}{tf}\PYG{o}{.}\PYG{n}{compat}\PYG{o}{.}\PYG{n}{v1}\PYG{o}{.}\PYG{n}{logging}\PYG{o}{.}\PYG{n}{ERROR}\PYG{p}{)}
+
+
+\PYG{c+c1}{\PYGZsh{} constant variables}
+\PYG{n}{n\PYGZus{}steps\PYGZus{}in} \PYG{o}{=} \PYG{l+m+mi}{4}
+\PYG{n}{n\PYGZus{}steps\PYGZus{}out} \PYG{o}{=} \PYG{l+m+mi}{4}
+\PYG{n}{n\PYGZus{}features}  \PYG{o}{=} \PYG{l+m+mi}{1}
+\PYG{n}{maes} \PYG{o}{=} \PYG{p}{[]}
+\PYG{n}{global\PYGZus{}maes} \PYG{o}{=} \PYG{p}{[]}
+
+\PYG{c+c1}{\PYGZsh{} optimizable variables}
+\PYG{n}{n\PYGZus{}neurons\PYGZus{}array} \PYG{o}{=} \PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{,}\PYG{l+m+mi}{10}\PYG{p}{,}\PYG{l+m+mi}{20}\PYG{p}{]}
+\PYG{n}{dropout\PYGZus{}array} \PYG{o}{=} \PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{,}\PYG{l+m+mf}{0.5}\PYG{p}{,}\PYG{l+m+mf}{0.99}\PYG{p}{]}
+\PYG{n}{batch\PYGZus{}size\PYGZus{}array} \PYG{o}{=} \PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{,}\PYG{l+m+mi}{8}\PYG{p}{]}
+
+
+\PYG{c+c1}{\PYGZsh{} initialize values}
+\PYG{n}{best\PYGZus{}MAE} \PYG{o}{=} \PYG{l+m+mi}{100}
+\PYG{n}{best\PYGZus{}n\PYGZus{}neurons} \PYG{o}{=} \PYG{l+m+mi}{0}
+\PYG{n}{best\PYGZus{}activation} \PYG{o}{=} \PYG{l+s+s1}{\PYGZsq{}none\PYGZsq{}}
+\PYG{n}{best\PYGZus{}dropout} \PYG{o}{=} \PYG{l+m+mi}{0}
+\PYG{n}{best\PYGZus{}batch\PYGZus{}size} \PYG{o}{=} \PYG{l+m+mi}{0}
+
+\PYG{c+c1}{\PYGZsh{} loop over all possible parameter combinations}
+\PYG{k}{for} \PYG{n}{n\PYGZus{}neurons} \PYG{o+ow}{in} \PYG{n}{n\PYGZus{}neurons\PYGZus{}array}\PYG{p}{:}
+    \PYG{k}{for} \PYG{n}{dropout} \PYG{o+ow}{in} \PYG{n}{dropout\PYGZus{}array}\PYG{p}{:}
+        \PYG{k}{for} \PYG{n}{batch\PYGZus{}size} \PYG{o+ow}{in} \PYG{n}{batch\PYGZus{}size\PYGZus{}array}\PYG{p}{:}
+
+            \PYG{n+nb}{print}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZdq{}}\PYG{p}{)}
+
+            \PYG{c+c1}{\PYGZsh{} loop trough all split time series that have a trainingsset with more than 20 values}
+            \PYG{k}{for} \PYG{n}{train\PYGZus{}index}\PYG{p}{,} \PYG{n}{test\PYGZus{}index} \PYG{o+ow}{in} \PYG{n}{tscv}\PYG{o}{.}\PYG{n}{split}\PYG{p}{(}\PYG{n}{ts\PYGZus{}diff}\PYG{p}{):}
+                \PYG{k}{if} \PYG{n}{train\PYGZus{}index}\PYG{o}{.}\PYG{n}{size} \PYG{o}{\PYGZgt{}} \PYG{l+m+mi}{20}\PYG{p}{:}
+
+                    \PYG{c+c1}{\PYGZsh{} initialize cross validation train and test sets}
+                    \PYG{n}{y\PYGZus{}train}\PYG{p}{,} \PYG{n}{y\PYGZus{}test} \PYG{o}{=} \PYG{n}{ts\PYGZus{}diff}\PYG{o}{.}\PYG{n}{iloc}\PYG{p}{[}\PYG{n}{train\PYGZus{}index}\PYG{p}{],} \PYG{n}{ts\PYGZus{}diff}\PYG{o}{.}\PYG{n}{iloc}\PYG{p}{[}\PYG{n}{test\PYGZus{}index}\PYG{p}{]}
+
+                    \PYG{c+c1}{\PYGZsh{} build model}
+                    \PYG{n}{lstm\PYGZus{}model} \PYG{o}{=} \PYG{n}{build\PYGZus{}model}\PYG{p}{(}\PYG{n}{y\PYGZus{}train}\PYG{p}{,} \PYG{n}{n\PYGZus{}steps\PYGZus{}in}\PYG{p}{,} \PYG{n}{n\PYGZus{}steps\PYGZus{}out}\PYG{p}{,} \PYG{n}{n\PYGZus{}features}\PYG{p}{,} \PYG{n}{n\PYGZus{}neurons}\PYG{p}{,} \PYG{n}{dropout}\PYG{p}{,} \PYG{n}{batch\PYGZus{}size}\PYG{p}{)}
+
+                    \PYG{c+c1}{\PYGZsh{} make predictions}
+                    \PYG{n}{x\PYGZus{}input} \PYG{o}{=} \PYG{n}{array}\PYG{p}{(}\PYG{n}{y\PYGZus{}test}\PYG{p}{)}
+                    \PYG{n}{y\PYGZus{}predicted} \PYG{o}{=} \PYG{n}{predict}\PYG{p}{(}\PYG{n}{x\PYGZus{}input}\PYG{p}{,} \PYG{n}{lstm\PYGZus{}model}\PYG{p}{,} \PYG{n}{n\PYGZus{}features}\PYG{p}{)}\PYG{o}{.}\PYG{n}{flatten}\PYG{p}{()}
+                    \PYG{n}{y\PYGZus{}actual} \PYG{o}{=} \PYG{n}{y\PYGZus{}test}\PYG{o}{.}\PYG{n}{values}
+
+                    \PYG{c+c1}{\PYGZsh{} error calculation this part of the cross validation}
+                    \PYG{n}{maes}\PYG{o}{.}\PYG{n}{append}\PYG{p}{(}\PYG{n}{mean\PYGZus{}absolute\PYGZus{}error}\PYG{p}{(}\PYG{n}{y\PYGZus{}actual}\PYG{p}{,} \PYG{n}{y\PYGZus{}predicted}\PYG{p}{))}
+
+                    \PYG{n+nb}{print}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}I\PYGZdq{}}\PYG{p}{,}\PYG{n}{end}\PYG{o}{=}\PYG{l+s+s2}{\PYGZdq{}\PYGZdq{}}\PYG{p}{)}
+
+                    \PYG{c+c1}{\PYGZsh{} last actual prediction}
+                    \PYG{n}{last\PYGZus{}prediction\PYGZus{}LSTM} \PYG{o}{=} \PYG{n}{y\PYGZus{}predicted}
+
+            \PYG{c+c1}{\PYGZsh{} error calculation for this parameter combination}
+            \PYG{n}{MAE\PYGZus{}LSTM} \PYG{o}{=} \PYG{n}{np}\PYG{o}{.}\PYG{n}{mean}\PYG{p}{(}\PYG{n}{maes}\PYG{p}{)}
+            \PYG{n}{last\PYGZus{}MAE\PYGZus{}LSTM} \PYG{o}{=} \PYG{n}{maes}\PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{]}
+            \PYG{n}{global\PYGZus{}maes}\PYG{o}{.}\PYG{n}{append}\PYG{p}{(}\PYG{n}{MAE\PYGZus{}LSTM}\PYG{p}{)}
+
+            \PYG{c+c1}{\PYGZsh{} store parameters resulting in the lowest mean MAE}
+            \PYG{k}{if} \PYG{n}{best\PYGZus{}MAE} \PYG{o}{\PYGZgt{}} \PYG{n}{MAE\PYGZus{}LSTM}\PYG{p}{:}
+                \PYG{n}{best\PYGZus{}n\PYGZus{}neurons} \PYG{o}{=} \PYG{n}{n\PYGZus{}neurons}
+                \PYG{n}{best\PYGZus{}dropout} \PYG{o}{=} \PYG{n}{dropout}
+                \PYG{n}{best\PYGZus{}batch\PYGZus{}size} \PYG{o}{=} \PYG{n}{batch\PYGZus{}size}
+                \PYG{n}{best\PYGZus{}MAE} \PYG{o}{=} \PYG{n}{MAE\PYGZus{}LSTM}
+
+            \PYG{c+c1}{\PYGZsh{} log values for parameter combination}
+            \PYG{n+nb}{print}\PYG{p}{()}
+            \PYG{n+nb}{print}\PYG{p}{(}\PYG{n}{n\PYGZus{}neurons}\PYG{p}{)}
+            \PYG{n+nb}{print}\PYG{p}{(}\PYG{n}{dropout}\PYG{p}{)}
+            \PYG{n+nb}{print}\PYG{p}{(}\PYG{n}{batch\PYGZus{}size}\PYG{p}{)}
+            \PYG{n+nb}{print}\PYG{p}{(}\PYG{n}{MAE\PYGZus{}LSTM}\PYG{p}{)}
+            \PYG{n+nb}{print}\PYG{p}{()}
+
+\PYG{c+c1}{\PYGZsh{} log parameter combination with best result}
+\PYG{n+nb}{print}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}Best:\PYGZsq{}}\PYG{p}{)}
+\PYG{n+nb}{print}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}N neurons\PYGZsq{}}\PYG{p}{)}
+\PYG{n+nb}{print}\PYG{p}{(}\PYG{n}{best\PYGZus{}n\PYGZus{}neurons}\PYG{p}{)}
+\PYG{n+nb}{print}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}Dropout rate\PYGZsq{}}\PYG{p}{)}
+\PYG{n+nb}{print}\PYG{p}{(}\PYG{n}{best\PYGZus{}dropout}\PYG{p}{)}
+\PYG{n+nb}{print}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}Batch size\PYGZsq{}}\PYG{p}{)}
+\PYG{n+nb}{print}\PYG{p}{(}\PYG{n}{best\PYGZus{}batch\PYGZus{}size}\PYG{p}{)}
+\PYG{n+nb}{print}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}MAE\PYGZsq{}}\PYG{p}{)}
+\PYG{n+nb}{print}\PYG{p}{(}\PYG{n}{best\PYGZus{}MAE}\PYG{p}{)}
+\PYG{n}{plt}\PYG{o}{.}\PYG{n}{bar}\PYG{p}{(}\PYG{n+nb}{range}\PYG{p}{(}\PYG{l+m+mi}{0}\PYG{p}{,}\PYG{n+nb}{len}\PYG{p}{(}\PYG{n}{global\PYGZus{}maes}\PYG{p}{)),} \PYG{n}{global\PYGZus{}maes}\PYG{p}{)}
+\end{Verbatim}

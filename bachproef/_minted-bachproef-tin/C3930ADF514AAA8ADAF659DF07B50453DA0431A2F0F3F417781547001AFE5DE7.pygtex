@@ -1,0 +1,52 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{k+kn}{from} \PYG{n+nn}{keras.layers} \PYG{k+kn}{import} \PYG{n}{Dropout}
+\PYG{c+c1}{\PYGZsh{} split a univariate sequence into samples}
+\PYG{k}{def} \PYG{n+nf}{split\PYGZus{}sequence}\PYG{p}{(}\PYG{n}{sequence}\PYG{p}{,} \PYG{n}{n\PYGZus{}steps\PYGZus{}in}\PYG{p}{,} \PYG{n}{n\PYGZus{}steps\PYGZus{}out}\PYG{p}{):}
+    \PYG{n}{X}\PYG{p}{,} \PYG{n}{y} \PYG{o}{=} \PYG{n+nb}{list}\PYG{p}{(),} \PYG{n+nb}{list}\PYG{p}{()}
+    \PYG{k}{for} \PYG{n}{i} \PYG{o+ow}{in} \PYG{n+nb}{range}\PYG{p}{(}\PYG{n+nb}{len}\PYG{p}{(}\PYG{n}{sequence}\PYG{p}{)):}
+        \PYG{c+c1}{\PYGZsh{} find the end of this pattern}
+        \PYG{n}{end\PYGZus{}ix} \PYG{o}{=} \PYG{n}{i} \PYG{o}{+} \PYG{n}{n\PYGZus{}steps\PYGZus{}in}
+        \PYG{n}{out\PYGZus{}end\PYGZus{}ix} \PYG{o}{=} \PYG{n}{end\PYGZus{}ix} \PYG{o}{+} \PYG{n}{n\PYGZus{}steps\PYGZus{}out}
+
+        \PYG{c+c1}{\PYGZsh{} check if we are beyond the sequence}
+        \PYG{k}{if} \PYG{n}{out\PYGZus{}end\PYGZus{}ix} \PYG{o}{\PYGZgt{}} \PYG{n+nb}{len}\PYG{p}{(}\PYG{n}{sequence}\PYG{p}{):}
+        \PYG{k}{break}
+
+        \PYG{c+c1}{\PYGZsh{} gather input and output parts of the pattern}
+        \PYG{n}{seq\PYGZus{}x}\PYG{p}{,} \PYG{n}{seq\PYGZus{}y} \PYG{o}{=} \PYG{n}{sequence}\PYG{p}{[}\PYG{n}{i}\PYG{p}{:}\PYG{n}{end\PYGZus{}ix}\PYG{p}{],} \PYG{n}{sequence}\PYG{p}{[}\PYG{n}{end\PYGZus{}ix}\PYG{p}{:}\PYG{n}{out\PYGZus{}end\PYGZus{}ix}\PYG{p}{]}
+        \PYG{n}{X}\PYG{o}{.}\PYG{n}{append}\PYG{p}{(}\PYG{n}{seq\PYGZus{}x}\PYG{p}{)}
+        \PYG{n}{y}\PYG{o}{.}\PYG{n}{append}\PYG{p}{(}\PYG{n}{seq\PYGZus{}y}\PYG{p}{)}
+    \PYG{k}{return} \PYG{n}{array}\PYG{p}{(}\PYG{n}{X}\PYG{p}{),} \PYG{n}{array}\PYG{p}{(}\PYG{n}{y}\PYG{p}{)}
+
+\PYG{k}{def} \PYG{n+nf}{build\PYGZus{}model}\PYG{p}{(}\PYG{n}{raw\PYGZus{}seq}\PYG{p}{,} \PYG{n}{n\PYGZus{}steps\PYGZus{}in}\PYG{p}{,} \PYG{n}{n\PYGZus{}steps\PYGZus{}out}\PYG{p}{,} \PYG{n}{n\PYGZus{}features}\PYG{p}{,} \PYG{n}{n\PYGZus{}neurons}\PYG{p}{,} \PYG{n}{dropout}\PYG{p}{,} \PYG{n}{batch\PYGZus{}s}\PYG{p}{):}
+
+    \PYG{c+c1}{\PYGZsh{} split into samples}
+    \PYG{n}{X}\PYG{p}{,} \PYG{n}{y} \PYG{o}{=} \PYG{n}{split\PYGZus{}sequence}\PYG{p}{(}\PYG{n}{raw\PYGZus{}seq}\PYG{o}{.}\PYG{n}{values}\PYG{o}{.}\PYG{n}{flatten}\PYG{p}{(),} \PYG{n}{n\PYGZus{}steps\PYGZus{}in}\PYG{p}{,} \PYG{n}{n\PYGZus{}steps\PYGZus{}out}\PYG{p}{)}
+
+    \PYG{c+c1}{\PYGZsh{} reshape from [samples, timesteps] into [samples, timesteps, features]}
+    \PYG{n}{X} \PYG{o}{=} \PYG{n}{X}\PYG{o}{.}\PYG{n}{reshape}\PYG{p}{((}\PYG{n}{X}\PYG{o}{.}\PYG{n}{shape}\PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{],} \PYG{n}{X}\PYG{o}{.}\PYG{n}{shape}\PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{],} \PYG{n}{n\PYGZus{}features}\PYG{p}{))}
+
+    \PYG{c+c1}{\PYGZsh{} define model}
+    \PYG{n}{model} \PYG{o}{=} \PYG{n}{Sequential}\PYG{p}{()}
+    \PYG{n}{model}\PYG{o}{.}\PYG{n}{add}\PYG{p}{(}\PYG{n}{LSTM}\PYG{p}{(}\PYG{n}{n\PYGZus{}neurons}\PYG{p}{,} \PYG{n}{activation}\PYG{o}{=}\PYG{l+s+s1}{\PYGZsq{}relu\PYGZsq{}}\PYG{p}{))}
+    \PYG{n}{model}\PYG{o}{.}\PYG{n}{add}\PYG{p}{(}\PYG{n}{Dropout}\PYG{p}{(}\PYG{n}{dropout}\PYG{p}{))}
+    \PYG{n}{model}\PYG{o}{.}\PYG{n}{add}\PYG{p}{(}\PYG{n}{Dense}\PYG{p}{(}\PYG{n}{n\PYGZus{}steps\PYGZus{}out}\PYG{p}{))}
+    \PYG{n}{model}\PYG{o}{.}\PYG{n}{compile}\PYG{p}{(}\PYG{n}{optimizer}\PYG{o}{=}\PYG{l+s+s1}{\PYGZsq{}adam\PYGZsq{}}\PYG{p}{,} \PYG{n}{loss}\PYG{o}{=}\PYG{l+s+s1}{\PYGZsq{}mae\PYGZsq{}}\PYG{p}{)}
+
+    \PYG{c+c1}{\PYGZsh{} fit model}
+    \PYG{n}{model}\PYG{o}{.}\PYG{n}{fit}\PYG{p}{(}\PYG{n}{X}\PYG{p}{,} \PYG{n}{y}\PYG{p}{,} \PYG{n}{batch\PYGZus{}size}\PYG{o}{=}\PYG{n}{batch\PYGZus{}s}\PYG{p}{,} \PYG{n}{epochs}\PYG{o}{=}\PYG{l+m+mi}{100}\PYG{p}{,} \PYG{n}{verbose}\PYG{o}{=}\PYG{l+m+mi}{0}\PYG{p}{)}
+
+    \PYG{k}{return} \PYG{n}{model}
+
+
+\PYG{k}{def} \PYG{n+nf}{predict}\PYG{p}{(}\PYG{n}{x\PYGZus{}input}\PYG{p}{,} \PYG{n}{model}\PYG{p}{,} \PYG{n}{n\PYGZus{}features}\PYG{p}{):}
+    \PYG{n}{n\PYGZus{}features} \PYG{o}{=} \PYG{l+m+mi}{1}
+
+    \PYG{c+c1}{\PYGZsh{} reshape data}
+    \PYG{n}{x\PYGZus{}input} \PYG{o}{=} \PYG{n}{x\PYGZus{}input}\PYG{o}{.}\PYG{n}{reshape}\PYG{p}{((}\PYG{l+m+mi}{1}\PYG{p}{,} \PYG{n}{n\PYGZus{}steps\PYGZus{}in}\PYG{p}{,} \PYG{n}{n\PYGZus{}features}\PYG{p}{))}
+
+    \PYG{c+c1}{\PYGZsh{} predict}
+    \PYG{n}{yhat} \PYG{o}{=} \PYG{n}{model}\PYG{o}{.}\PYG{n}{predict}\PYG{p}{(}\PYG{n}{x\PYGZus{}input}\PYG{p}{,} \PYG{n}{verbose}\PYG{o}{=}\PYG{l+m+mi}{0}\PYG{p}{)}
+
+    \PYG{k}{return} \PYG{n}{yhat}
+\end{Verbatim}

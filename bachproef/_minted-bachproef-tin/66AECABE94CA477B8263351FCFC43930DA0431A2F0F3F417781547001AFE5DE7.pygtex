@@ -1,0 +1,48 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{o}{\PYGZpc{}\PYGZpc{}}\PYG{n}{time}
+
+\PYG{c+c1}{\PYGZsh{} Disabled tf warning because of clutter}
+\PYG{n}{warnings}\PYG{o}{.}\PYG{n}{filterwarnings}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}ignore\PYGZdq{}}\PYG{p}{)} \PYG{c+c1}{\PYGZsh{} specify to ignore warning messages}
+
+\PYG{n}{start\PYGZus{}time} \PYG{o}{=} \PYG{n}{timeit}\PYG{o}{.}\PYG{n}{default\PYGZus{}timer}\PYG{p}{()}
+
+\PYG{c+c1}{\PYGZsh{} initialize variables}
+\PYG{n}{maes} \PYG{o}{=} \PYG{p}{[]}
+
+\PYG{k}{for} \PYG{n}{train\PYGZus{}index}\PYG{p}{,} \PYG{n}{test\PYGZus{}index} \PYG{o+ow}{in} \PYG{n}{tscv}\PYG{o}{.}\PYG{n}{split}\PYG{p}{(}\PYG{n}{ts\PYGZus{}formated\PYGZus{}prophet}\PYG{p}{):}
+    \PYG{k}{if} \PYG{n}{train\PYGZus{}index}\PYG{o}{.}\PYG{n}{size} \PYG{o}{\PYGZgt{}} \PYG{l+m+mi}{20}\PYG{p}{:}
+
+        \PYG{c+c1}{\PYGZsh{} initialize cross validation train and test sets}
+        \PYG{n}{train}  \PYG{o}{=} \PYG{n}{ts\PYGZus{}formated\PYGZus{}prophet}\PYG{o}{.}\PYG{n}{iloc}\PYG{p}{[}\PYG{n}{train\PYGZus{}index}\PYG{p}{]}
+        \PYG{n}{y\PYGZus{}test} \PYG{o}{=} \PYG{n}{ts\PYGZus{}formated\PYGZus{}prophet}\PYG{o}{.}\PYG{n}{iloc}\PYG{p}{[}\PYG{n}{test\PYGZus{}index}\PYG{p}{][[}\PYG{l+s+s1}{\PYGZsq{}y\PYGZsq{}}\PYG{p}{]]}\PYG{o}{.}\PYG{n}{values}\PYG{o}{.}\PYG{n}{flatten}\PYG{p}{()}
+        \PYG{n}{X\PYGZus{}test} \PYG{o}{=} \PYG{n}{ts\PYGZus{}formated\PYGZus{}prophet}\PYG{o}{.}\PYG{n}{iloc}\PYG{p}{[}\PYG{n}{test\PYGZus{}index}\PYG{p}{][[}\PYG{l+s+s1}{\PYGZsq{}ds\PYGZsq{}}\PYG{p}{]]}
+
+        \PYG{c+c1}{\PYGZsh{} build model}
+        \PYG{n}{model} \PYG{o}{=} \PYG{n}{Prophet}\PYG{p}{(}\PYG{o}{**}\PYG{n}{best\PYGZus{}params}\PYG{p}{,} \PYG{n}{weekly\PYGZus{}seasonality}\PYG{o}{=}\PYG{k+kc}{False}\PYG{p}{,} \PYG{n}{daily\PYGZus{}seasonality}\PYG{o}{=}\PYG{k+kc}{False}\PYG{p}{)}
+        \PYG{n}{model}\PYG{o}{.}\PYG{n}{fit}\PYG{p}{(}\PYG{n}{train}\PYG{p}{)}
+
+        \PYG{c+c1}{\PYGZsh{} make predictions}
+        \PYG{n}{forecast} \PYG{o}{=} \PYG{n}{model}\PYG{o}{.}\PYG{n}{predict}\PYG{p}{(}\PYG{n}{X\PYGZus{}test}\PYG{p}{)}
+        \PYG{n}{y\PYGZus{}pred} \PYG{o}{=} \PYG{n}{forecast}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}yhat\PYGZsq{}}\PYG{p}{]}\PYG{o}{.}\PYG{n}{values}
+
+        \PYG{c+c1}{\PYGZsh{} error calc}
+        \PYG{n}{maes}\PYG{o}{.}\PYG{n}{append}\PYG{p}{(}\PYG{n}{mean\PYGZus{}absolute\PYGZus{}error}\PYG{p}{(}\PYG{n}{y\PYGZus{}test}\PYG{p}{,} \PYG{n}{y\PYGZus{}pred}\PYG{p}{))}
+
+        \PYG{c+c1}{\PYGZsh{} last actual prediction}
+        \PYG{n}{last\PYGZus{}prediction\PYGZus{}prophet} \PYG{o}{=} \PYG{n}{y\PYGZus{}pred}
+
+
+\PYG{c+c1}{\PYGZsh{} store results}
+\PYG{n}{time\PYGZus{}Prophet} \PYG{o}{=} \PYG{n}{timeit}\PYG{o}{.}\PYG{n}{default\PYGZus{}timer}\PYG{p}{()} \PYG{o}{\PYGZhy{}} \PYG{n}{start\PYGZus{}time}
+\PYG{n}{MAE\PYGZus{}Prophet} \PYG{o}{=} \PYG{n}{np}\PYG{o}{.}\PYG{n}{mean}\PYG{p}{(}\PYG{n}{maes}\PYG{p}{)}
+\PYG{n}{last\PYGZus{}MAE\PYGZus{}Prophet} \PYG{o}{=} \PYG{n}{maes}\PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{]}
+
+\PYG{c+c1}{\PYGZsh{} visualize results}
+\PYG{n+nb}{print}\PYG{p}{()}
+\PYG{n+nb}{print}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}Mean MAE: }\PYG{l+s+si}{\PYGZpc{}.3f}\PYG{l+s+s1}{ x 1 000 000 km}\PYG{l+s+se}{\PYGZbs{}u00b2}\PYG{l+s+s1}{\PYGZsq{}} \PYG{o}{\PYGZpc{}} \PYG{n}{MAE\PYGZus{}Prophet}\PYG{p}{)}
+\PYG{n+nb}{print}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}MAE of last prediction: }\PYG{l+s+si}{\PYGZpc{}.3f}\PYG{l+s+s1}{ x 1 000 000 km}\PYG{l+s+se}{\PYGZbs{}u00b2}\PYG{l+s+s1}{\PYGZsq{}} \PYG{o}{\PYGZpc{}} \PYG{n}{last\PYGZus{}MAE\PYGZus{}Prophet}\PYG{p}{)}
+\PYG{n+nb}{print}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}Execution time: }\PYG{l+s+si}{\PYGZpc{}.3f}\PYG{l+s+s1}{ seconds\PYGZsq{}} \PYG{o}{\PYGZpc{}} \PYG{n}{time\PYGZus{}Prophet}\PYG{p}{)}
+\PYG{n}{full\PYGZus{}graph}\PYG{p}{(}\PYG{n}{last\PYGZus{}prediction\PYGZus{}prophet}\PYG{p}{,} \PYG{l+s+s2}{\PYGZdq{}Last 4 year prediction prophet\PYGZdq{}}\PYG{p}{)}
+\PYG{n+nb}{print}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}Mean average errors\PYGZsq{}}\PYG{p}{)}
+\PYG{n+nb}{print}\PYG{p}{(}\PYG{n}{maes}\PYG{p}{)}
+\end{Verbatim}

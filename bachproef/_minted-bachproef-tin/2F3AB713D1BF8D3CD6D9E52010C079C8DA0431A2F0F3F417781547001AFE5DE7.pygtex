@@ -1,0 +1,64 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{c+c1}{\PYGZsh{} Python}
+\PYG{k+kn}{import} \PYG{n+nn}{itertools}
+\PYG{k+kn}{import} \PYG{n+nn}{numpy} \PYG{k}{as} \PYG{n+nn}{np}
+\PYG{k+kn}{import} \PYG{n+nn}{pandas} \PYG{k}{as} \PYG{n+nn}{pd}
+
+\PYG{c+c1}{\PYGZsh{} define dataframe}
+\PYG{n}{df} \PYG{o}{=} \PYG{n}{ts\PYGZus{}formated\PYGZus{}prophet}
+
+\PYG{n}{param\PYGZus{}grid} \PYG{o}{=} \PYG{p}{\PYGZob{}}
+\PYG{l+s+s1}{\PYGZsq{}changepoint\PYGZus{}prior\PYGZus{}scale\PYGZsq{}}\PYG{p}{:} \PYG{p}{[}\PYG{l+m+mf}{0.001}\PYG{p}{,} \PYG{l+m+mf}{0.01}\PYG{p}{,} \PYG{l+m+mf}{0.1}\PYG{p}{,} \PYG{l+m+mi}{1}\PYG{p}{,} \PYG{l+m+mi}{2}\PYG{p}{,} \PYG{l+m+mi}{5}\PYG{p}{,} \PYG{l+m+mi}{10}\PYG{p}{,} \PYG{l+m+mi}{15}\PYG{p}{,} \PYG{l+m+mi}{20}\PYG{p}{,} \PYG{l+m+mi}{25}\PYG{p}{],}
+\PYG{p}{\PYGZcb{}}
+
+\PYG{c+c1}{\PYGZsh{} Generate all combinations of parameters}
+\PYG{n}{all\PYGZus{}params} \PYG{o}{=} \PYG{p}{[}\PYG{n+nb}{dict}\PYG{p}{(}\PYG{n+nb}{zip}\PYG{p}{(}\PYG{n}{param\PYGZus{}grid}\PYG{o}{.}\PYG{n}{keys}\PYG{p}{(),} \PYG{n}{v}\PYG{p}{))} \PYG{k}{for} \PYG{n}{v} \PYG{o+ow}{in} \PYG{n}{itertools}\PYG{o}{.}\PYG{n}{product}\PYG{p}{(}\PYG{o}{*}\PYG{n}{param\PYGZus{}grid}\PYG{o}{.}\PYG{n}{values}\PYG{p}{())]}
+
+\PYG{c+c1}{\PYGZsh{} initialize variables}
+\PYG{n}{maes} \PYG{o}{=} \PYG{p}{[]}
+\PYG{n}{global\PYGZus{}maes} \PYG{o}{=} \PYG{p}{[]}
+\PYG{n}{best\PYGZus{}MAE\PYGZus{}prophet} \PYG{o}{=} \PYG{n}{np}\PYG{o}{.}\PYG{n}{inf}
+
+\PYG{c+c1}{\PYGZsh{} Use cross validation to evaluate all parameters}
+\PYG{k}{for} \PYG{n}{params} \PYG{o+ow}{in} \PYG{n}{all\PYGZus{}params}\PYG{p}{:}
+
+    \PYG{c+c1}{\PYGZsh{} loop trough all split time series that have a trainingsset with more than 20 values}
+    \PYG{k}{for} \PYG{n}{train\PYGZus{}index}\PYG{p}{,} \PYG{n}{test\PYGZus{}index} \PYG{o+ow}{in} \PYG{n}{tscv}\PYG{o}{.}\PYG{n}{split}\PYG{p}{(}\PYG{n}{ts\PYGZus{}formated\PYGZus{}prophet}\PYG{p}{):}
+        \PYG{k}{if} \PYG{n}{train\PYGZus{}index}\PYG{o}{.}\PYG{n}{size} \PYG{o}{\PYGZgt{}} \PYG{l+m+mi}{20}\PYG{p}{:}
+
+            \PYG{c+c1}{\PYGZsh{} initialize cross validation train and test sets}
+            \PYG{n}{train}  \PYG{o}{=} \PYG{n}{ts\PYGZus{}formated\PYGZus{}prophet}\PYG{o}{.}\PYG{n}{iloc}\PYG{p}{[}\PYG{n}{train\PYGZus{}index}\PYG{p}{]}
+            \PYG{n}{y\PYGZus{}test} \PYG{o}{=} \PYG{n}{ts\PYGZus{}formated\PYGZus{}prophet}\PYG{o}{.}\PYG{n}{iloc}\PYG{p}{[}\PYG{n}{test\PYGZus{}index}\PYG{p}{][[}\PYG{l+s+s1}{\PYGZsq{}y\PYGZsq{}}\PYG{p}{]]}\PYG{o}{.}\PYG{n}{values}\PYG{o}{.}\PYG{n}{flatten}\PYG{p}{()}
+            \PYG{n}{X\PYGZus{}test} \PYG{o}{=} \PYG{n}{ts\PYGZus{}formated\PYGZus{}prophet}\PYG{o}{.}\PYG{n}{iloc}\PYG{p}{[}\PYG{n}{test\PYGZus{}index}\PYG{p}{][[}\PYG{l+s+s1}{\PYGZsq{}ds\PYGZsq{}}\PYG{p}{]]}
+
+            \PYG{c+c1}{\PYGZsh{} Fit model with given params}
+            \PYG{n}{model} \PYG{o}{=} \PYG{n}{Prophet}\PYG{p}{(}\PYG{o}{**}\PYG{n}{params}\PYG{p}{,} \PYG{n}{weekly\PYGZus{}seasonality}\PYG{o}{=}\PYG{k+kc}{False}\PYG{p}{,} \PYG{n}{daily\PYGZus{}seasonality}\PYG{o}{=}\PYG{k+kc}{False}\PYG{p}{)}
+            \PYG{n}{model} \PYG{o}{=} \PYG{n}{model}\PYG{o}{.}\PYG{n}{fit}\PYG{p}{(}\PYG{n}{train}\PYG{p}{)}
+
+            \PYG{c+c1}{\PYGZsh{} make predictions}
+            \PYG{n}{forecast} \PYG{o}{=} \PYG{n}{model}\PYG{o}{.}\PYG{n}{predict}\PYG{p}{(}\PYG{n}{X\PYGZus{}test}\PYG{p}{)}
+            \PYG{n}{y\PYGZus{}pred} \PYG{o}{=} \PYG{n}{forecast}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}yhat\PYGZsq{}}\PYG{p}{]}\PYG{o}{.}\PYG{n}{values}
+
+            \PYG{c+c1}{\PYGZsh{} last actual prediction}
+            \PYG{n}{last\PYGZus{}prediction\PYGZus{}prophet} \PYG{o}{=} \PYG{n}{y\PYGZus{}pred}
+
+            \PYG{c+c1}{\PYGZsh{} error calculation this part of the cross validation}
+            \PYG{n}{maes}\PYG{o}{.}\PYG{n}{append}\PYG{p}{(}\PYG{n}{mean\PYGZus{}absolute\PYGZus{}error}\PYG{p}{(}\PYG{n}{y\PYGZus{}test}\PYG{p}{,} \PYG{n}{y\PYGZus{}pred}\PYG{p}{))}
+
+    \PYG{c+c1}{\PYGZsh{} error calculation for this parameter combination}
+    \PYG{n}{MAE\PYGZus{}prophet} \PYG{o}{=} \PYG{n}{np}\PYG{o}{.}\PYG{n}{mean}\PYG{p}{(}\PYG{n}{maes}\PYG{p}{)}
+    \PYG{n}{last\PYGZus{}MAE\PYGZus{}prophet} \PYG{o}{=} \PYG{n}{maes}\PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{]}
+    \PYG{n}{global\PYGZus{}maes}\PYG{o}{.}\PYG{n}{append}\PYG{p}{(}\PYG{n}{MAE\PYGZus{}prophet}\PYG{p}{)}
+
+    \PYG{c+c1}{\PYGZsh{} logging}
+    \PYG{n+nb}{print}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}changepoint\PYGZus{}prior\PYGZus{}scale: \PYGZsq{}} \PYG{o}{+} \PYG{n+nb}{str}\PYG{p}{(}\PYG{n}{params}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}changepoint\PYGZus{}prior\PYGZus{}scale\PYGZsq{}}\PYG{p}{]))}
+
+    \PYG{c+c1}{\PYGZsh{} store parameters resulting in the lowest mean MAE}
+    \PYG{k}{if} \PYG{n}{best\PYGZus{}MAE\PYGZus{}prophet} \PYG{o}{\PYGZgt{}} \PYG{n}{MAE\PYGZus{}prophet}\PYG{p}{:}
+    \PYG{n}{best\PYGZus{}params} \PYG{o}{=} \PYG{n}{params}
+    \PYG{n}{best\PYGZus{}MAE\PYGZus{}prophet} \PYG{o}{=} \PYG{n}{MAE\PYGZus{}prophet}
+
+\PYG{c+c1}{\PYGZsh{} log optimal result}
+\PYG{n+nb}{print}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}changepoint\PYGZus{}prior\PYGZus{}scale: \PYGZsq{}} \PYG{o}{+} \PYG{n+nb}{str}\PYG{p}{(}\PYG{n}{best\PYGZus{}params}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}changepoint\PYGZus{}prior\PYGZus{}scale\PYGZsq{}}\PYG{p}{]))}
+\PYG{n+nb}{print}\PYG{p}{(}\PYG{n}{best\PYGZus{}MAE\PYGZus{}prophet}\PYG{p}{)}
+\end{Verbatim}

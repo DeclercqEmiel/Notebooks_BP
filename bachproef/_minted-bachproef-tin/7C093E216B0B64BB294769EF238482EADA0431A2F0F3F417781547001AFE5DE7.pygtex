@@ -1,0 +1,59 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{o}{\PYGZpc{}\PYGZpc{}}\PYG{n}{time}
+
+\PYG{n}{start\PYGZus{}time} \PYG{o}{=} \PYG{n}{timeit}\PYG{o}{.}\PYG{n}{default\PYGZus{}timer}\PYG{p}{()}
+
+\PYG{c+c1}{\PYGZsh{} Disabled tf warning because of visual clutter}
+\PYG{n}{tf}\PYG{o}{.}\PYG{n}{compat}\PYG{o}{.}\PYG{n}{v1}\PYG{o}{.}\PYG{n}{logging}\PYG{o}{.}\PYG{n}{set\PYGZus{}verbosity}\PYG{p}{(}\PYG{n}{tf}\PYG{o}{.}\PYG{n}{compat}\PYG{o}{.}\PYG{n}{v1}\PYG{o}{.}\PYG{n}{logging}\PYG{o}{.}\PYG{n}{ERROR}\PYG{p}{)}
+
+
+\PYG{c+c1}{\PYGZsh{} constant variables}
+\PYG{n}{n\PYGZus{}steps\PYGZus{}in} \PYG{o}{=} \PYG{l+m+mi}{4}
+\PYG{n}{n\PYGZus{}steps\PYGZus{}out} \PYG{o}{=} \PYG{l+m+mi}{4}
+\PYG{n}{n\PYGZus{}features}  \PYG{o}{=} \PYG{l+m+mi}{1}
+\PYG{n}{maes} \PYG{o}{=} \PYG{p}{[]}
+
+
+\PYG{c+c1}{\PYGZsh{} optimizable variables}
+\PYG{n}{n\PYGZus{}neurons} \PYG{o}{=} \PYG{n}{best\PYGZus{}n\PYGZus{}neurons}
+\PYG{n}{dropout} \PYG{o}{=} \PYG{n}{best\PYGZus{}dropout}
+\PYG{n}{batch\PYGZus{}s} \PYG{o}{=} \PYG{n}{best\PYGZus{}batch\PYGZus{}s}
+
+\PYG{n+nb}{print}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZdq{}}\PYG{p}{)}
+
+\PYG{c+c1}{\PYGZsh{} loop trough all split time series that have a trainingsset with more than 20 values}
+\PYG{k}{for} \PYG{n}{train\PYGZus{}index}\PYG{p}{,} \PYG{n}{test\PYGZus{}index} \PYG{o+ow}{in} \PYG{n}{tscv}\PYG{o}{.}\PYG{n}{split}\PYG{p}{(}\PYG{n}{ts\PYGZus{}diff}\PYG{p}{):}
+    \PYG{k}{if} \PYG{n}{train\PYGZus{}index}\PYG{o}{.}\PYG{n}{size} \PYG{o}{\PYGZgt{}} \PYG{l+m+mi}{20}\PYG{p}{:}
+        \PYG{c+c1}{\PYGZsh{} initialize cross validation train and test sets}
+        \PYG{n}{y\PYGZus{}train}\PYG{p}{,} \PYG{n}{y\PYGZus{}test} \PYG{o}{=} \PYG{n}{ts\PYGZus{}diff}\PYG{o}{.}\PYG{n}{iloc}\PYG{p}{[}\PYG{n}{train\PYGZus{}index}\PYG{p}{],} \PYG{n}{ts\PYGZus{}diff}\PYG{o}{.}\PYG{n}{iloc}\PYG{p}{[}\PYG{n}{test\PYGZus{}index}\PYG{p}{]}
+
+        \PYG{c+c1}{\PYGZsh{} build model}
+        \PYG{n}{lstm\PYGZus{}model} \PYG{o}{=} \PYG{n}{build\PYGZus{}model}\PYG{p}{(}\PYG{n}{y\PYGZus{}train}\PYG{p}{,} \PYG{n}{n\PYGZus{}steps\PYGZus{}in}\PYG{p}{,} \PYG{n}{n\PYGZus{}steps\PYGZus{}out}\PYG{p}{,} \PYG{n}{n\PYGZus{}features}\PYG{p}{,} \PYG{n}{n\PYGZus{}neurons}\PYG{p}{,} \PYG{n}{dropout}\PYG{p}{,} \PYG{n}{batch\PYGZus{}s}\PYG{p}{)}
+
+        \PYG{c+c1}{\PYGZsh{} make predictions}
+        \PYG{n}{x\PYGZus{}input} \PYG{o}{=} \PYG{n}{array}\PYG{p}{(}\PYG{n}{y\PYGZus{}test}\PYG{p}{)}
+        \PYG{n}{y\PYGZus{}predicted} \PYG{o}{=} \PYG{n}{predict}\PYG{p}{(}\PYG{n}{x\PYGZus{}input}\PYG{p}{,} \PYG{n}{lstm\PYGZus{}model}\PYG{p}{,} \PYG{n}{n\PYGZus{}features}\PYG{p}{)}\PYG{o}{.}\PYG{n}{flatten}\PYG{p}{()}
+        \PYG{n}{y\PYGZus{}actual} \PYG{o}{=} \PYG{n}{y\PYGZus{}test}\PYG{o}{.}\PYG{n}{values}
+
+        \PYG{c+c1}{\PYGZsh{} error calc}
+        \PYG{n}{maes}\PYG{o}{.}\PYG{n}{append}\PYG{p}{(}\PYG{n}{mean\PYGZus{}absolute\PYGZus{}error}\PYG{p}{(}\PYG{n}{y\PYGZus{}actual}\PYG{p}{,} \PYG{n}{y\PYGZus{}predicted}\PYG{p}{))}
+
+        \PYG{n+nb}{print}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}I\PYGZdq{}}\PYG{p}{,}\PYG{n}{end}\PYG{o}{=}\PYG{l+s+s2}{\PYGZdq{}\PYGZdq{}}\PYG{p}{)}
+
+\PYG{c+c1}{\PYGZsh{} last actual prediction}
+\PYG{n}{last\PYGZus{}prediction\PYGZus{}LSTM} \PYG{o}{=} \PYG{n}{y\PYGZus{}predicted}
+
+\PYG{c+c1}{\PYGZsh{} store variables}
+\PYG{n}{time\PYGZus{}LSTM} \PYG{o}{=} \PYG{n}{timeit}\PYG{o}{.}\PYG{n}{default\PYGZus{}timer}\PYG{p}{()} \PYG{o}{\PYGZhy{}} \PYG{n}{start\PYGZus{}time}
+\PYG{n}{MAE\PYGZus{}LSTM} \PYG{o}{=} \PYG{n}{np}\PYG{o}{.}\PYG{n}{mean}\PYG{p}{(}\PYG{n}{maes}\PYG{p}{)}
+\PYG{n}{last\PYGZus{}MAE\PYGZus{}LSTM} \PYG{o}{=} \PYG{n}{maes}\PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{]}
+
+\PYG{c+c1}{\PYGZsh{} visualisation}
+\PYG{n+nb}{print}\PYG{p}{()}
+\PYG{n+nb}{print}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}Mean MAE: }\PYG{l+s+si}{\PYGZpc{}.3f}\PYG{l+s+s1}{ x 1 000 000 km}\PYG{l+s+se}{\PYGZbs{}u00b2}\PYG{l+s+s1}{\PYGZsq{}} \PYG{o}{\PYGZpc{}} \PYG{n}{MAE\PYGZus{}LSTM}\PYG{p}{)}
+\PYG{n+nb}{print}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}MAE of last prediction: }\PYG{l+s+si}{\PYGZpc{}.3f}\PYG{l+s+s1}{ x 1 000 000 km}\PYG{l+s+se}{\PYGZbs{}u00b2}\PYG{l+s+s1}{\PYGZsq{}} \PYG{o}{\PYGZpc{}} \PYG{n}{last\PYGZus{}MAE\PYGZus{}LSTM}\PYG{p}{)}
+\PYG{n+nb}{print}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}Execution time: }\PYG{l+s+si}{\PYGZpc{}.3f}\PYG{l+s+s1}{ seconds\PYGZsq{}} \PYG{o}{\PYGZpc{}} \PYG{n}{time\PYGZus{}LSTM}\PYG{p}{)}
+\PYG{n}{full\PYGZus{}graph}\PYG{p}{(}\PYG{n}{last\PYGZus{}prediction\PYGZus{}LSTM}\PYG{p}{,} \PYG{l+s+s1}{\PYGZsq{}Last prediction LSTM\PYGZsq{}}\PYG{p}{)}
+\PYG{n+nb}{print}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}Mean average errors\PYGZsq{}}\PYG{p}{)}
+\PYG{n+nb}{print}\PYG{p}{(}\PYG{n}{maes}\PYG{p}{)}
+\end{Verbatim}

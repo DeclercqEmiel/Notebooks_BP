@@ -1,15 +1,136 @@
-\chapter{\IfLanguageName{dutch}{Methodologie}{State of the art}}
+\chapter{\IfLanguageName{dutch}{Methodologie}{Methodology}}
 \label{ch:methodologie}
 
-\captionof{listing}{Datavoorbereiding dataset ijsexpansie}
-\label{}
+Om te onderzoeken welke types modellen best presteren zal er voor elke combinatie van seizoensgebonden of niet-seizoensgebonden en univariate of multivariate data een notebook opgesteld worden. Op het einde van elke notebook zal dan aan elk model een foutscore toegekend zijn. Deze foutscore wordt bepaald door het gemiddelde te nemen van de mean average errors van elke partitie bij de datasetverdeling door cross-validation. Het model met de laagste foutscore zal de meest accurate voorspelling gemaakt hebben bij het type invoerdata bij dit deelprobleem voor de gebruikte data. 
+
+Er dient echter vermeld te worden dat dit in zekere mate altijd zal afhangen van de invoerdata en dit type model niet noodzakelijk de beste prestatie zal leveren bij dit type invoerdata.
+
+\section{Voorbereiding}
+%\subsection{Benutte libraries}
+\subsection{Datavoorbereiding}
+\subsubsection{Dataset 1, temperatuur}
+Hier zal het het deel van de dataset die de temperatuur weergeeft geformateerd worden  naar een dataset met 1 kolom en een index waarin de maand en het jaartal weergegeven worden van het jaar 1979 tot 2018.
+
+\clearpage
+\captionof{listing}{Datavoorbereiding dataset temperatuur}
+\label{code:prep_temp}
 \begin{minted}[
 frame=lines,
 framesep=2mm,
 fontsize=\footnotesize,
 linenos,breaklines
 ]{python}
+# Source: https://www.kaggle.com/rainbowgirl/climate-data-toronto-19372018
+tt = pd.read_csv('./data/Toronto_temp.csv')
+tt = tt[tt['Day'] == 1]
+tt['Year'] = tt['Year'].replace({'2,013':'2013',
+'2,014':'2014',
+'2,015':'2015',
+'2,016':'2016',
+'2,017':'2017',
+'2,018':'2018'})
+# tt.groupby('Year').count()
+tt = tt[(tt['Year'] != '1937')]
+ttt = tt.groupby('Year').count()
+#ttt.head(50)
+#tt.groupby('Year').count().tail(50)
+meantt = tt.groupby('Year').mean()['Mean Temp (C)']
+#meantt.index
+#meantt
+meantt.sort_index(inplace=True)
 
+plt.xlabel('Years')
+plt.ylabel('Temperature (C)')
+plt.xticks(np.array(range(0,meantt.size,10)))
+plt.scatter(meantt.index, meantt)
+
+print('start : ' + meantt.index[0])
+print('end : ' + meantt.index[-1])
+
+new_row = pd.Series({'Mean Temp (C)' : 0.555556, 'Year': '2018', 'Month':12})
+tt = tt.append(new_row, ignore_index=True)
+tt['Year'] = tt['Year'].astype(int)
+mean_temp_monthly = tt[['Year','Month','Mean Temp (C)']].set_index(['Year','Month']).sort_index()
+# mean_temp_monthly
+mean_temp_monthly = mean_temp_monthly[mean_temp_monthly.index.get_level_values(0).astype(int) >= 1979 ]
+mean_temp_monthly
+\end{minted}
+
+Op listing \ref{code:prep_temp} wordt de code weergegeven de die ruwe dataset zal omzetten naar een dataset die bruikbaar zal zijn om te gebruiken voor deze bachelorproef. 
+
+
+De delen die in commentaar staan geven een tussentijdse weergave van de dataset, maar worden niet telkens weergegeven om het aantal tabellen binnen deze sectie overzichtelijk te houden. \\
+
+
+Zo wordt op lijn 2 het originele csv-bestand ingelezen deze ruwe data zal er uit zien als deze zichtbaar op figuur \ref{fig:tempdatagraph}. \\
+Op lijn 3 worden enkel de waarden van de eerste dag van de maand behouden in de dataset \\
+Daarna worden van lijn 4 tot lijn 9 de jaartallen aangepast zodat deze overeenkomen met de rest van de dataset. \\
+Op lijn 10 wordt het aantal rijen per jaar weergegeven. \\
+Op lijn 11 zal het eerste jaar uit de dataset verwijderd worden aangezien deze data onvolledig is. \\
+Op lijn 12 wordt het aantal jaren toegekend aan de variabele $ttt$ \\
+Op lijn 15 wordt het gemiddelde van de temperaturen van de eerste dagen van de maand per jaar berekend. \\
+Op lijn 18 wordt dit gemiddelde gesorteerd. \\
+
+
+
+\begin{figure}
+    \centering
+    \caption{Ruwe invoerdata}
+    \label{fig:tempdataraw.png}
+    \includegraphics[width=1\linewidth]{temp_data_rawpng}
+\end{figure}
+
+
+Van lijn 20 tot lijn 23 worden de labels en ijkingen gedefini\"{e}erd van de grafiek die de data zal weergeven en zichtbaar is op figuur \ref{fig:tempdatagraph} die op lijn 24 getekend zal worden. \\
+
+
+
+\begin{figure}
+    \caption{Grafische weergave jaarlijkse temperatuur}
+    \label{fig:tempdatagraph}
+    \centering
+    \includegraphics[width=0.7\linewidth]{temp_data_graph}
+\end{figure}
+
+Op lijn 25 en 26 worden de start en de eindjaren van deze dataset afgeprint om ze te kunnen vergelijken met de start en de eindjaren van de andere dataset.
+
+Op lijn 28 wordt de laatste waarde voor het jaar 2018 toegevoegd aangezien deze nog niet in de dataset zat. \\
+Op lijn 29 wordt deze nieuwe waarde toegevoegd.\\
+
+Op lijn 30 wordt de waarde voor het jaar geconverteerd naar een integer. \\
+Op lijn 31 wordt de dataset geindexeerd op jaar en maand. \\
+Op lijn 33 worden de jaren die voor 1979 komen uit de dataset gefilterd omdat de waarden voor de andere dataset starten vanaf 1979.\\
+Op lijn 34 wordt het resultaat van de dataformattering uitgevoerd zichtbaar op figuur \ref{fig:tempdata}.
+
+
+
+
+\begin{figure}
+    \centering
+    \caption{Resultaat van data formatting}
+    \label{fig:tempdata}
+    \includegraphics[width=0.3\linewidth]{temp_data}
+\end{figure}
+
+
+
+\clearpage
+
+
+
+\subsubsection{Dataset 2, ijsdikte}
+
+Hier zal het deel van de dataset die de ijsdikte weergeeft geformateerd worden naar een dataset met 1 kolom en het jaartal van het jaar 1979 tot 2018 als index zal dienen.
+
+\captionof{listing}{Datavoorbereiding dataset temperatuur}
+\label{code:prep_ice}
+\begin{minted}[
+frame=lines,
+framesep=2mm,
+fontsize=\footnotesize,
+linenos,breaklines
+]{python}
+#source: https://nsidc.org/arcticseaicenews/sea-ice-tools/
 ice2 = pd.read_csv('./data/seaice2.csv')
 # ice2
 ice2_mean = ice2.mean()[1:-2]
@@ -30,11 +151,11 @@ ice2.drop([' ','1981-2010','Day','1978','2020'],axis=1,inplace=True)
 values = ice2.values
 i = 0
 for row in values :
-if type(row[0]) != str :
-values[i][0] = month
-else:
-month = row[0]
-i = i +1
+    if type(row[0]) != str :
+        values[i][0] = month
+    else:
+        month = row[0]
+    i = i +1
 # ice2.columns.values
 ice2_clean = pd.DataFrame(values)
 ice2_clean.columns = ice2.columns.values
@@ -58,3 +179,899 @@ ice2_monthly_mean_chron = ice2_monthly_mean.T.stack().reset_index(level=['Month'
 ice2_monthly_mean_chron.columns = ['ice_extent']
 ice2_monthly_mean_chron
 \end{minted}
+
+Op lijn 2 zal de ijsdataset ingelezen worden en zal er uitzien zoals zichtbaar op figuur \ref{fig:icedataraw} \\
+Op lijn 4 zal het gemiddelde genomen worden van alle kolommen tussen eerste en de voorlaatste. De eerste, de voorlaatste en de laatste kolom worden uit de dataset gelaten omdat deze irrelevant zijn voor dit onderzoek. \\
+Op lijn 6 worden de indexwaarden geconverteerd naar integers. \\
+
+\begin{figure}
+    \centering
+    \caption{Ruwe data van de jaarlijkse ijsdiktes}
+    \label{fig:icedataraw}
+    \includegraphics[width=1\linewidth]{ice_data_rawpng}
+\end{figure}
+
+De code van lijn 8 tot lijn 12 zal ervoor zorgen dat de jaarlijkse data grafisch weergegeven wordt. \\
+Op lijn 17 zullen de kolomnamen hernoemd worden en op lijn 18 worden de overbodige kolommen verwijderd. \\
+
+De code van lijn 18 tot lijn 26 zal er voor zorgen dat de maandkolom aangevuld wordt omdat deze tot hiertoe nog onvolledig zal zijn. \\
+Op lijn 28 wordt een nieuwe dataframe ge\"{i}nitialiseerd waarvan de kolommen op lijn 29 aangevuld worden. \\
+Op lijn 31 wordt hier het maandelijks gemiddelde genomen van deze nieuwe dataframe en opgeslaan in de variabele en op lijn 35 worden deze in chronologische volgorde geplaatst.\\
+
+Het deel code van lijn 37 tot en met lijn 42 zal zorgen voor de grafische weergave van de maandelijkse ijsdikte weergegeven op figuur\ref{fig:iceextentmonthly}. \\
+
+\begin{figure}
+    \centering
+    \caption{Grafische weergave van de maandelijkse ijsdiktes}
+    \label{fig:iceextentmonthly}
+    \includegraphics[width=0.7\linewidth]{ice_extent_monthly}
+\end{figure}
+
+Op lijn 45 worden de start en eindjaartallen uitgeprint. \\
+De code op lijn 46 zal ervoor zorgen dat de maandindex verwijderd wordt.\\
+Op lijn 47 zal de kolom hernoemd worden en op lijn 48 zal het resultaat uitgeprint worden, dit zal er uit zien zoals zichtbaar op figuur\ref{fig:iceextentdata}.
+
+\begin{figure}
+    \centering
+    \caption{Data van de maandelijks ijsdiktes}
+    \label{fig:iceextentdata}
+    \includegraphics[width=0.3\linewidth]{ice_extent_data}
+\end{figure}
+
+\subsubsection{Combineren van de datasets}
+
+In dit deel van de datavoorbereiding zullen de datasets gecombineerd worden.
+
+\captionof{listing}{Datavoorbereiding dataset temperatuur}
+\begin{minted}[
+frame=lines,
+framesep=2mm,
+fontsize=\footnotesize,
+linenos,breaklines
+]{python}
+ice2_monthly_mean_chron_cut = ice2_monthly_mean_chron[:-12]
+# ice2_monthly_mean_chron
+# ice2_monthly_mean_chron_cut
+# mean_temp_monthly
+# ice2_monthly_mean_chron_cut
+combined = mean_temp_monthly[mean_temp_monthly.index.get_level_values(0) >= 1979]
+combined['ice_extent'] = ice2_monthly_mean_chron_cut.values
+# combined
+combined.rename(columns={'Mean Temp (C)': 'mean_temp'}, inplace=True)
+dataframe_monthly = combined
+# dataframe_monthly
+# dataframe_monthly[['mean_temp']]
+plt.plot(dataframe_monthly[['mean_temp']].values[-24:],label='temperature')
+plt.plot(dataframe_monthly[['ice_extent']].values[-24:],label='ice extent')
+plt.legend()
+plt.show()
+dataframe_yearly = combined.groupby('Year').mean()
+# dataframe_yearly
+# dataframe_monthly[['mean_temp']].values
+plt.plot(dataframe_monthly[['mean_temp']].values,label='temperature')
+plt.plot(dataframe_monthly[['ice_extent']].values,label='ice extent')
+plt.legend()
+dataframe_monthly.to_csv('./data/dataframe_monthly.csv')
+dataframe_yearly.to_csv('./data/dataframe_yearly.csv')
+\end{minted}
+
+Op lijn 1 worden de laatste 12 waarden van de gemiddelde maandelijkse chronologische dataset in een nieuwe variabele gestoken. \\
+Op lijn 6 wordt een nieuwe dataset ge\"{i}nitialiseerd waar de maandelijkse gemiddelde temperaturen van 1979 ingevoerd worden.\\
+Op lijn 7 worden de ijsdiktes hieraan toegevoegd. \\
+Op lijn 9 wordt de kolom hernoemd op de lijn erna wordt de dataset nog eens toegevoegd aan een duidelijkere variabelenaam. \\
+
+De code op lijn 13 tot 17 zorgt voor de grafische weergave van de gecombineerde dataset van de laatste 2 jaren weergegeven op figuur\ref{fig:combinedlastyears}. Hier valt op te merken dat de ijsdikte zal vergroten wanneer de temperatuur laag is. Dit is logisch aangezien het ijs zal smelten bij hogere temperaturen. \\
+
+\begin{figure}
+    \centering
+    \caption{Grafische weergave van de ijsdikte en de temperatuur van de laatste 2 jaar}
+    \label{fig:combinedlastyears}
+    \includegraphics[width=0.7\linewidth]{combined_last_years.PNG}
+\end{figure}
+
+De code op lijn 17 zal het jaarlijks gemiddelde nemen.
+
+Op lijn 20 tot 23 wordt de code weergegeven die ervoor zal zorgen dat het volledige maandelijks gemiddelde weergegeven zal worden van 1979 tot 2018. Dit valt te beschouwen op figuur \ref{fig:combinedlastyears}. Hierop kunnen we vaststellen dat de temperatuur lichtjes zal dalen terwijl de ijsdikte zal stijgen.
+
+\begin{figure}
+    \centering
+    \caption{Grafische weergave van de ijsdikte en de temperatuur}
+    \label{fig:combinedmonths}
+    \includegraphics[width=0.7\linewidth]{combined_months.PNG}
+\end{figure}
+
+Op lijn 23 en 24 worden de dataframes weggeschreven naar csv-bestanden zodat ze kunnen gebruikt worden bij het opstellen van de modellen.
+
+
+\section{Univariate niet-seizoensgebonden}
+\subsection{Voorbereiding}
+
+In dit deel zullen de voorspellingsmodellen voor univariate niet-seizoensgebonden data opgesteld worden. De modeltypes die bekeken zullen worden zijn ARIMA, LSTM en Prophet.
+
+Eerst zal de data die in het vorige onderdeel voorbereid werd opgehaald worden.
+
+\captionof{listing}{Uitlezen van data}
+\begin{minted}[
+frame=lines,
+framesep=2mm,
+fontsize=\footnotesize,
+linenos,breaklines
+]{python}
+ts = pd.read_csv('./data/dataframe_yearly.csv', index_col=0, usecols=[0,2])
+\end{minted}
+
+Daarna zal nagegaan worden in hoeverre deze dataset stationair is met gebruik van de hieronder omschreven test\textunderscore stationarity methode. Dit is noodzakelijk voor het opstellen van het ARIMA model.
+
+\subsection{Stationariteit}
+\captionof{listing}{Test stationarity}
+\begin{minted}[
+frame=lines,
+framesep=2mm,
+fontsize=\footnotesize,
+linenos,breaklines
+]{python}
+# define method to visualise the stationarity of a time series
+def test_stationarity(timeseries):
+
+    #Determing rolling statistics
+    rolmean = timeseries.rolling(12).mean()
+    rolstd = timeseries.rolling(12).std()
+    
+    #Plot rolling statistics:
+    orig = plt.plot(timeseries, color='blue',label='Original')
+    mean = plt.plot(rolmean, color='red', label='Rolling Mean')
+    std = plt.plot(rolstd, color='black', label = 'Rolling Std')
+    plt.legend(loc='best')
+    plt.title('Rolling Mean & Standard Deviation')
+    plt.show(block=False)
+
+# check stationarity of time serie
+test_stationarity(ts)
+\end{minted}
+
+Het resultaat van de test\textunderscore stationarity methode wordt weergegeven op figuur \ref{fig:stationarityunivariatenonseasonal}. Daarop zien we dat de data niet stationair is maar er een dalende trend aanwezig is.
+
+\begin{figure}
+    \centering
+    \caption{Resultaat test stationarity}
+    \label{fig:stationarityunivariatenonseasonal}
+    \includegraphics[width=0.7\linewidth]{stationarity_univariate_non_seasonal}
+\end{figure}
+
+Om deze trend te neutraliseren en de data stationair te maken zullen we het random walk difference nemen en nogmaals de stationariteit testen.
+
+\captionof{listing}{Test stationarity bij random walk differencing}
+\begin{minted}[
+frame=lines,
+framesep=2mm,
+fontsize=\footnotesize,
+linenos,breaklines
+]{python}
+# take the random walk difference of the time serie
+ts_diff = ts - ts.shift(1)
+ts_diff = ts_diff.dropna()
+
+# display stationarity of the newly differenced time serie
+test_stationarity(ts_diff)
+\end{minted}
+
+Door hiervan nogmaals de stationariteit te testen bekomen we figuur\ref{fig:stationarityunivariatenonseasonal2}. Hierop valt af te lezen dat de data nu wel stationair is.
+
+\begin{figure}
+    \centering
+    \caption{Resultaat test stationarity na random walk differencing}
+    \label{fig:stationarityunivariatenonseasonal2}
+    \includegraphics[width=0.7\linewidth]{stationarity_univariate_non_seasonal2}
+\end{figure}
+
+\subsection{Cross validation}
+
+Om aan cross validation te doen moet de tijdreeks opgesplitst worden in verschillende reeksen waarbij de testset van de vorige reeks telkens toegevoegd wordt aan de trainingsset van de huidige reeks. Bij de univariate niet-seizoensgebonden tijdreeks nemen we telkens een testgrootte van 4. De waarden worden ook enkel uitgeprint indien de testset groter is dan 20 om een minimale testset te garanderen. De grootte van de train-en testset zal ook geprint worden bij het uitvoeren van dit stuk code.
+
+\captionof{listing}{Code voor het opstellen van cross-validation}
+\begin{minted}[
+frame=lines,
+framesep=2mm,
+fontsize=\footnotesize,
+linenos,breaklines
+]{python}
+# initialize TimeSeriesSplit object
+tscv = TimeSeriesSplit(n_splits = 8)
+
+# loop trough all split time series that have a trainingsset with more than 20 values
+for train_index, test_index in tscv.split(ts_diff):
+    if train_index.size > 20:
+
+        # initialize cross validation train and test sets
+        cv_train, cv_test = ts_diff.iloc[train_index], ts_diff.iloc[test_index]
+        
+        # visiualize cross_validation structure for reference
+        print("TRAIN:", train_index.size)
+        print("TEST:", test_index.size)
+        print()
+\end{minted}
+
+\subsection{Algemene methodes}
+
+Hier worden enkele algemene methodes gedefinieerd namelijk de full\textunderscore graph methode die een grafiek zal weergeven van de ingevoerde gedifferentieerde tijdreeks die ook als invoerparameter gebruikt zal worden samen met de grafiektitel.
+
+Daarnaast wordt ook nog de methode revert\textunderscore diff gedefinieerd waar de gediferentieerde voorspellingen terug omgezet worden naar voorspellingen in miljoenen vierkante kilometers. Hiervoor zijn de gedifferentieerde voorspellingen en de originele dataset nodig als invoerparameters.
+
+\captionof{listing}{Opstellen van algemene methodes}
+\begin{minted}[
+frame=lines,
+framesep=2mm,
+fontsize=\footnotesize,
+linenos,breaklines
+]{python}
+
+# define functions used troughout the notebook
+
+# define function for plotting last prediction and the actual data
+def full_graph(predicted_diff, title):
+
+    # format predictions by adding NaN values in front
+    predictionsArray = np.asarray(revert_diff(predicted_diff, ts))
+    zerosArray = np.zeros(ts.values.size-len(predictionsArray.flatten()))
+    cleanPrediction = pd.Series(np.concatenate((zerosArray,predictionsArray))).replace(0,np.NaN)
+    cleanPrediction.index = ts.index.values
+    
+    # plot
+    plt.title(title)
+    plt.plot(ts, marker='o', color='blue',label='Actual values')
+    plt.plot(cleanPrediction, marker='o', color='red',label='Last 4 year prediction')
+    plt.ylim([0,15])
+    plt.legend()
+    
+    plt.show()
+
+# define function for reverting a differenced dataset
+def revert_diff(predicted_diff, og_data):
+
+    # retrieve last value
+    last_value = og_data.iloc[-predicted_diff.size-1][0]
+    
+    # initialize reverted array
+    predicted_actual = np.array([])
+    
+    # add each value in the differenced array with the last actual value
+    for value_diff in predicted_diff:
+        actual_value = last_value + value_diff
+        predicted_actual = np.append(predicted_actual, actual_value)
+        last_value = actual_value
+    
+    return predicted_actual
+\end{minted}
+
+
+
+
+\subsection{ARIMA}
+
+In dit stuk code worden de hyperparameters bepaald die de beste resultaten zullen behalen. Zo worden alle mogelijke parametercombinaties binnen het ARIMA model getest op de data met cross validation. De best presterende parameters die dus zorgen voor de laagste MAE score worden behouden en zullen gebruikt worden voor de finale voorspelling.
+
+\captionof{listing}{Bepalen van de hyperparameters}
+\begin{minted}[
+frame=lines,
+framesep=2mm,
+fontsize=\footnotesize,
+linenos,breaklines
+]{python}
+%%time
+# ARIMA
+from statsmodels.tsa.arima_model import ARIMA
+import itertools
+import warnings
+import sys
+from sklearn.metrics import mean_absolute_error
+
+# Define the p, d and q parameters to take any value between 0 and 2
+p = q = range(0, 5)
+d = range(0,3)
+
+# Generate all different combinations of p, q and q triplets
+pdq = list(itertools.product(p, d, q))
+
+# initialize variables
+best_pdq = pdq
+best_mean_mae = np.inf
+
+# specify to ignore warning messages to reduce visual clutter
+warnings.filterwarnings("ignore") 
+
+# loop trough all possible parameter combinations of pdq
+for param in pdq:
+    print(param)
+    
+    # some parametercombinations might lead to crash, so catch exceptions and continue
+    try:  
+        
+        # initialize the array which will contain the mean average errors
+        maes = []
+        
+        # loop trough all split time series that have a trainingsset with more than 20 values
+        for train_index, test_index in tscv.split(ts_diff):
+            if train_index.size > 20:
+            
+                # initialize cross validation train and test sets
+                cv_train, cv_test = ts_diff.iloc[train_index], ts_diff.iloc[test_index]
+                
+                # build model
+                model = ARIMA(cv_train, order=(param))
+                
+                # fit model
+                model_fit = model.fit()
+                
+                # make predictions
+                predictions =  model_fit.predict(start=len(cv_train), end=len(cv_train)+cv_test.size-1, dynamic=False)
+                
+                # renaming for clarity
+                prediction_values = predictions.values
+                true_values = cv_test.values
+                
+                # error calculation this part of the cross validation
+                maes.append(mean_absolute_error(true_values, prediction_values))
+            
+        
+        # error calculation for this parameter combination
+        mean_mae = np.mean(maes)
+        print('MAE: ' + str(mean_mae))    
+        
+        # store parameters resulting in the lowest mean MAE
+        if mean_mae < best_mean_mae:
+            best_mean_mae = mean_mae
+            best_maes = maes
+            best_pdq = param
+            best_predictions = prediction_values
+            
+    except Exception as e:
+    print(e)
+    continue
+
+# logging
+print()
+print('Best MAE = ' + str(best_mean_mae))
+print(best_pdq)
+\end{minted}
+
+Hieruit blijkt dat de beste parametercombinatie voor een bereik van 0 tot 5 voor de $p$ en $q$ waarden en 0 tot 3 voor de $d$ waarden (3,0,0) zijn. Dit zijn dan ook de parameterwaarden die gebruikt zullen worden voor de finale iteratie van ARIMA. Een hoger bereik zou tot een beter resultaat kunnen leiden maar ook tot overfitting en zal zeker zorgen voor een hogere uitvoeringstijd omwille van deze redenen is het bereik van $p$ en $q$ beperkt tot 5.
+
+\captionof{listing}{Finale iteratie ARIMA}
+\begin{minted}[
+frame=lines,
+framesep=2mm,
+fontsize=\footnotesize,
+linenos,breaklines
+]{python}
+start_time = timeit.default_timer()
+
+# specify to ignore warning messages
+warnings.filterwarnings("ignore") 
+
+print("----")
+
+# initialize the array which will contain the mean average errors
+maes = []
+
+# loop trough all split time series that have a trainingsset with more than 20 values
+for train_index, test_index in tscv.split(ts_diff):
+    if train_index.size > 20:
+    
+        # initialize cross validation train and test sets
+        cv_train, cv_test = ts_diff.iloc[train_index], ts_diff.iloc[test_index]
+        
+        # build model
+        arima = ARIMA(cv_train, best_pdq).fit(start_ar_lags=1,disp=False)
+        
+        # make predictions
+        predictions = arima.forecast(steps=4)
+        prediction_values = predictions[0]
+        true_values = cv_test.values
+        
+        # error calc
+        maes.append(mean_absolute_error(true_values, prediction_values))
+        
+        # last actual prediction 
+        last_prediction_ARIMA = prediction_values
+        
+        print("I",end="")
+
+# store results to variables
+time_ARIMA = timeit.default_timer() - start_time
+mae_mean = np.mean(maes)
+MAE_ARIMA = mae_mean
+last_MAE_ARIMA = maes[-1]
+
+# logging
+print()
+print('Mean MAE: %.3f x 1 000 000 km\u00b2' % MAE_ARIMA)
+print('MAE of last prediction: %.3f x 1 000 000 km\u00b2' % last_MAE_ARIMA)
+print('Execution time: %.3f seconds' % time_ARIMA)
+full_graph(last_prediction_ARIMA, 'Last prediction ARIMA')
+print('Mean average errors:')
+print(maes)
+\end{minted}
+
+De bovenstaande code zal leiden tot de uitvoer die zichtbaar is op figuur\ref{fig:uvnsarima}. Hieruit kunnen we de gemiddelde MAE overheen de verschillende iteraties bij cross validation weergeven alsook de MAE van de laatste voorspelling. Daarnaast wordt ook de uitvoeringstijd weergegeven en ook de voorspelde waarden van de laatste partitie van de cross validation ten opzichte van de originele waarden. Ook de reeks met de MAEs wordt weergegeven.
+
+\begin{figure}
+    \centering
+    \caption{Resultaat finale iteratie ARIMA}
+    \label{fig:uvnsarima}
+    \includegraphics[width=0.7\linewidth]{uv_ns_ARIMA}
+\end{figure}
+
+\clearpage
+\subsection{LSTM}
+
+Het volgende model dat getest zal worden is een LSTM model. Aangezien dit een neuraal netwerk is zijn er op voorhand enkele methodes gedefinieerd om het overzicht te bewaren. 
+
+De eerste methode die gedefinieerd wordt is de split\textunderscore sequence dit zal er voor zorgen dat de univariabele tijdreeks opgesplitst wordt in samples zodat deze gebruikt kunnen worden als invoerwaarden voor een LSTM netwerk. De originele tijdreeks dient ingegeven te worden bij sequence, het aantal invoerstappen en het aantal uitvoerstappen dienen ook meegegeven te worden.
+
+Daarnaast wordt ook de methode build\textunderscore model gedefinieerd die het model zal opstellen. Dit zal gebeuren door de structuur van het LSTM model op te stellen met gebruik van het aantal features, het aantal neuronen in de LSTM laag, de dropout rate en de batchgrootte deze parameters diennen ook ingegeven te worden. Na het opstellen van het model zal het gefit worden aan de trainingsdata.
+
+Ten slotte wordt ook nog de functie predict opgesteld. Deze functie verwacht de trainingsset, het model en het aantal features als invoerwaarde en zal het verdere verloop van de tijdreeks trachten te voorspellen. 
+
+\captionof{listing}{Functies voor het opstellen van een LSTM model}
+\begin{minted}[
+frame=lines,
+framesep=2mm,
+fontsize=\footnotesize,
+linenos,breaklines
+]{python}
+from keras.layers import Dropout
+# split a univariate sequence into samples
+def split_sequence(sequence, n_steps_in, n_steps_out):
+    X, y = list(), list()
+    for i in range(len(sequence)):
+        # find the end of this pattern
+        end_ix = i + n_steps_in
+        out_end_ix = end_ix + n_steps_out
+        
+        # check if we are beyond the sequence
+        if out_end_ix > len(sequence):
+        break
+        
+        # gather input and output parts of the pattern
+        seq_x, seq_y = sequence[i:end_ix], sequence[end_ix:out_end_ix]
+        X.append(seq_x)
+        y.append(seq_y)
+    return array(X), array(y)
+
+def build_model(raw_seq, n_steps_in, n_steps_out, n_features, n_neurons, dropout, batch_s):
+
+    # split into samples
+    X, y = split_sequence(raw_seq.values.flatten(), n_steps_in, n_steps_out)
+    
+    # reshape from [samples, timesteps] into [samples, timesteps, features]
+    X = X.reshape((X.shape[0], X.shape[1], n_features))
+    
+    # define model
+    model = Sequential()
+    model.add(LSTM(n_neurons, activation='relu'))
+    model.add(Dropout(dropout))
+    model.add(Dense(n_steps_out))
+    model.compile(optimizer='adam', loss='mae')
+    
+    # fit model
+    model.fit(X, y, batch_size=batch_s, epochs=100, verbose=0)
+    
+    return model
+
+
+def predict(x_input, model, n_features):
+    n_features = 1
+    
+    # reshape data
+    x_input = x_input.reshape((1, n_steps_in, n_features))
+    
+    # predict
+    yhat = model.predict(x_input, verbose=0)
+    
+    return yhat
+\end{minted}
+
+Ook bij LSTM dienen de hyperparameters geoptimaliseerd te worden. Dit gebeurt door middel van onderstaande code. Waarbij een reeks mogelijk waarden gedefinieerd wordt op lijn 15 tot 18 waarvan alle mogelijk combinaties getest worden en waarvan de best presterende combinatie bijgehouden wordt.
+
+\captionof{listing}{Bepalen van de hyperparameters}
+\begin{minted}[
+frame=lines,
+framesep=2mm,
+fontsize=\footnotesize,
+linenos,breaklines
+]{python}
+%%time
+
+# Disabled tf warning because of visual clutter
+tf.compat.v1.logging.set_verbosity(tf.compat.v1.logging.ERROR)
+
+
+# constant variables
+n_steps_in = 4
+n_steps_out = 4
+n_features  = 1
+maes = []
+global_maes = []
+
+# optimizable variables
+n_neurons_array = [1,10,20]
+dropout_array = [0,0.5,0.99]
+batch_size_array = [1,8]
+
+
+# initialize values
+best_MAE = 100
+best_n_neurons = 0
+best_activation = 'none'
+best_dropout = 0
+best_batch_size = 0
+
+# loop over all possible parameter combinations
+for n_neurons in n_neurons_array:
+    for dropout in dropout_array:
+        for batch_size in batch_size_array:
+        
+            print("----")
+            
+            # loop trough all split time series that have a trainingsset with more than 20 values
+            for train_index, test_index in tscv.split(ts_diff): 
+                if train_index.size > 20:  
+                
+                    # initialize cross validation train and test sets
+                    y_train, y_test = ts_diff.iloc[train_index], ts_diff.iloc[test_index]
+                    
+                    # build model
+                    lstm_model = build_model(y_train, n_steps_in, n_steps_out, n_features, n_neurons, dropout, batch_size)
+                    
+                    # make predictions
+                    x_input = array(y_test)
+                    y_predicted = predict(x_input, lstm_model, n_features).flatten()
+                    y_actual = y_test.values
+                    
+                    # error calculation this part of the cross validation
+                    maes.append(mean_absolute_error(y_actual, y_predicted))
+                    
+                    print("I",end="")
+                    
+                    # last actual prediction 
+                    last_prediction_LSTM = y_predicted
+                    
+            # error calculation for this parameter combination
+            MAE_LSTM = np.mean(maes)
+            last_MAE_LSTM = maes[-1]
+            global_maes.append(MAE_LSTM)
+            
+            # store parameters resulting in the lowest mean MAE
+            if best_MAE > MAE_LSTM:
+                best_n_neurons = n_neurons
+                best_dropout = dropout
+                best_batch_size = batch_size
+                best_MAE = MAE_LSTM
+            
+            # log values for parameter combination
+            print()
+            print(n_neurons)
+            print(dropout)
+            print(batch_size)
+            print(MAE_LSTM)
+            print()    
+
+# log parameter combination with best result
+print('Best:')
+print('N neurons')
+print(best_n_neurons)
+print('Dropout rate')
+print(best_dropout)
+print('Batch size')
+print(best_batch_size)
+print('MAE')
+print(best_MAE)
+plt.bar(range(0,len(global_maes)), global_maes)
+\end{minted}
+
+Na het uitvoeren van deze code blijkt er nauwelijks verschil te zijn bij het aanpassen van de hyperparameters. Dit valt af te leiden uit de MAE's die weergegeven worden door de plot op lijn 87. Die figuur\ref{fig:uvnslstmbar} als resultaat zal hebben.
+Dit blijkt ook wanneer deze code meerdere malen doorlopen wordt aangezien er verschillende resultaten bekomen worden.
+
+\begin{figure}
+    \centering
+    \caption{Grafische weergave verschil in MAE's bij verschillende hyperparameters met MAE op de y-as}
+    \label{fig:uvnslstmbar}
+    \includegraphics[width=0.7\linewidth]{uv_ns_LSTM_bar}
+\end{figure}
+
+Om verder te gaan zullen we de waarden 1 voor het aantal neuronen gebruiken, 0 voor de beste dropout rate en 8 voor de batch size. 
+
+\captionof{listing}{Finale iteratie LSTM}
+\begin{minted}[
+frame=lines,
+framesep=2mm,
+fontsize=\footnotesize,
+linenos,breaklines
+]{python}
+
+%%time
+
+start_time = timeit.default_timer()
+
+# Disabled tf warning because of visual clutter
+tf.compat.v1.logging.set_verbosity(tf.compat.v1.logging.ERROR)
+
+
+# constant variables
+n_steps_in = 4
+n_steps_out = 4
+n_features  = 1
+maes = []
+
+
+# optimizable variables
+n_neurons = best_n_neurons
+dropout = best_dropout
+batch_s = best_batch_s
+
+print("----")
+
+# loop trough all split time series that have a trainingsset with more than 20 values
+for train_index, test_index in tscv.split(ts_diff):
+    if train_index.size > 20:  
+        # initialize cross validation train and test sets
+        y_train, y_test = ts_diff.iloc[train_index], ts_diff.iloc[test_index]
+        
+        # build model
+        lstm_model = build_model(y_train, n_steps_in, n_steps_out, n_features, n_neurons, dropout, batch_s)
+        
+        # make predictions
+        x_input = array(y_test)
+        y_predicted = predict(x_input, lstm_model, n_features).flatten()
+        y_actual = y_test.values
+        
+        # error calc
+        maes.append(mean_absolute_error(y_actual, y_predicted))
+        
+        print("I",end="")
+    
+# last actual prediction 
+last_prediction_LSTM = y_predicted
+
+# store variables
+time_LSTM = timeit.default_timer() - start_time
+MAE_LSTM = np.mean(maes)
+last_MAE_LSTM = maes[-1]
+
+# visualisation
+print()
+print('Mean MAE: %.3f x 1 000 000 km\u00b2' % MAE_LSTM)
+print('MAE of last prediction: %.3f x 1 000 000 km\u00b2' % last_MAE_LSTM)
+print('Execution time: %.3f seconds' % time_LSTM)
+full_graph(last_prediction_LSTM, 'Last prediction LSTM')
+print('Mean average errors')
+print(maes)
+\end{minted}
+
+De bovenstaande code zal leiden tot de uitvoer die zichtbaar is op figuur\ref{fig:uvns}. En ook hier kunnen we de gemiddelde MAE overheen de verschillende iteraties bij cross validation weergeven alsook de MAE van de laatste voorspelling. Daarnaast wordt ook de uitvoeringstijd weergegeven en ook de voorspelde waarden van de laatste partitie van de cross validation ten opzichte van de originele waarden. Ook de reeks met de MAEs wordt weergegeven. Net zoals bij ARIMA.
+
+\begin{figure}
+    \centering
+    \caption{Resultaat finale iteratie LSTM}
+    \label{fig:uvnslstm}
+    \includegraphics[width=0.7\linewidth]{uv_ns_LSTM}
+\end{figure}
+
+\clearpage
+\subsection{Prophet}
+
+Als laatste dient ook Prophet nog bekeken te worden voor het voorspellen van de tijdreeks. Hier zal eerst de data opnieuw geformateerd moeten worden aangezien prophet een bepaalde structuur hantereert.
+
+\captionof{listing}{Code voor het formatteren van de data voor Prophet}
+\begin{minted}[
+frame=lines,
+framesep=2mm,
+fontsize=\footnotesize,
+linenos,breaklines
+]{python}
+# formatting dataframe
+ts_formated_prophet = ts_diff.reset_index().rename(columns = {'Year' : 'ds', 'ice_extent' : 'y'})
+ts_formated_prophet['ds'] = pd.DataFrame(pd.to_datetime(ts_formated_prophet['ds'].astype(str), format='%Y'))
+\end{minted}
+
+Daarna kan de hyperparameter voor changepoint\textunderscore prior\textunderscore scale die zal staan voor de frequentie van het aanduiden changepoints (punten waar de data van een trend zal afwijken) bepaald worden met behulp van onderstaande code.
+
+\captionof{listing}{Code voor het bepalen van de hyperparameters}
+\begin{minted}[
+frame=lines,
+framesep=2mm,
+fontsize=\footnotesize,
+linenos,breaklines
+]{python}
+
+# Python
+import itertools
+import numpy as np
+import pandas as pd
+
+# define dataframe
+df = ts_formated_prophet
+
+param_grid = {  
+'changepoint_prior_scale': [0.001, 0.01, 0.1, 1, 2, 5, 10, 15, 20, 25],
+}
+
+# Generate all combinations of parameters
+all_params = [dict(zip(param_grid.keys(), v)) for v in itertools.product(*param_grid.values())]
+
+# initialize variables
+maes = []  
+global_maes = []
+best_MAE_prophet = np.inf
+
+# Use cross validation to evaluate all parameters
+for params in all_params:
+
+    # loop trough all split time series that have a trainingsset with more than 20 values
+    for train_index, test_index in tscv.split(ts_formated_prophet):    
+        if train_index.size > 20:  
+        
+            # initialize cross validation train and test sets
+            train  = ts_formated_prophet.iloc[train_index]
+            y_test = ts_formated_prophet.iloc[test_index][['y']].values.flatten()
+            X_test = ts_formated_prophet.iloc[test_index][['ds']]
+            
+            # Fit model with given params
+            model = Prophet(**params, weekly_seasonality=False, daily_seasonality=False)
+            model = model.fit(train)
+            
+            # make predictions
+            forecast = model.predict(X_test)
+            y_pred = forecast['yhat'].values
+            
+            # last actual prediction 
+            last_prediction_prophet = y_pred
+            
+            # error calculation this part of the cross validation
+            maes.append(mean_absolute_error(y_test, y_pred))
+    
+    # error calculation for this parameter combination
+    MAE_prophet = np.mean(maes)
+    last_MAE_prophet = maes[-1]
+    global_maes.append(MAE_prophet)
+    
+    # logging
+    print('changepoint_prior_scale: ' + str(params['changepoint_prior_scale']))
+    
+    # store parameters resulting in the lowest mean MAE
+    if best_MAE_prophet > MAE_prophet:
+    best_params = params
+    best_MAE_prophet = MAE_prophet
+
+# log optimal result          
+print('changepoint_prior_scale: ' + str(best_params['changepoint_prior_scale']))
+print(best_MAE_prophet)
+
+\end{minted}
+
+Hieruit zal blijken dat de optimale waarde voor de hyperparameter 2 is. Waneer dit ingevoegd wordt bij het uitvoeren van de onderstaande code krijgen we het resultaat dat zichtbaar is op figuur \ref{fig:uvnsprophet}.
+
+\begin{figure}
+    \centering
+    \caption{Resultaat finale iteratie Prophet}
+    \label{fig:uvnsprophet}
+    \includegraphics[width=0.7\linewidth]{uv_ns_prophet}
+\end{figure}
+
+
+\captionof{listing}{Finale iteratie Prophet}
+\begin{minted}[
+frame=lines,
+framesep=2mm,
+fontsize=\footnotesize,
+linenos,breaklines
+]{python}
+
+%%time
+
+# Disabled tf warning because of clutter
+warnings.filterwarnings("ignore") # specify to ignore warning messages
+
+start_time = timeit.default_timer()
+
+# initialize variables
+maes = []
+
+for train_index, test_index in tscv.split(ts_formated_prophet):
+    if train_index.size > 20:  
+    
+        # initialize cross validation train and test sets
+        train  = ts_formated_prophet.iloc[train_index]
+        y_test = ts_formated_prophet.iloc[test_index][['y']].values.flatten()
+        X_test = ts_formated_prophet.iloc[test_index][['ds']]
+        
+        # build model
+        model = Prophet(**best_params, weekly_seasonality=False, daily_seasonality=False)
+        model.fit(train)
+        
+        # make predictions
+        forecast = model.predict(X_test)
+        y_pred = forecast['yhat'].values
+        
+        # error calc
+        maes.append(mean_absolute_error(y_test, y_pred))
+        
+        # last actual prediction 
+        last_prediction_prophet = y_pred
+
+
+# store results
+time_Prophet = timeit.default_timer() - start_time
+MAE_Prophet = np.mean(maes)
+last_MAE_Prophet = maes[-1]
+
+# visualize results
+print()
+print('Mean MAE: %.3f x 1 000 000 km\u00b2' % MAE_Prophet)
+print('MAE of last prediction: %.3f x 1 000 000 km\u00b2' % last_MAE_Prophet)
+print('Execution time: %.3f seconds' % time_Prophet)
+full_graph(last_prediction_prophet, "Last 4 year prediction prophet")
+print('Mean average errors')
+print(maes)
+
+\end{minted}
+
+\clearpage
+\subsection{Evaluatie}
+
+Wanneer we deze resultaten combineren komen we tot de tabel die zichtbaar is op figuur \ref{fig:uvnsresult}. Om dit resultaat grafisch te schetsen worden op figuur\ref{fig:uvnsresultgraph} de laatste voorspellingen voor elk modeltype weergegeven.
+
+Hieruit kunnen we dus stellen dat ARIMA het beste gemiddelde resultaat zal halen bij cross validation aangezien het hier een fout van 0.171 x 1 000 000 km\textsuperscript{2} behaalt. Ook de uitvoeringstijd is het laagst bij ARIMA namelijk 0.360 seconden. Dit is een beter dan LSTM met een fout van 0.200 x 1 000 000 km\textsuperscript{2} en een uitvoeringstijd van 5.480 seconden. De voorspelling van Prophet is nog een pak minder accuraat met een fout van 0.252 x 1 000 000 km\textsuperscript{2} en een uitvoeringstijd van 8.891 seconden.
+
+
+\begin{figure}
+    \centering
+    \caption{Resultaat van de univariate non-seasonal analyse}
+    \label{fig:uvnsresult}
+    \includegraphics[width=0.7\linewidth]{uv_ns_result}
+\end{figure}
+
+\begin{figure}
+    \centering
+    \caption{Grafische weergave van de laatste voorspellingen van de univariate non-seasonal analyse}
+    \label{fig:uvnsresultgraph}
+    \includegraphics[width=0.7\linewidth]{uv_ns_result_graph}
+\end{figure}
+
+
+
+\captionof{listing}{Code voor het weergeven van de resultaten}
+\begin{minted}[
+frame=lines,
+framesep=2mm,
+fontsize=\footnotesize,
+linenos,breaklines
+]{python}
+# formatting
+results = [[MAE_ARIMA,time_ARIMA,last_MAE_ARIMA],[MAE_LSTM,time_LSTM,last_MAE_LSTM],[MAE_Prophet,time_Prophet,last_MAE_Prophet]]
+
+# display results
+pd.DataFrame(results, columns=['Mean MAE (x 1 000 000 km\u00b2)','Execution time (s)','Last MAE (x 1 000 000 km\u00b2)'],index=['ARIMA','LSTM','Prophet']).round(decimals=3)
+
+\end{minted}
+
+\captionof{listing}{Code voor het grafisch weergeven van de resultaten}
+\begin{minted}[
+frame=lines,
+framesep=2mm,
+fontsize=\footnotesize,
+linenos,breaklines
+]{python}
+# visualize results of last prediction
+full_graph(last_prediction_ARIMA, "Last prediction ARIMA")
+full_graph(last_prediction_LSTM, "Last prediction LSTM")
+full_graph(last_prediction_prophet, "Last prediction Prophet")
+\end{minted}
+
+\clearpage
+
+\section{Univariate seizoensgebonden}
+
+\section{Multivariate niet-seizoensgebonden}
+
+\section{Multivariate seizoensgebonden}

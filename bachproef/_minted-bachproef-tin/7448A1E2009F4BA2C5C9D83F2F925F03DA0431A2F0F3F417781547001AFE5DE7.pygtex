@@ -1,0 +1,5 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{c+c1}{\PYGZsh{} formatting dataframe}
+\PYG{n}{ts\PYGZus{}formated\PYGZus{}prophet} \PYG{o}{=} \PYG{n}{ts\PYGZus{}diff}\PYG{o}{.}\PYG{n}{reset\PYGZus{}index}\PYG{p}{()}\PYG{o}{.}\PYG{n}{rename}\PYG{p}{(}\PYG{n}{columns} \PYG{o}{=} \PYG{p}{\PYGZob{}}\PYG{l+s+s1}{\PYGZsq{}Year\PYGZsq{}} \PYG{p}{:} \PYG{l+s+s1}{\PYGZsq{}ds\PYGZsq{}}\PYG{p}{,} \PYG{l+s+s1}{\PYGZsq{}ice\PYGZus{}extent\PYGZsq{}} \PYG{p}{:} \PYG{l+s+s1}{\PYGZsq{}y\PYGZsq{}}\PYG{p}{\PYGZcb{})}
+\PYG{n}{ts\PYGZus{}formated\PYGZus{}prophet}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}ds\PYGZsq{}}\PYG{p}{]} \PYG{o}{=} \PYG{n}{pd}\PYG{o}{.}\PYG{n}{DataFrame}\PYG{p}{(}\PYG{n}{pd}\PYG{o}{.}\PYG{n}{to\PYGZus{}datetime}\PYG{p}{(}\PYG{n}{ts\PYGZus{}formated\PYGZus{}prophet}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}ds\PYGZsq{}}\PYG{p}{]}\PYG{o}{.}\PYG{n}{astype}\PYG{p}{(}\PYG{n+nb}{str}\PYG{p}{),} \PYG{n+nb}{format}\PYG{o}{=}\PYG{l+s+s1}{\PYGZsq{}\PYGZpc{}Y\PYGZsq{}}\PYG{p}{))}
+\end{Verbatim}
