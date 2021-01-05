@@ -19,7 +19,7 @@
 \defcounter {refsection}{0}\relax 
 \contentsline {figure}{\numberline {1.8}{\ignorespaces Grafische weergave van de ijsdikte en de temperatuur\relax }}{19}{figure.caption.12}% 
 \defcounter {refsection}{0}\relax 
-\contentsline {figure}{\numberline {1.9}{\ignorespaces Resultaat test stationarity\relax }}{21}{figure.caption.13}% 
+\contentsline {figure}{\numberline {1.9}{\ignorespaces Resultaat test stationarity\relax }}{22}{figure.caption.13}% 
 \defcounter {refsection}{0}\relax 
 \contentsline {figure}{\numberline {1.10}{\ignorespaces Resultaat test stationarity na random walk differencing\relax }}{22}{figure.caption.14}% 
 \defcounter {refsection}{0}\relax 
@@ -34,4 +34,32 @@
 \contentsline {figure}{\numberline {1.15}{\ignorespaces Resultaat van de univariate non-seasonal analyse\relax }}{36}{figure.caption.19}% 
 \defcounter {refsection}{0}\relax 
 \contentsline {figure}{\numberline {1.16}{\ignorespaces Grafische weergave van de laatste voorspellingen van de univariate non-seasonal analyse\relax }}{37}{figure.caption.20}% 
+\defcounter {refsection}{0}\relax 
+\contentsline {figure}{\numberline {1.17}{\ignorespaces \relax }}{39}{figure.caption.21}% 
+\defcounter {refsection}{0}\relax 
+\contentsline {figure}{\numberline {1.18}{\ignorespaces \relax }}{40}{figure.caption.22}% 
+\defcounter {refsection}{0}\relax 
+\contentsline {figure}{\numberline {1.19}{\ignorespaces \relax }}{40}{figure.caption.23}% 
+\defcounter {refsection}{0}\relax 
+\contentsline {figure}{\numberline {1.20}{\ignorespaces Resultaat van ARIMA bij random walk differentiatie\relax }}{41}{figure.caption.24}% 
+\defcounter {refsection}{0}\relax 
+\contentsline {figure}{\numberline {1.21}{\ignorespaces Resultaat van ARIMA bij seizoensdifferentiatie\relax }}{41}{figure.caption.25}% 
+\defcounter {refsection}{0}\relax 
+\contentsline {figure}{\numberline {1.22}{\ignorespaces Resultaat SARIMAX bij random walk differentiatie\relax }}{42}{figure.caption.26}% 
+\defcounter {refsection}{0}\relax 
+\contentsline {figure}{\numberline {1.23}{\ignorespaces Resultaat SARIMAX bij seizoensdifferentiatie\relax }}{43}{figure.caption.27}% 
+\defcounter {refsection}{0}\relax 
+\contentsline {figure}{\numberline {1.24}{\ignorespaces Resultaat LSTM bij seizoensdifferentiatie\relax }}{43}{figure.caption.28}% 
+\defcounter {refsection}{0}\relax 
+\contentsline {figure}{\numberline {1.25}{\ignorespaces Grafische weergave multivariate tijdreeks zonder seizoenseffect\relax }}{45}{figure.caption.29}% 
+\defcounter {refsection}{0}\relax 
+\contentsline {figure}{\numberline {1.26}{\ignorespaces Grafische weergave gedifferentieerde multivariate tijdreeks zonder seizoenseffect\relax }}{46}{figure.caption.30}% 
+\defcounter {refsection}{0}\relax 
+\contentsline {figure}{\numberline {1.27}{\ignorespaces Resultaat multivariate voorspelling VARMAX\relax }}{47}{figure.caption.31}% 
+\defcounter {refsection}{0}\relax 
+\contentsline {figure}{\numberline {1.28}{\ignorespaces Resultaat multivariate voorspelling LSTM\relax }}{49}{figure.caption.32}% 
+\defcounter {refsection}{0}\relax 
+\contentsline {figure}{\numberline {1.29}{\ignorespaces Resultaten multivariate voorspelling\relax }}{49}{figure.caption.33}% 
+\defcounter {refsection}{0}\relax 
+\contentsline {figure}{\numberline {1.30}{\ignorespaces Grafische weergaven van de laatste voorspellingen van de VARMAX en LSTM modellen\relax }}{50}{figure.caption.34}% 
 \contentsfinish 

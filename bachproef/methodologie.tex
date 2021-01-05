@@ -271,7 +271,7 @@ De code op lijn 13 tot 17 zorgt voor de grafische weergave van de gecombineerde 
 
 De code op lijn 17 zal het jaarlijks gemiddelde nemen.
 
-Op lijn 20 tot 23 wordt de code weergegeven die ervoor zal zorgen dat het volledige maandelijks gemiddelde weergegeven zal worden van 1979 tot 2018. Dit valt te beschouwen op figuur \ref{fig:combinedlastyears}. Hierop kunnen we vaststellen dat de temperatuur lichtjes zal dalen terwijl de ijsdikte zal stijgen.
+Op lijn 20 tot 23 wordt de code weergegeven die ervoor zal zorgen dat het volledige maandelijks gemiddelde weergegeven zal worden van 1979 tot 2018. Dit valt te beschouwen op figuur \ref{fig:combinedlastyears}. Hierop kan vastgesteld worden dat de temperatuur lichtjes zal dalen terwijl de ijsdikte zal stijgen.
 
 \begin{figure}
     \centering
@@ -284,25 +284,65 @@ Op lijn 23 en 24 worden de dataframes weggeschreven naar csv-bestanden zodat ze 
 
 
 \section{Univariate niet-seizoensgebonden}
-\subsection{Voorbereiding}
 
-In dit deel zullen de voorspellingsmodellen voor univariate niet-seizoensgebonden data opgesteld worden. De modeltypes die bekeken zullen worden zijn ARIMA, LSTM en Prophet.
+In dit deel zullen de voorspellingsmodellen voor univariate niet-seizoensgebonden data opgesteld worden. De modeltypes die bekeken zullen worden zijn ARIMA, LSTM en Prophet. Om dit te onderzoeken zullen er voorspellingen gemaakt worden van de gemiddelde jaarlijkse temperatuur.
 
-Eerst zal de data die in het vorige onderdeel voorbereid werd opgehaald worden.
+\subsection{Algemene methodes}
 
-\captionof{listing}{Uitlezen van data}
+Hier worden enkele algemene methodes gedefinieerd namelijk de full\textunderscore graph methode die een grafiek zal weergeven van de ingevoerde gedifferentieerde tijdreeks die ook als invoerparameter gebruikt zal worden samen met de grafiektitel.
+
+Daarnaast wordt ook nog de methode revert\textunderscore diff gedefinieerd waar de gediferentieerde voorspellingen terug omgezet worden naar voorspellingen in miljoenen vierkante kilometers. Hiervoor zijn de gedifferentieerde voorspellingen en de originele dataset nodig als invoerparameters.
+
+\captionof{listing}{Opstellen van algemene methodes}
 \begin{minted}[
 frame=lines,
 framesep=2mm,
 fontsize=\footnotesize,
 linenos,breaklines
 ]{python}
-ts = pd.read_csv('./data/dataframe_yearly.csv', index_col=0, usecols=[0,2])
+
+# define functions used troughout the notebook
+
+# define function for plotting last prediction and the actual data
+def full_graph(predicted_diff, title):
+
+# format predictions by adding NaN values in front
+predictionsArray = np.asarray(revert_diff(predicted_diff, ts))
+zerosArray = np.zeros(ts.values.size-len(predictionsArray.flatten()))
+cleanPrediction = pd.Series(np.concatenate((zerosArray,predictionsArray))).replace(0,np.NaN)
+cleanPrediction.index = ts.index.values
+
+# plot
+plt.title(title)
+plt.plot(ts, marker='o', color='blue',label='Actual values')
+plt.plot(cleanPrediction, marker='o', color='red',label='Last 4 year prediction')
+plt.ylim([0,15])
+plt.legend()
+
+plt.show()
+
+# define function for reverting a differenced dataset
+def revert_diff(predicted_diff, og_data):
+
+# retrieve last value
+last_value = og_data.iloc[-predicted_diff.size-1][0]
+
+# initialize reverted array
+predicted_actual = np.array([])
+
+# add each value in the differenced array with the last actual value
+for value_diff in predicted_diff:
+actual_value = last_value + value_diff
+predicted_actual = np.append(predicted_actual, actual_value)
+last_value = actual_value
+
+return predicted_actual
 \end{minted}
 
-Daarna zal nagegaan worden in hoeverre deze dataset stationair is met gebruik van de hieronder omschreven test\textunderscore stationarity methode. Dit is noodzakelijk voor het opstellen van het ARIMA model.
-
 \subsection{Stationariteit}
+
+Dan zal nagegaan worden in hoeverre deze dataset stationair is met gebruik van de hieronder omschreven test\textunderscore stationarity methode. Dit is noodzakelijk voor het opstellen van het ARIMA model.
+
 \captionof{listing}{Test stationarity}
 \begin{minted}[
 frame=lines,
@@ -329,7 +369,7 @@ def test_stationarity(timeseries):
 test_stationarity(ts)
 \end{minted}
 
-Het resultaat van de test\textunderscore stationarity methode wordt weergegeven op figuur \ref{fig:stationarityunivariatenonseasonal}. Daarop zien we dat de data niet stationair is maar er een dalende trend aanwezig is.
+Het resultaat van de test\textunderscore stationarity methode wordt weergegeven op figuur \ref{fig:stationarityunivariatenonseasonal}. Daar kan opgemerkt worden dat de data niet stationair is maar er een dalende trend aanwezig is.
 
 \begin{figure}
     \centering
@@ -338,7 +378,7 @@ Het resultaat van de test\textunderscore stationarity methode wordt weergegeven 
     \includegraphics[width=0.7\linewidth]{stationarity_univariate_non_seasonal}
 \end{figure}
 
-Om deze trend te neutraliseren en de data stationair te maken zullen we het random walk difference nemen en nogmaals de stationariteit testen.
+Om deze trend te neutraliseren en de data stationair te maken zal het random walk difference genomen worden en nogmaals de stationariteit testen.
 
 \captionof{listing}{Test stationarity bij random walk differencing}
 \begin{minted}[
@@ -355,7 +395,7 @@ ts_diff = ts_diff.dropna()
 test_stationarity(ts_diff)
 \end{minted}
 
-Door hiervan nogmaals de stationariteit te testen bekomen we figuur\ref{fig:stationarityunivariatenonseasonal2}. Hierop valt af te lezen dat de data nu wel stationair is.
+Door hiervan nogmaals de stationariteit te testen wordt figuur\ref{fig:stationarityunivariatenonseasonal2} bekomen. Hierop valt af te lezen dat de data nu wel stationair is.
 
 \begin{figure}
     \centering
@@ -366,7 +406,7 @@ Door hiervan nogmaals de stationariteit te testen bekomen we figuur\ref{fig:stat
 
 \subsection{Cross validation}
 
-Om aan cross validation te doen moet de tijdreeks opgesplitst worden in verschillende reeksen waarbij de testset van de vorige reeks telkens toegevoegd wordt aan de trainingsset van de huidige reeks. Bij de univariate niet-seizoensgebonden tijdreeks nemen we telkens een testgrootte van 4. De waarden worden ook enkel uitgeprint indien de testset groter is dan 20 om een minimale testset te garanderen. De grootte van de train-en testset zal ook geprint worden bij het uitvoeren van dit stuk code.
+Om aan cross validation te doen moet de tijdreeks opgesplitst worden in verschillende reeksen waarbij de testset van de vorige reeks telkens toegevoegd wordt aan de trainingsset van de huidige reeks. Bij de univariate niet-seizoensgebonden tijdreeks wordt telkens een testgrootte van 4 genomen. De waarden worden ook enkel uitgeprint indien de testset groter is dan 20 om een minimale testset te garanderen. De grootte van de train-en testset zal ook geprint worden bij het uitvoeren van dit stuk code.
 
 \captionof{listing}{Code voor het opstellen van cross-validation}
 \begin{minted}[
@@ -390,61 +430,6 @@ for train_index, test_index in tscv.split(ts_diff):
         print("TEST:", test_index.size)
         print()
 \end{minted}
-
-\subsection{Algemene methodes}
-
-Hier worden enkele algemene methodes gedefinieerd namelijk de full\textunderscore graph methode die een grafiek zal weergeven van de ingevoerde gedifferentieerde tijdreeks die ook als invoerparameter gebruikt zal worden samen met de grafiektitel.
-
-Daarnaast wordt ook nog de methode revert\textunderscore diff gedefinieerd waar de gediferentieerde voorspellingen terug omgezet worden naar voorspellingen in miljoenen vierkante kilometers. Hiervoor zijn de gedifferentieerde voorspellingen en de originele dataset nodig als invoerparameters.
-
-\captionof{listing}{Opstellen van algemene methodes}
-\begin{minted}[
-frame=lines,
-framesep=2mm,
-fontsize=\footnotesize,
-linenos,breaklines
-]{python}
-
-# define functions used troughout the notebook
-
-# define function for plotting last prediction and the actual data
-def full_graph(predicted_diff, title):
-
-    # format predictions by adding NaN values in front
-    predictionsArray = np.asarray(revert_diff(predicted_diff, ts))
-    zerosArray = np.zeros(ts.values.size-len(predictionsArray.flatten()))
-    cleanPrediction = pd.Series(np.concatenate((zerosArray,predictionsArray))).replace(0,np.NaN)
-    cleanPrediction.index = ts.index.values
-    
-    # plot
-    plt.title(title)
-    plt.plot(ts, marker='o', color='blue',label='Actual values')
-    plt.plot(cleanPrediction, marker='o', color='red',label='Last 4 year prediction')
-    plt.ylim([0,15])
-    plt.legend()
-    
-    plt.show()
-
-# define function for reverting a differenced dataset
-def revert_diff(predicted_diff, og_data):
-
-    # retrieve last value
-    last_value = og_data.iloc[-predicted_diff.size-1][0]
-    
-    # initialize reverted array
-    predicted_actual = np.array([])
-    
-    # add each value in the differenced array with the last actual value
-    for value_diff in predicted_diff:
-        actual_value = last_value + value_diff
-        predicted_actual = np.append(predicted_actual, actual_value)
-        last_value = actual_value
-    
-    return predicted_actual
-\end{minted}
-
-
-
 
 \subsection{ARIMA}
 
@@ -534,7 +519,7 @@ print('Best MAE = ' + str(best_mean_mae))
 print(best_pdq)
 \end{minted}
 
-Hieruit blijkt dat de beste parametercombinatie voor een bereik van 0 tot 5 voor de $p$ en $q$ waarden en 0 tot 3 voor de $d$ waarden (3,0,0) zijn. Dit zijn dan ook de parameterwaarden die gebruikt zullen worden voor de finale iteratie van ARIMA. Een hoger bereik zou tot een beter resultaat kunnen leiden maar ook tot overfitting en zal zeker zorgen voor een hogere uitvoeringstijd omwille van deze redenen is het bereik van $p$ en $q$ beperkt tot 5.
+Hieruit blijkt dat de beste parametercombinatie voor een bereik van 0 tot 5 voor de $p$ en $q$ waarden en 0 tot 2 voor de $d$ waarden (3,0,0) zijn. De $d$ waarden blijven zo beperkt omdat een waarde hoger dan 1 in praktijk niet voorkomt zoals beschreven in de literatuurstudie. Dit zijn dan ook de parameterwaarden die gebruikt zullen worden voor de finale iteratie van ARIMA. Een hoger bereik zou tot een beter resultaat kunnen leiden maar ook tot overfitting en zal zeker zorgen voor een hogere uitvoeringstijd omwille van deze redenen is het bereik van $p$ en $q$ beperkt tot 5.
 
 \captionof{listing}{Finale iteratie ARIMA}
 \begin{minted}[
@@ -592,7 +577,7 @@ print('Mean average errors:')
 print(maes)
 \end{minted}
 
-De bovenstaande code zal leiden tot de uitvoer die zichtbaar is op figuur\ref{fig:uvnsarima}. Hieruit kunnen we de gemiddelde MAE overheen de verschillende iteraties bij cross validation weergeven alsook de MAE van de laatste voorspelling. Daarnaast wordt ook de uitvoeringstijd weergegeven en ook de voorspelde waarden van de laatste partitie van de cross validation ten opzichte van de originele waarden. Ook de reeks met de MAEs wordt weergegeven.
+De bovenstaande code zal leiden tot de uitvoer die zichtbaar is op figuur\ref{fig:uvnsarima}. Hier wordt de gemiddelde MAE overheen de verschillende iteraties bij cross validation weergeven alsook de MAE van de laatste voorspelling. Daarnaast wordt ook de uitvoeringstijd weergegeven en ook de voorspelde waarden van de laatste partitie van de cross validation ten opzichte van de originele waarden. Ook de reeks met de MAEs wordt weergegeven.
 
 \begin{figure}
     \centering
@@ -779,7 +764,7 @@ Dit blijkt ook wanneer deze code meerdere malen doorlopen wordt aangezien er ver
     \includegraphics[width=0.7\linewidth]{uv_ns_LSTM_bar}
 \end{figure}
 
-Om verder te gaan zullen we de waarden 1 voor het aantal neuronen gebruiken, 0 voor de beste dropout rate en 8 voor de batch size. 
+Om verder te gaan zullen de waarden 1 voor het aantal neuronen gebruikt worden, 0 voor de beste dropout rate en 8 voor de batch size. 
 
 \captionof{listing}{Finale iteratie LSTM}
 \begin{minted}[
@@ -848,7 +833,7 @@ print('Mean average errors')
 print(maes)
 \end{minted}
 
-De bovenstaande code zal leiden tot de uitvoer die zichtbaar is op figuur\ref{fig:uvns}. En ook hier kunnen we de gemiddelde MAE overheen de verschillende iteraties bij cross validation weergeven alsook de MAE van de laatste voorspelling. Daarnaast wordt ook de uitvoeringstijd weergegeven en ook de voorspelde waarden van de laatste partitie van de cross validation ten opzichte van de originele waarden. Ook de reeks met de MAEs wordt weergegeven. Net zoals bij ARIMA.
+De bovenstaande code zal leiden tot de uitvoer die zichtbaar is op figuur\ref{fig:uvns}. Ook hier kan de gemiddelde MAE overheen de verschillende iteraties bij cross validation weergeven worden alsook de MAE van de laatste voorspelling. Daarnaast wordt ook de uitvoeringstijd weergegeven en ook de voorspelde waarden van de laatste partitie van de cross validation ten opzichte van de originele waarden. Ook de reeks met de MAEs wordt weergegeven. Net zoals bij ARIMA.
 
 \begin{figure}
     \centering
@@ -949,7 +934,7 @@ print(best_MAE_prophet)
 
 \end{minted}
 
-Hieruit zal blijken dat de optimale waarde voor de hyperparameter 2 is. Waneer dit ingevoegd wordt bij het uitvoeren van de onderstaande code krijgen we het resultaat dat zichtbaar is op figuur \ref{fig:uvnsprophet}.
+Hieruit zal blijken dat de optimale waarde voor de hyperparameter 2 is. Waneer dit ingevoegd wordt bij het uitvoeren van de onderstaande code wordt het resultaat dat zichtbaar is op figuur \ref{fig:uvnsprophet} verkregen.
 
 \begin{figure}
     \centering
@@ -1019,9 +1004,9 @@ print(maes)
 \clearpage
 \subsection{Evaluatie}
 
-Wanneer we deze resultaten combineren komen we tot de tabel die zichtbaar is op figuur \ref{fig:uvnsresult}. Om dit resultaat grafisch te schetsen worden op figuur\ref{fig:uvnsresultgraph} de laatste voorspellingen voor elk modeltype weergegeven.
+Wanneer deze resultaten gecombineerd worden wordt de tabel die zichtbaar is op figuur \ref{fig:uvnsresult} verkregen. Om dit resultaat grafisch te schetsen worden op figuur\ref{fig:uvnsresultgraph} de laatste voorspellingen voor elk modeltype weergegeven.
 
-Hieruit kunnen we dus stellen dat ARIMA het beste gemiddelde resultaat zal halen bij cross validation aangezien het hier een fout van 0.171 x 1 000 000 km\textsuperscript{2} behaalt. Ook de uitvoeringstijd is het laagst bij ARIMA namelijk 0.360 seconden. Dit is een beter dan LSTM met een fout van 0.200 x 1 000 000 km\textsuperscript{2} en een uitvoeringstijd van 5.480 seconden. De voorspelling van Prophet is nog een pak minder accuraat met een fout van 0.252 x 1 000 000 km\textsuperscript{2} en een uitvoeringstijd van 8.891 seconden.
+Hieruit kunnen dus geconcludeerd worden dat ARIMA het beste gemiddelde resultaat zal halen bij cross validation aangezien het hier een fout van 0.171 x 1 000 000 km\textsuperscript{2} behaalt. Ook de uitvoeringstijd is het laagst bij ARIMA namelijk 0.360 seconden. Dit is een beter dan LSTM met een fout van 0.200 x 1 000 000 km\textsuperscript{2} en een uitvoeringstijd van 5.480 seconden. De voorspelling van Prophet is nog een pak minder accuraat met een fout van 0.252 x 1 000 000 km\textsuperscript{2} en een uitvoeringstijd van 8.891 seconden.
 
 
 \begin{figure}
@@ -1072,6 +1057,353 @@ full_graph(last_prediction_prophet, "Last prediction Prophet")
 
 \section{Univariate seizoensgebonden}
 
+In deze sectie zal onderzocht worden welk type model de beste voorspellingen zal treffen voor data met 1 variabele waar er een duidelijk seizoensverband zichtbaar is. Ook hier zal crossvalidation gebruikt worden maar het aantal minimum waarden in de trainingsset zal hier niet 20 zijn maar 300.
+
+\subsection{Algemene methodes}
+
+Vooraleer de dataset effectief gebruikt zal worden dienen er eerst nog enkele functies gedeclareerd te worden.
+
+Zo herkennen kunnen de test\textunderscore stationarity, full\textunderscore graph en  revert\textunderscore diff methodes van de voorgaande sectie herkend worden. Naast deze methodes wordt hier ook nog de revert\textunderscore seasonal\textunderscore diff\textunderscore recursion methode gedefinieerd. Deze wordt benut bij de seizoensgebonden variant van de revert\textunderscore diff methode namelijk revert\textunderscore seasonal\textunderscore diff. Ook deze methode zal dienen om een gedifferentieerde data terug om te zetten naar data die vergeleken kan worden met de effectieve waarden.
+
+
+\captionof{listing}{Algemene methodes}
+\begin{minted}[
+frame=lines,
+framesep=2mm,
+fontsize=\footnotesize,
+linenos,breaklines
+]{python}
+def test_stationarity(timeseries):
+
+    #Determing rolling statistics
+    rolmean = timeseries.rolling(36).mean()
+    rolstd = timeseries.rolling(24).std()
+    
+    #Plot rolling statistics:
+    orig = plt.plot(timeseries, color='blue',label='Original')
+    mean = plt.plot(rolmean, color='red', label='Rolling Mean')
+    std = plt.plot(rolstd, color='black', label = 'Rolling Std')
+    plt.legend(loc='best')
+    plt.title('Rolling Mean & Standard Deviation')
+    plt.show(block=False)
+
+def full_graph(predicted, og_dataset, title):
+    zerosArray = np.zeros(og_dataset.values.size-len(predicted.flatten()))
+    cleanPrediction = pd.Series(np.concatenate((zerosArray,predicted))).replace(0,np.NaN)
+    
+    # plot
+    plt.title(title)
+    plt.plot(og_dataset.index, og_dataset.values,marker='o', color='blue',label='Actual values')
+    plt.plot(og_dataset.index, cleanPrediction,marker='o', color='red',label='Last 2 year prediction')
+    plt.ylim([0,20])
+    plt.legend()
+    
+    plt.show()
+
+def revert_diff(predicted_diff, og_data):
+    last_value = og_data.iloc[-predicted_diff.size-1][0]
+    predicted_actual = np.array([])
+    for value_diff in predicted_diff:
+    actual_value = last_value + value_diff
+    predicted_actual = np.append(predicted_actual, actual_value)
+    last_value = actual_value
+    return predicted_actual
+
+def revert_seasonal_diff_recursion(last_seasons_value, diff_value):
+    return last_seasons_value + diff_value
+
+def revert_diff_seasonal(predicted_diff, og_data):
+    prediction_size = predicted_diff.size
+
+    history = ts[:-prediction_size].values.flatten()
+    for value_diff in predicted_diff[-prediction_size:]:
+        new_value = revert_seasonal_diff_recursion(history[-12], value_diff)
+        history = np.append(history,new_value)
+    return history[-prediction_size:]
+\end{minted}
+
+\subsection{Stationariteit}
+
+Ook wanneer we hier de stationariteit van de data gaan testen krijgen we een licht dalende trend. Deze trend die zichtbaar is op figuur \ref{fig:uvsstationarity}. Deze loopt gelijk met de trend van de niet seizoensgebonden data aangezien die data het jaarlijks gemiddelde is en dit maandelijkse waarden zijn.
+
+\begin{figure}
+    \centering
+    \caption{}
+    \label{fig:uvsstationarity}
+    \includegraphics[width=0.7\linewidth]{uvsstationarity}
+\end{figure}
+
+Aangezien hier met seizoensgebonden data gewerkt wordt is het hier naast random walk differentiatie een optie om seizoensdifferentiatie te gebruiken. Dit zal dan ook getest worden. 
+
+\captionof{listing}{Code voor seizoensdifferentiatie}
+\begin{minted}[
+frame=lines,
+framesep=2mm,
+fontsize=\footnotesize,
+linenos,breaklines
+]{python}
+ts_diff_seasonal = ts - ts.shift(12)
+ts_diff_seasonal = ts_diff_seasonal.dropna()
+test_stationarity(ts_diff_seasonal)
+\end{minted}
+
+Wanneer seizoensdifferentiatie toegepast wordt zal de stationariteit voorgesteld kunnen worden zoals zichtbaar op figuur\ref{fig:uvsstationarityseasonal}. Dit is wel stationair maar fluctureert wel behoorlijk naar het einde toe.
+
+\begin{figure}
+    \centering
+    \caption{}
+    \label{fig:uvsstationarityseasonal}
+    \includegraphics[width=0.7\linewidth]{uvsstationarityseasonal}
+\end{figure}
+
+Daarnaast kan ook nog gewone random walk differentiatie toegepast worden op de data. De stationariteit van deze gedifferentieerde data wordt afgebeeld op figuur\ref{fig:uvsstationarityrw}. Hier wordt vastgesteld dat het gemiddelde een horizontale lijn is. Dit houdt in dat de data zeer stationair is.
+
+\begin{figure}
+    \centering
+    \caption{}
+    \label{fig:uvsstationarityrw}
+    \includegraphics[width=0.7\linewidth]{uvsstationarityrw}
+\end{figure}
+
+
+\captionof{listing}{code voor differentiatie}
+\begin{minted}[
+frame=lines,
+framesep=2mm,
+fontsize=\footnotesize,
+linenos,breaklines
+]{python}
+ts_diff = ts - ts.shift(1)
+ts_diff = ts_diff.dropna()
+test_stationarity(ts_diff)
+\end{minted}
+
+Er dient ook nog vermeld te worden dat door 2 verschillende types differentiaties te testen, het aantal gebruikte testsets bij crossvalidation wel verschillen. Zo zullen er bij seizoensdifferentiatie minder waarden beschikbaar zullen zijn. Concreet leidt dit ertoe dat er bij random walk differentiatie 7 trainingssets zijn die meer dan 300 waarden bevatten terwijl er bij seizoensdifferentiatie 6 trainingssets zullen zijn die meer dan 300 waarden bevatten.
+
+\subsection{ARIMA}
+
+Ook hier zal een ARIMA model opgesteld worden zowel voor de random walk gedifferentieerde data als de seizoensgedifferentieerde data.
+\subsubsection{Random walk differentiatie}
+
+Ook hier zal aan hyperparameterbepaling gedaan worden. Aangezien zo goed als alles identiek is als bij univariate non-seasonal differentiatie zal de code hiervan niet meer weergegeven worden alle code is echter terug te vinden in de bijlage.
+
+Uit die hyperparameterbepaling zal blijken dat de combinatie (3,0,4) de beste prestatie zal leveren wanneer het bereik van de parameters $p$ en $q$ 5 zal zijn. 
+
+Wanneer deze hyperparameters ingevoerd worden wordt het resultaat dat afgebeeld staat op figuur \ref{fig:uvsarimadiff} verkregen.
+
+\begin{figure}
+    \centering
+    \caption{Resultaat van ARIMA bij random walk differentiatie}
+    \label{fig:uvsarimadiff}
+    \includegraphics[width=1\linewidth]{uv_s_arima_diff}
+\end{figure}
+
+
+\subsubsection{Seizoensdifferentiatie}
+
+Ook hier zullen eerst de hyperparameters bepaald worden. Met (3,0,3) als optimale waarden bij een range van 0 tot 5 voor de waarden $p$ of $q$. Wanneer deze waarden uitgebreider getest worden resulteert dit in de uitvoer die waar te nemen valt op figuur\ref{fig:uvsarimasdiff}.
+
+
+\begin{figure}
+    \centering
+    \caption{Resultaat van ARIMA bij seizoensdifferentiatie}
+    \includegraphics[width=1\linewidth]{uv_s_arima_sdiff}
+    \label{fig:uvsarimasdiff}
+\end{figure}
+
+\subsection{SARIMA}
+
+Naast ARIMA zelf is er ook een variant op het ARIMA model die specifiek voor data met een seizoenseffect is ontworpen genaamd SARIMA. Deze variant zal in dit deel onder de loep genomen worden.
+
+\subsubsection{Random walk differentiatie} 
+
+De hyperparameterbepaling zal er hier wel anders uitzien, zo dienen voor het seizoenseffect $PDQ$ waarden bepaald te worden naast de $pdq$ waarden voor de data zelf en de $m$ waarde die het aantal tijdstappen zal weergeven van de data die binnen 1 sequentie van het seizoenseffect vallen.
+
+De beste parametercombinatie van de parameters $p, d, q, P, D, Q$ met een bereik van 3 zal (1,0,2,0,1,2) zijn. Het uitgebreid resultaat van deze combinatie wordt weergegeven op figuur\ref{fig:uvssarimaxdiff}.
+
+\begin{figure}
+    \centering
+    \caption{Resultaat SARIMAX bij random walk differentiatie}
+    \label{fig:uvssarimaxdiff}
+    \includegraphics[width=1\linewidth]{uv_s_sarimax_diff}
+\end{figure}
+
+
+\subsubsection{Seizoensdifferentiatie}
+
+Deze testopstelling is identiek aan de vorige uitgezonderd van de invoerdata die hier seizoensgedifferentieerd zal zijn. Ook hier zullen de optimale parameters (1,0,2,0,1,2) zijn. Dit de uitvoer geven die afgebeeld staat op figuur \ref{fig:uvssarimaxsdiff}.
+
+\begin{figure}
+    \centering
+    \caption{Resultaat SARIMAX bij seizoensdifferentiatie}
+    \label{fig:uvssarimaxsdiff}
+    \includegraphics[width=1\linewidth]{uv_s_sarimax_s_diff}
+\end{figure}
+
+\subsection{LSTM}
+\subsubsection{Random walk differentiatie}
+
+%Ook de opbouw van het LSTM bij seizoensgebonden univariate data verloopt net als die bij niet seizoensgebonden univariate data. Hier bleek er echter wel een verschil in resultaat bij de verschillende hyperparameters en de optimale configuratie met de testwaarden bleek een model te zijn met 1 neuron, waar de dropout rate 0.99 was en een batchgrootte die 8 bedroeg. Het eindresultaat van deze configuratie staat afgebeeld op figuur \ref{fig:uvslstmdiff}.
+
+\subsubsection{Seizoensdifferentiatie}
+
+De opstelling zal identiek zijn als de bovenstaande hier zullen de optimale parameters bestaan uit 1 neuron een dropout rate van 0.99 en een batchgrootte van 8 met het eindresultaat dat zich op figuur \ref{fig:uvslstmsdiff} bevindt.
+
+\begin{figure}
+    \centering
+    \caption{Resultaat LSTM bij seizoensdifferentiatie}
+    \label{fig:uvslstmsdiff}
+    \includegraphics[width=1\linewidth]{uv_s_lstm_s_diff}
+\end{figure}
+
+
+\subsection{Prophet}
+
+Ook hier verloopt alles bijna analoog met de niet seizoensgebonden variatie worden er hier wel 2 hyperparameters getest
+
+\subsection{Evaluatie}
+\clearpage
+
 \section{Multivariate niet-seizoensgebonden}
+In dit onderdeel van deze bachelorproef zal onderzocht worden welk van de 3 modellen de beste voorspelling maken voor meervoudige tijdreeksen. Dit houdt in dat het model een tijdreeks krijgt die meerdere features bevat per tijdstap en deze features in verband brengt om tot accuratere voorspellingen te komen. De testset zal dan ook altijd enkel blijven bestaan uit de tijdsstappen die voorspeld moeten worden.
+
+De data die gebruikt zal worden voor deze sectie wordt grafisch weergegeven op Figuur \ref{fig:mvnsdata}. Ook hier zal er gebruik gemaakt worden van cross validation.
+
+Aangezien Prophet geen multivariate tijdreeksen als invoer ondersteunt zal dit niet ge\"{e}valueerd kunnen worden.
+
+\begin{figure}
+    \centering
+    \caption{Grafische weergave multivariate tijdreeks zonder seizoenseffect}
+    \label{fig:mvnsdata}
+    \includegraphics[width=1\linewidth]{mv_ns_data}
+\end{figure}
+
+\subsection{Stationariteit}
+
+Ook hier zal de ijsdikte een dalende trend vertonen zoals weergegeven werd bij de univariate analyse en hier zal niks aan veranderen aangezien dit dezelfde data is. Ook deze data zal random walk gedifferentieerd worden maar dit keer niet enkel de ijsdikte maar ook de temperatuur. De resultaten van die differentiatie zijn zichtbaar op figuur \ref{fig:mvnsdatadiff}. Daaruit kan afgeleid worden dat de data nu stationair is.
+
+\begin{figure}
+    \centering
+    \caption{Grafische weergave gedifferentieerde multivariate tijdreeks zonder seizoenseffect}
+    \label{fig:mvnsdatadiff}
+    \includegraphics[width=1\linewidth]{mv_ns_data_diff}
+\end{figure}
+
+\subsection{VARMAX}
+Aangezien een ARIMA model slechts in staat is om tijdreeksen met 1 variabele te voorspellen moet er een variant gebruikt worden die wel in staat is om multivariate tijdreeksen te interpreteren genaamd VARMAX. 
+
+Ook hier wordt de gebruikelijke methode toegepast om de hyperparameters te bepalen en daar verandert niet veel aan. Behalve dat enkel de $p$ en $q$ variabelen verwacht worden, de $d$ variabele is hier niet nodig. 
+
+Bij een range van 0 tot 5 zijn ook hier de optimale waarden voor deze parameters (3,3). Wanneer we deze waarden invoeren in de uitgebreidere versie van de evaluatiemethode wordt het resultaat bekomen dat weergegeven wordt op Figuur \ref{fig:mvnsvarmax}.
+
+\begin{figure}
+    \centering
+    \caption{Resultaat multivariate voorspelling VARMAX}
+    \label{fig:mvnsvarmax}
+    \includegraphics[width=1\linewidth]{mv_ns_varmax}
+\end{figure}
+
+
+\subsection{LSTM}
+
+Waneer er multivariate voorspellingen gemaakt moeten worden met LSTM ziet de structuur van het neuraal netwerk er anders uit dan bij een univariate voorspelling. Zo zal er deze keer een grote functie gebruikt worden om het model op te stellen en de voorspelling te maken. Deze functie staat uitgeschreven bij listing \ref{code:pred_lstm}.
+
+De hyperparameters die hier bepaald zullen worden zijn het aantal neuronen en het aantal epochs om tot het beste resultaat te komen. Een enkel neuron blijkt alweer optimaal te zijn en met 200 epochs verkrijgt men het beste resultaat. De uitgebreide uitvoer van dit resultaat wordt weergegeven op Figuur \ref{fig:mvnslstm}.
+
+\captionof{listing}{Voorspellingsfunctie LSTM}
+\label{code:pred_lstm}
+\begin{minted}[
+frame=lines,
+framesep=2mm,
+fontsize=\footnotesize,
+linenos,breaklines
+]{python}
+def predict_LSTM(train, test, n_neurons, n_epochs):
+    test['sum'] = test['mean_temp'] + test['ice_extent']
+    
+    
+    # define input sequence
+    in_seq1 = train.values[:,0]
+    in_seq2 = train.values[:,1]
+    out_seq = array([in_seq1[i]+in_seq2[i] for i in range(len(in_seq1))])
+    
+    # convert to [rows, columns] structure
+    in_seq1 = in_seq1.reshape((len(in_seq1), 1))
+    in_seq2 = in_seq2.reshape((len(in_seq2), 1))
+    out_seq = out_seq.reshape((len(out_seq), 1))
+    
+    # horizontally stack columns
+    dataset = hstack((in_seq1, in_seq2, out_seq))
+    
+    # choose a number of time steps
+    n_steps_in, n_steps_out = 4, 4
+    
+    # covert into input/output
+    X, y = split_sequences(dataset, n_steps_in, n_steps_out)
+    
+    # the dataset knows the number of features, e.g. 2
+    n_features = X.shape[2]
+    
+    # define model
+    model = Sequential()
+    model.add(LSTM(n_neurons, activation='relu', input_shape=(n_steps_in, n_features)))
+    model.add(RepeatVector(n_steps_out))
+    model.add(LSTM(n_neurons, activation='relu', return_sequences=True))
+    model.add(TimeDistributed(Dense(n_features)))
+    model.compile(optimizer='adam', loss='mae')
+    
+    # fit model
+    model.fit(X, y, epochs=n_epochs, verbose=0)
+    
+    # demonstrate prediction
+    x_input = test.values
+    x_input = x_input.reshape((1, n_steps_in, n_features))
+    yhat = model.predict(x_input, verbose=0)
+    return yhat
+\end{minted}
+
+\begin{figure}
+    \centering
+    \caption{Resultaat multivariate voorspelling LSTM}
+    \label{fig:mvnslstm}
+    \includegraphics[width=1\linewidth]{mv_ns_LSTM}
+\end{figure}
+
+\subsection{Evaluation}
+
+Wanneer we de resultaten van de multivariate niet-seizoensgebonden voorspellingen weergegeven op Figuur \ref{fig:mvnsresult} vergelijken kunnen we stellen dat VARMAX het best presteert volgens cross validation maar wel een hogere uitvoeringstijd heeft. Daarnaast zal de laatste voorspelling van het ijsoppervlak door het VARMAX model ook accurater zijn dan dat van het LSTM model. Deze laatste voorspelling wordt grafisch weergegeven op Figuur \ref{fig:mvnsresultgraph}
+
+\begin{figure}
+    \centering
+    \caption{Resultaten multivariate voorspelling}
+    \label{fig:mvnsresult}
+    \includegraphics[width=1\linewidth]{mv_ns_result}
+\end{figure}
+
+\begin{figure}
+    \centering
+    \caption{Grafische weergaven van de laatste voorspellingen van de VARMAX en LSTM modellen}
+    \label{fig:mvnsresultgraph}
+    \includegraphics[width=1\linewidth]{mv_ns_result_graph}
+\end{figure}
+
+
 
 \section{Multivariate seizoensgebonden}
+
+De laatste combinatie die getest zal worden is de dataset waar een seizoensverband en een extra variabele aanwezig is. Hier zullen ook, net als bij de niet seizoensgebonden data, enkel VARMAX en LSTM getest worden. Hier zal ook weer cross validation gebruikt worden. Er zal ook weer random walk en seasonal differentiatie gebuikt worden.
+
+\subsection{VARMAX}
+\subsubsection{Random walk differentiatie}
+
+Waneer we de hyperparameters bepalen bij dit VARMAX model blijken de parameters (4,1) de optimale waarden te zijn bij een range van 0 tot 5. Wanneer we deze invoeren om een uitgebreider resultaat te krijgen bekomen we de uitvoer die te beschouwen valt op Figuur \ref{}
+
+\subsubsection{Seizoensdifferentiatie}
+
+\subsection{LSTM}
+\subsubsection{Random walk differentiatie}
+\subsubsection{Seizoensdifferentiatie}
+
+\subsection{Evaluation}
+
+

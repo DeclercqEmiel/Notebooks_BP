@@ -15,25 +15,57 @@
 \defcounter {refsection}{0}\relax 
 \contentsline {section}{\numberline {1.2}Univariate niet-seizoensgebonden}{20}{section.1.2}% 
 \defcounter {refsection}{0}\relax 
-\contentsline {subsection}{\numberline {1.2.1}Voorbereiding}{20}{subsection.1.2.1}% 
+\contentsline {subsection}{\numberline {1.2.1}Algemene methodes}{20}{subsection.1.2.1}% 
 \defcounter {refsection}{0}\relax 
-\contentsline {subsection}{\numberline {1.2.2}Stationariteit}{20}{subsection.1.2.2}% 
+\contentsline {subsection}{\numberline {1.2.2}Stationariteit}{21}{subsection.1.2.2}% 
 \defcounter {refsection}{0}\relax 
-\contentsline {subsection}{\numberline {1.2.3}Cross validation}{21}{subsection.1.2.3}% 
+\contentsline {subsection}{\numberline {1.2.3}Cross validation}{23}{subsection.1.2.3}% 
 \defcounter {refsection}{0}\relax 
-\contentsline {subsection}{\numberline {1.2.4}Algemene methodes}{22}{subsection.1.2.4}% 
+\contentsline {subsection}{\numberline {1.2.4}ARIMA}{23}{subsection.1.2.4}% 
 \defcounter {refsection}{0}\relax 
-\contentsline {subsection}{\numberline {1.2.5}ARIMA}{23}{subsection.1.2.5}% 
+\contentsline {subsection}{\numberline {1.2.5}LSTM}{27}{subsection.1.2.5}% 
 \defcounter {refsection}{0}\relax 
-\contentsline {subsection}{\numberline {1.2.6}LSTM}{27}{subsection.1.2.6}% 
+\contentsline {subsection}{\numberline {1.2.6}Prophet}{33}{subsection.1.2.6}% 
 \defcounter {refsection}{0}\relax 
-\contentsline {subsection}{\numberline {1.2.7}Prophet}{33}{subsection.1.2.7}% 
+\contentsline {subsection}{\numberline {1.2.7}Evaluatie}{36}{subsection.1.2.7}% 
 \defcounter {refsection}{0}\relax 
-\contentsline {subsection}{\numberline {1.2.8}Evaluatie}{36}{subsection.1.2.8}% 
+\contentsline {section}{\numberline {1.3}Univariate seizoensgebonden}{38}{section.1.3}% 
 \defcounter {refsection}{0}\relax 
-\contentsline {section}{\numberline {1.3}Univariate seizoensgebonden}{36}{section.1.3}% 
+\contentsline {subsection}{\numberline {1.3.1}Algemene methodes}{38}{subsection.1.3.1}% 
 \defcounter {refsection}{0}\relax 
-\contentsline {section}{\numberline {1.4}Multivariate niet-seizoensgebonden}{36}{section.1.4}% 
+\contentsline {subsection}{\numberline {1.3.2}Stationariteit}{39}{subsection.1.3.2}% 
 \defcounter {refsection}{0}\relax 
-\contentsline {section}{\numberline {1.5}Multivariate seizoensgebonden}{36}{section.1.5}% 
+\contentsline {subsection}{\numberline {1.3.3}ARIMA}{40}{subsection.1.3.3}% 
+\defcounter {refsection}{0}\relax 
+\contentsline {subsubsection}{Random walk differentiatie}{40}{subsection.1.3.3}% 
+\defcounter {refsection}{0}\relax 
+\contentsline {subsubsection}{Seizoensdifferentiatie}{41}{figure.caption.24}% 
+\defcounter {refsection}{0}\relax 
+\contentsline {subsection}{\numberline {1.3.4}SARIMA}{41}{subsection.1.3.4}% 
+\defcounter {refsection}{0}\relax 
+\contentsline {subsubsection}{Random walk differentiatie}{42}{subsection.1.3.4}% 
+\defcounter {refsection}{0}\relax 
+\contentsline {subsubsection}{Seizoensdifferentiatie}{42}{figure.caption.26}% 
+\defcounter {refsection}{0}\relax 
+\contentsline {subsection}{\numberline {1.3.5}LSTM}{42}{subsection.1.3.5}% 
+\defcounter {refsection}{0}\relax 
+\contentsline {subsubsection}{Random walk differentiatie}{42}{subsection.1.3.5}% 
+\defcounter {refsection}{0}\relax 
+\contentsline {subsubsection}{Seizoensdifferentiatie}{42}{subsection.1.3.5}% 
+\defcounter {refsection}{0}\relax 
+\contentsline {subsection}{\numberline {1.3.6}Prophet}{42}{subsection.1.3.6}% 
+\defcounter {refsection}{0}\relax 
+\contentsline {subsection}{\numberline {1.3.7}Evaluatie}{44}{subsection.1.3.7}% 
+\defcounter {refsection}{0}\relax 
+\contentsline {section}{\numberline {1.4}Multivariate niet-seizoensgebonden}{45}{section.1.4}% 
+\defcounter {refsection}{0}\relax 
+\contentsline {subsection}{\numberline {1.4.1}Stationariteit}{45}{subsection.1.4.1}% 
+\defcounter {refsection}{0}\relax 
+\contentsline {subsection}{\numberline {1.4.2}VARMAX}{47}{subsection.1.4.2}% 
+\defcounter {refsection}{0}\relax 
+\contentsline {subsection}{\numberline {1.4.3}LSTM}{47}{subsection.1.4.3}% 
+\defcounter {refsection}{0}\relax 
+\contentsline {subsection}{\numberline {1.4.4}Evaluation}{48}{subsection.1.4.4}% 
+\defcounter {refsection}{0}\relax 
+\contentsline {section}{\numberline {1.5}Multivariate seizoensgebonden}{48}{section.1.5}% 
 \contentsfinish 

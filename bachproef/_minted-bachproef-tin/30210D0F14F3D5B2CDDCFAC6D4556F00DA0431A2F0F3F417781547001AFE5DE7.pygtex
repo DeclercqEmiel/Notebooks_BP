@@ -1,0 +1,5 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{n}{ts\PYGZus{}diff\PYGZus{}seasonal} \PYG{o}{=} \PYG{n}{ts} \PYG{o}{\PYGZhy{}} \PYG{n}{ts}\PYG{o}{.}\PYG{n}{shift}\PYG{p}{(}\PYG{l+m+mi}{12}\PYG{p}{)}
+\PYG{n}{ts\PYGZus{}diff\PYGZus{}seasonal} \PYG{o}{=} \PYG{n}{ts\PYGZus{}diff\PYGZus{}seasonal}\PYG{o}{.}\PYG{n}{dropna}\PYG{p}{()}
+\PYG{n}{test\PYGZus{}stationarity}\PYG{p}{(}\PYG{n}{ts\PYGZus{}diff\PYGZus{}seasonal}\PYG{p}{)}
+\end{Verbatim}
