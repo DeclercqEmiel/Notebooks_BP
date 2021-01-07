@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.19 (MiKTeX 2.9.7050 64-bit) (preloaded format=pdflatex 2019.3.7)  5 JAN 2021 20:24
+This is pdfTeX, Version 3.14159265-2.6-1.40.19 (MiKTeX 2.9.7050 64-bit) (preloaded format=pdflatex 2019.3.7)  7 JAN 2021 01:59
 entering extended mode
 **./bachproef-tin.tex
 (bachproef-tin.tex
@@ -1902,28 +1902,28 @@ runsystem(del bachproef-tin.aex)...executed.
  (bachproef-tin.aux)
 \openout1 = `bachproef-tin.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 71.
-LaTeX Font Info:    ... okay on input line 71.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 71.
-LaTeX Font Info:    ... okay on input line 71.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 71.
-LaTeX Font Info:    ... okay on input line 71.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 71.
-LaTeX Font Info:    ... okay on input line 71.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 71.
-LaTeX Font Info:    ... okay on input line 71.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 71.
-LaTeX Font Info:    ... okay on input line 71.
-LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 71.
-LaTeX Font Info:    ... okay on input line 71.
-LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 71.
-LaTeX Font Info:    Try loading font information for TS1+cmr on input line 71.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 73.
+LaTeX Font Info:    ... okay on input line 73.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 73.
+LaTeX Font Info:    ... okay on input line 73.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 73.
+LaTeX Font Info:    ... okay on input line 73.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 73.
+LaTeX Font Info:    ... okay on input line 73.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 73.
+LaTeX Font Info:    ... okay on input line 73.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 73.
+LaTeX Font Info:    ... okay on input line 73.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 73.
+LaTeX Font Info:    ... okay on input line 73.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 73.
+LaTeX Font Info:    Try loading font information for TS1+cmr on input line 73.
 
 ("C:\Users\Emiel\AppData\Local\Programs\MiKTeX 2.9\tex/latex/base\ts1cmr.fd"
 File: ts1cmr.fd 2014/09/29 v2.5h Standard LaTeX font definitions
 )
-LaTeX Font Info:    ... okay on input line 71.
-LaTeX Font Info:    Try loading font information for T1+ptm on input line 71.
+LaTeX Font Info:    ... okay on input line 73.
+LaTeX Font Info:    Try loading font information for T1+ptm on input line 73.
 
 ("C:\Users\Emiel\AppData\Local\Programs\MiKTeX 2.9\tex/latex/psnfss\t1ptm.fd"
 File: t1ptm.fd 2001/06/04 font definitions for T1/ptm.
@@ -1995,7 +1995,7 @@ G,.JBIG2,.JB2,.eps]
 )
 \c@lstlisting=\count510
  ABD: EveryShipout initializing macros
-LaTeX Info: Redefining \microtypecontext on input line 71.
+LaTeX Info: Redefining \microtypecontext on input line 73.
 Package microtype Info: Generating PDF output.
 Package microtype Info: Character protrusion enabled (level 2).
 Package microtype Info: Using default protrusion set `alltext'.
@@ -2011,7 +2011,7 @@ fg"
 File: mt-ptm.cfg 2006/04/20 v1.7 microtype config. file: Times (RS)
 )
 \AtBeginShipoutBox=\box80
-Package hyperref Info: Link coloring OFF on input line 71.
+Package hyperref Info: Link coloring OFF on input line 73.
 
 ("C:\Users\Emiel\AppData\Local\Programs\MiKTeX 2.9\tex/latex/hyperref\nameref.s
 ty"
@@ -2023,9 +2023,9 @@ Package: gettitlestring 2016/05/16 v1.5 Cleanup title references (HO)
 )
 \c@section@level=\count511
 )
-LaTeX Info: Redefining \ref on input line 71.
-LaTeX Info: Redefining \pageref on input line 71.
-LaTeX Info: Redefining \nameref on input line 71.
+LaTeX Info: Redefining \ref on input line 73.
+LaTeX Info: Redefining \pageref on input line 73.
+LaTeX Info: Redefining \nameref on input line 73.
 Package biblatex Info: Input encoding 'utf8' detected.
 Package biblatex Info: Automatic encoding selection.
 (biblatex)             Assuming data encoding 'utf8'.
@@ -2033,9 +2033,98 @@ Package biblatex Info: Automatic encoding selection.
 
 Package biblatex Info: Trying to load bibliographic data...
 Package biblatex Info: ... file 'bachproef-tin.bbl' found.
- (bachproef-tin.bbl)
-Package biblatex Info: Reference section=0 on input line 71.
-Package biblatex Info: Reference segment=0 on input line 71.
+ (bachproef-tin.bbl
+
+Package biblatex Warning: Biber reported the following issues
+(biblatex)                with 'Brown2020':
+(biblatex)                - Entry 'Brown2020' (bachproef-tin.bib): Invalid form
+at '26-11-20' of date field 'urldate' - ignoring.
+
+
+Package biblatex Warning: Biber reported the following issues
+(biblatex)                with 'Brownlee2017b':
+(biblatex)                - Entry 'Brownlee2017b' (bachproef-tin.bib): Invalid 
+format '2020-12-1' of date field 'urldate' - ignoring.
+
+
+Package biblatex Warning: Biber reported the following issues
+(biblatex)                with 'Prophet2020':
+(biblatex)                - Entry 'Prophet2020' (bachproef-tin.bib): Invalid fo
+rmat '6-12-20' of date field 'urldate' - ignoring.
+
+
+Package biblatex Warning: Biber reported the following issues
+(biblatex)                with 'Kampakis2020':
+(biblatex)                - Entry 'Kampakis2020' (bachproef-tin.bib): Invalid f
+ormat '6-12-20' of date field 'urldate' - ignoring.
+
+
+Package biblatex Warning: Biber reported the following issues
+(biblatex)                with 'Nau2020':
+(biblatex)                - Entry 'Nau2020' (bachproef-tin.bib): Invalid format
+ '2-12-20' of date field 'urldate' - ignoring.
+
+
+Package biblatex Warning: Biber reported the following issues
+(biblatex)                with 'Hyndman2018':
+(biblatex)                - Entry 'Hyndman2018' (bachproef-tin.bib): Invalid fo
+rmat '27-11-20' of date field 'urldate' - ignoring.
+
+
+Package biblatex Warning: Biber reported the following issues
+(biblatex)                with 'Shrivastava2020':
+(biblatex)                - Entry 'Shrivastava2020' (bachproef-tin.bib): Invali
+d format '8-12-20' of date field 'urldate' - ignoring.
+
+
+Package biblatex Warning: Biber reported the following issues
+(biblatex)                with 'Sinha2019':
+(biblatex)                - Entry 'Sinha2019' (bachproef-tin.bib): Invalid form
+at '11-12-20' of date field 'urldate' - ignoring.
+
+
+Package biblatex Warning: Biber reported the following issues
+(biblatex)                with 'Swaminathan2018':
+(biblatex)                - Entry 'Swaminathan2018' (bachproef-tin.bib): Invali
+d format '26-11-20' of date field 'urldate' - ignoring.
+
+
+Package biblatex Warning: Biber reported the following issues
+(biblatex)                with 'Rahman2019':
+(biblatex)                - Entry 'Rahman2019' (bachproef-tin.bib): Invalid for
+mat '1-12-20' of date field 'urldate' - ignoring.
+
+
+Package biblatex Warning: The following entry could not be found
+(biblatex)                in the database:
+(biblatex)                Colah2015
+(biblatex)                Please verify the spelling and rerun
+(biblatex)                LaTeX afterwards.
+
+
+Package biblatex Warning: The following entry could not be found
+(biblatex)                in the database:
+(biblatex)                Pant2019
+(biblatex)                Please verify the spelling and rerun
+(biblatex)                LaTeX afterwards.
+
+
+Package biblatex Warning: The following entry could not be found
+(biblatex)                in the database:
+(biblatex)                Salvi2020
+(biblatex)                Please verify the spelling and rerun
+(biblatex)                LaTeX afterwards.
+
+
+Package biblatex Warning: The following entry could not be found
+(biblatex)                in the database:
+(biblatex)                Siami-Namini2018
+(biblatex)                Please verify the spelling and rerun
+(biblatex)                LaTeX afterwards.
+
+)
+Package biblatex Info: Reference section=0 on input line 73.
+Package biblatex Info: Reference segment=0 on input line 73.
 
 No file pythontex-files-bachproef-tin/bachproef-tin.pytxmcr.
 Run PythonTeX to create it.
@@ -2043,7 +2132,7 @@ Run PythonTeX to create it.
 Package PythonTeX Warning: A "listing" environment already exists 
 (PythonTeX)                PythonTeX will not create one 
 (PythonTeX)                Use \setpythontexlistingenv to create a custom listi
-ng environment on input line 71.
+ng environment on input line 73.
 
 Package caption Info: Begin \AtBeginDocument code.
 Package caption Info: End \AtBeginDocument code.
@@ -2082,7 +2171,7 @@ Package caption Info: End \AtBeginDocument code.
 <img/HOGENT_Logo_Pos_rgb.png, id=6, 3503.0875pt x 1975.38pt>
 File: img/HOGENT_Logo_Pos_rgb.png Graphic file (type png)
 <use img/HOGENT_Logo_Pos_rgb.png>
-Package pdftex.def Info: img/HOGENT_Logo_Pos_rgb.png  used on input line 80.
+Package pdftex.def Info: img/HOGENT_Logo_Pos_rgb.png  used on input line 82.
 (pdftex.def)             Requested size: 71.13188pt x 40.08864pt.
 [1
 
@@ -2128,7 +2217,7 @@ pdfTeX warning (ext4): destination with the same identifier (name{page.1}) has
 been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.80 \inserttitlepage
+l.82 \inserttitlepage
                       [1
 
 
@@ -2161,9 +2250,11 @@ LaTeX Font Info:    Try loading font information for TS1+ptm on input line 42.
 
 ("C:\Users\Emiel\AppData\Local\Programs\MiKTeX 2.9\tex/latex/psnfss\ts1ptm.fd"
 File: ts1ptm.fd 2001/06/04 font definitions for TS1/ptm.
-)) [5] [6
+)
+Underfull \vbox (badness 10000) has occurred while \output is active []
 
-] (bachproef-tin.toc
+ [5])
+[6] (bachproef-tin.toc
 LaTeX Font Info:    Font shape `T1/pag/bx/n' in size <14.4> not available
 (Font)              Font shape `T1/pag/b/n' tried instead on input line 4.
 LaTeX Font Info:    Font shape `T1/pag/b/n' in size <14.4> not available
@@ -2179,72 +2270,23 @@ LaTeX Font Info:    Font shape `T1/pag/b/n' in size <12> not available
 
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
- [7])
+ [7
+
+]
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [8]
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [9])
 \tf@toc=\write9
 \openout9 = `bachproef-tin.toc'.
 
 
-[8] (bachproef-tin.lof
-Underfull \vbox (badness 10000) has occurred while \output is active []
-
- [9
-
-
-])
-\tf@lof=\write10
-\openout10 = `bachproef-tin.lof'.
-
-
-(methodologie.tex [10]
-Hoofdstuk 1.
-LaTeX Font Info:    Font shape `T1/ptm/bx/n' in size <20.74> not available
-(Font)              Font shape `T1/ptm/b/n' tried instead on input line 8.
-LaTeX Font Info:    Font shape `T1/ptm/bx/n' in size <17.28> not available
+[10] (bachproef-tin.lof
+LaTeX Font Info:    Font shape `T1/ptm/bx/n' in size <12> not available
 (Font)              Font shape `T1/ptm/b/n' tried instead on input line 10.
-LaTeX Font Info:    Font shape `T1/ptm/bx/n' in size <14.4> not available
-(Font)              Font shape `T1/ptm/b/n' tried instead on input line 11.
-[11
-
-]
-
-Package caption Warning: \captionsetup{type*=...} or \captionof
-(caption)                outside box or environment on input line 15.
-See the caption package documentation for explanation.
-
-
-Package caption Warning: The option `hypcap=true' will be ignored for this
-(caption)                particular \caption on input line 15.
-See the caption package documentation for explanation.
-
-Package hyperref Info: bookmark level for unknown listing defaults to 0 on inpu
-t line 15.
-\openout6 = `bachproef-tin.pyg'.
-
-(_minted-bachproef-tin/default-pyg-prefix.pygstyle)
-(_minted-bachproef-tin/default.pygstyle)
-(_minted-bachproef-tin/D2B8402B009318CCD71A3944A77230A1DA0431A2F0F3F41778154700
-1AFE5DE7.pygtex
-LaTeX Font Info:    Try loading font information for T1+cmtt on input line 1.
-
-("C:\Users\Emiel\AppData\Local\Programs\MiKTeX 2.9\tex/latex/base\t1cmtt.fd"
-File: t1cmtt.fd 2014/09/29 v2.5h Standard LaTeX font definitions
-)
-Package microtype Info: Loading generic protrusion settings for font family
-(microtype)             `cmtt' (encoding: T1).
-(microtype)             For optimal results, create family-specific settings.
-(microtype)             See the microtype manual for details.
-LaTeX Font Info:    Try loading font information for TS1+cmtt on input line 3.
-
-("C:\Users\Emiel\AppData\Local\Programs\MiKTeX 2.9\tex/latex/base\ts1cmtt.fd"
-File: ts1cmtt.fd 2014/09/29 v2.5h Standard LaTeX font definitions
-)
-Package microtype Info: Loading generic protrusion settings for font family
-(microtype)             `cmtt' (encoding: TS1).
-(microtype)             For optimal results, create family-specific settings.
-(microtype)             See the microtype manual for details.
-LaTeX Font Info:    Font shape `T1/cmtt/bx/n' in size <10> not available
-(Font)              Font shape `T1/cmtt/m/n' tried instead on input line 19.
-LaTeX Font Info:    Try loading font information for OT1+ztmcm on input line 32
+LaTeX Font Info:    Try loading font information for OT1+ztmcm on input line 24
 .
 
 ("C:\Users\Emiel\AppData\Local\Programs\MiKTeX 2.9\tex/latex/psnfss\ot1ztmcm.fd
@@ -2255,21 +2297,21 @@ Package microtype Info: Loading generic protrusion settings for font family
 (microtype)             `ztmcm' (encoding: OT1).
 (microtype)             For optimal results, create family-specific settings.
 (microtype)             See the microtype manual for details.
-LaTeX Font Info:    Try loading font information for OML+ztmcm on input line 32
+LaTeX Font Info:    Try loading font information for OML+ztmcm on input line 24
 .
 
 ("C:\Users\Emiel\AppData\Local\Programs\MiKTeX 2.9\tex/latex/psnfss\omlztmcm.fd
 "
 File: omlztmcm.fd 2000/01/03 Fontinst v1.801 font definitions for OML/ztmcm.
 )
-LaTeX Font Info:    Try loading font information for OMS+ztmcm on input line 32
+LaTeX Font Info:    Try loading font information for OMS+ztmcm on input line 24
 .
 
 ("C:\Users\Emiel\AppData\Local\Programs\MiKTeX 2.9\tex/latex/psnfss\omsztmcm.fd
 "
 File: omsztmcm.fd 2000/01/03 Fontinst v1.801 font definitions for OMS/ztmcm.
 )
-LaTeX Font Info:    Try loading font information for OMX+ztmcm on input line 32
+LaTeX Font Info:    Try loading font information for OMX+ztmcm on input line 24
 .
 
 ("C:\Users\Emiel\AppData\Local\Programs\MiKTeX 2.9\tex/latex/psnfss\omxztmcm.fd
@@ -2284,11 +2326,256 @@ File: mt-msa.cfg 2006/02/04 v1.1 microtype config. file: AMS symbols (a) (RS)
 fg"
 File: mt-msb.cfg 2005/06/01 v1.0 microtype config. file: AMS symbols (b) (RS)
 )
-LaTeX Font Info:    Try loading font information for OT1+ptm on input line 32.
+LaTeX Font Info:    Try loading font information for OT1+ptm on input line 24.
 
 ("C:\Users\Emiel\AppData\Local\Programs\MiKTeX 2.9\tex/latex/psnfss\ot1ptm.fd"
 File: ot1ptm.fd 2001/06/04 font definitions for OT1/ptm.
 )
+LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <12> not available
+(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 24.
+LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <9> not available
+(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 24.
+LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <7> not available
+(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 24.
+[11
+
+
+]
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [12])
+\tf@lof=\write10
+\openout10 = `bachproef-tin.lof'.
+
+
+(inleiding.tex [13] [14
+
+]
+Hoofdstuk 1.
+
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [15]
+LaTeX Font Info:    Font shape `T1/ptm/bx/n' in size <20.74> not available
+(Font)              Font shape `T1/ptm/b/n' tried instead on input line 18.
+
+Underfull \hbox (badness 10000) in paragraph at lines 39--40
+
+ []
+
+[16]) (standvanzaken.tex [17] [18
+
+]
+Hoofdstuk 2.
+LaTeX Font Info:    Font shape `T1/ptm/bx/n' in size <17.28> not available
+(Font)              Font shape `T1/ptm/b/n' tried instead on input line 14.
+[19]
+<least_squares.png, id=545, 265.59225pt x 90.3375pt>
+File: least_squares.png Graphic file (type png)
+<use least_squares.png>
+Package pdftex.def Info: least_squares.png  used on input line 35.
+(pdftex.def)             Requested size: 298.75264pt x 101.62666pt.
+
+
+LaTeX Warning: `!h' float specifier changed to `!ht'.
+
+[20]
+<ExampleDataLinearRegressionGraph.png, id=553, 289.08pt x 224.33812pt>
+File: ExampleDataLinearRegressionGraph.png Graphic file (type png)
+<use ExampleDataLinearRegressionGraph.png>
+Package pdftex.def Info: ExampleDataLinearRegressionGraph.png  used on input li
+ne 77.
+(pdftex.def)             Requested size: 298.75264pt x 231.85474pt.
+
+
+LaTeX Warning: `!h' float specifier changed to `!ht'.
+
+[21 <./least_squares.png>] [22 <./ExampleDataLinearRegressionGraph.png>]
+[23]
+<stationarity.png, id=587, 585.98924pt x 427.5975pt>
+File: stationarity.png Graphic file (type png)
+<use stationarity.png>
+Package pdftex.def Info: stationarity.png  used on input line 142.
+(pdftex.def)             Requested size: 298.75264pt x 218.00659pt.
+ [24 <./stationarity.png>]
+LaTeX Font Info:    Font shape `T1/ptm/bx/n' in size <14.4> not available
+(Font)              Font shape `T1/ptm/b/n' tried instead on input line 168.
+
+Underfull \vbox (badness 2617) has occurred while \output is active []
+
+ [25]
+[26] [27]
+Underfull \vbox (badness 2980) has occurred while \output is active []
+
+ [28]
+[29] [30] [31]
+<neuron.png, id=661, 322.95656pt x 155.07938pt>
+File: neuron.png Graphic file (type png)
+<use neuron.png>
+Package pdftex.def Info: neuron.png  used on input line 362.
+(pdftex.def)             Requested size: 298.75264pt x 143.46272pt.
+ [32 <./neuron.png>]
+LaTeX Font Info:    Font shape `T1/pag/bx/n' in size <10.95> not available
+(Font)              Font shape `T1/pag/b/n' tried instead on input line 395.
+LaTeX Font Info:    Font shape `T1/pag/b/n' in size <10.95> not available
+(Font)              Font shape `T1/pag/db/n' tried instead on input line 395.
+ [33]
+<lstmFig1.png, id=678, 452.892pt x 170.0754pt>
+File: lstmFig1.png Graphic file (type png)
+<use lstmFig1.png>
+Package pdftex.def Info: lstmFig1.png  used on input line 411.
+(pdftex.def)             Requested size: 298.75264pt x 112.193pt.
+<lstmFig2.png, id=682, 452.892pt x 175.857pt>
+File: lstmFig2.png Graphic file (type png)
+<use lstmFig2.png>
+Package pdftex.def Info: lstmFig2.png  used on input line 422.
+(pdftex.def)             Requested size: 298.75264pt x 116.00694pt.
+ [34 <./lstmFig1.png> <./lstmFig2.png>]
+<lstmFig3.png, id=691, 452.892pt x 135.8676pt>
+File: lstmFig3.png Graphic file (type png)
+<use lstmFig3.png>
+Package pdftex.def Info: lstmFig3.png  used on input line 435.
+(pdftex.def)             Requested size: 298.75264pt x 89.62726pt.
+<lstmFig4.png, id=694, 452.892pt x 132.9768pt>
+File: lstmFig4.png Graphic file (type png)
+<use lstmFig4.png>
+Package pdftex.def Info: lstmFig4.png  used on input line 446.
+(pdftex.def)             Requested size: 298.75264pt x 87.7203pt.
+<lstmFig5.png, id=697, 452.892pt x 135.8676pt>
+File: lstmFig5.png Graphic file (type png)
+<use lstmFig5.png>
+Package pdftex.def Info: lstmFig5.png  used on input line 456.
+(pdftex.def)             Requested size: 298.75264pt x 89.62726pt.
+<lstmFig6.png, id=700, 452.892pt x 147.9126pt>
+File: lstmFig6.png Graphic file (type png)
+<use lstmFig6.png>
+Package pdftex.def Info: lstmFig6.png  used on input line 466.
+(pdftex.def)             Requested size: 298.75264pt x 97.57295pt.
+
+[35 <./lstmFig3.png> <./lstmFig4.png> <./lstmFig5.png>]
+("C:\Users\Emiel\AppData\Local\Programs\MiKTeX 2.9\tex/latex/listings\lstlang1.
+sty"
+File: lstlang1.sty 2019/02/27 1.8b listings language file
+) [36 <./lstmFig6.png>]
+<parabolicfunction.png, id=723, 424.58624pt x 396.48125pt>
+File: parabolicfunction.png Graphic file (type png)
+<use parabolicfunction.png>
+Package pdftex.def Info: parabolicfunction.png  used on input line 510.
+(pdftex.def)             Requested size: 298.75264pt x 278.98692pt.
+
+Underfull \vbox (badness 2707) has occurred while \output is active []
+
+ [37]
+[38 <./parabolicfunction.png (PNG copy)>]
+
+Package caption Warning: \captionsetup{type*=...} or \captionof
+(caption)                outside box or environment on input line 543.
+See the caption package documentation for explanation.
+
+
+Package caption Warning: The option `hypcap=true' will be ignored for this
+(caption)                particular \caption on input line 543.
+See the caption package documentation for explanation.
+
+Package hyperref Info: bookmark level for unknown listing defaults to 0 on inpu
+t line 543.
+\openout6 = `bachproef-tin.pyg'.
+
+(_minted-bachproef-tin/default-pyg-prefix.pygstyle)
+(_minted-bachproef-tin/default.pygstyle)
+(_minted-bachproef-tin/592B81D50BE00FDBA48F38DDD4B34FD1DA0431A2F0F3F41778154700
+1AFE5DE7.pygtex
+LaTeX Font Info:    Try loading font information for T1+cmtt on input line 1.
+
+("C:\Users\Emiel\AppData\Local\Programs\MiKTeX 2.9\tex/latex/base\t1cmtt.fd"
+File: t1cmtt.fd 2014/09/29 v2.5h Standard LaTeX font definitions
+)
+Package microtype Info: Loading generic protrusion settings for font family
+(microtype)             `cmtt' (encoding: T1).
+(microtype)             For optimal results, create family-specific settings.
+(microtype)             See the microtype manual for details.
+LaTeX Font Info:    Font shape `T1/cmtt/bx/n' in size <10> not available
+(Font)              Font shape `T1/cmtt/m/n' tried instead on input line 3.
+
+[39]
+LaTeX Font Info:    Try loading font information for TS1+cmtt on input line 38.
+
+
+("C:\Users\Emiel\AppData\Local\Programs\MiKTeX 2.9\tex/latex/base\ts1cmtt.fd"
+File: ts1cmtt.fd 2014/09/29 v2.5h Standard LaTeX font definitions
+)
+Package microtype Info: Loading generic protrusion settings for font family
+(microtype)             `cmtt' (encoding: TS1).
+(microtype)             For optimal results, create family-specific settings.
+(microtype)             See the microtype manual for details.
+)
+<stacked_lstm.png, id=757, 62.03175pt x 196.3335pt>
+File: stacked_lstm.png Graphic file (type png)
+<use stacked_lstm.png>
+Package pdftex.def Info: stacked_lstm.png  used on input line 610.
+(pdftex.def)             Requested size: 64.01608pt x 202.6122pt.
+[40 <./stacked_lstm.png>]
+<bidirectional_lstm.png, id=765, 303.534pt x 115.632pt>
+File: bidirectional_lstm.png Graphic file (type png)
+<use bidirectional_lstm.png>
+Package pdftex.def Info: bidirectional_lstm.png  used on input line 623.
+(pdftex.def)             Requested size: 298.75264pt x 113.81085pt.
+<ConvLSTM.png, id=768, 423.984pt x 149.96025pt>
+File: ConvLSTM.png Graphic file (type png)
+<use ConvLSTM.png>
+Package pdftex.def Info: ConvLSTM.png  used on input line 638.
+(pdftex.def)             Requested size: 298.75264pt x 105.66934pt.
+
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [41 <./bidirectional_lstm.png> <./ConvLSTM.png>]
+<encoder_decoder_lstm.png, id=779, 88.83188pt x 249.93375pt>
+File: encoder_decoder_lstm.png Graphic file (type png)
+<use encoder_decoder_lstm.png>
+Package pdftex.def Info: encoder_decoder_lstm.png  used on input line 676.
+(pdftex.def)             Requested size: 64.01608pt x 180.11996pt.
+
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [42]
+Underfull \hbox (badness 10000) in paragraph at lines 694--696
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 697--699
+
+ []
+
+<fittingcurve.png, id=788, 600.44325pt x 155.98276pt>
+File: fittingcurve.png Graphic file (type png)
+<use fittingcurve.png>
+Package pdftex.def Info: fittingcurve.png  used on input line 708.
+(pdftex.def)             Requested size: 426.79135pt x 110.8723pt.
+
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [43 <./encoder_decoder_lstm.png>] [44 <./fittingcurve.png (PNG copy)>]
+<cross_validation_ts.png, id=806, 578.16pt x 278.2395pt>
+File: cross_validation_ts.png Graphic file (type png)
+<use cross_validation_ts.png>
+Package pdftex.def Info: cross_validation_ts.png  used on input line 760.
+(pdftex.def)             Requested size: 384.1096pt x 184.85287pt.
+) (methodologie.tex [45] [46 <./cross_validation_ts.png>]
+Hoofdstuk 3.
+[47
+
+]
+
+Package caption Warning: The option `hypcap=true' will be ignored for this
+(caption)                particular \caption on input line 15.
+See the caption package documentation for explanation.
+
+\openout6 = `bachproef-tin.pyg'.
+
+
+(_minted-bachproef-tin/D2B8402B009318CCD71A3944A77230A1DA0431A2F0F3F41778154700
+1AFE5DE7.pygtex
 LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <6> not available
 (Font)              Font shape `OT1/ptm/b/n' tried instead on input line 32.
 LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <5> not available
@@ -2298,21 +2585,15 @@ Underfull \hbox (badness 10000) in paragraph at lines 62--63
 
  []
 
-LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <12> not available
-(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 70.
-LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <9> not available
-(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 70.
-LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <7> not available
-(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 70.
 
 Underfull \hbox (badness 10000) in paragraph at lines 65--73
 
  []
 
-[12
+[48
 
 ]
-<temp_data_rawpng.png, id=253, 603.0028pt x 226.59656pt>
+<temp_data_rawpng.png, id=835, 603.0028pt x 226.59656pt>
 File: temp_data_rawpng.png Graphic file (type png)
 <use temp_data_rawpng.png>
 Package pdftex.def Info: temp_data_rawpng.png  used on input line 80.
@@ -2322,7 +2603,7 @@ Underfull \hbox (badness 10000) in paragraph at lines 84--85
 
  []
 
-<temp_data_graph.png, id=255, 273.27094pt x 180.675pt>
+<temp_data_graph.png, id=837, 273.27094pt x 180.675pt>
 File: temp_data_graph.png Graphic file (type png)
 <use temp_data_graph.png>
 Package pdftex.def Info: temp_data_graph.png  used on input line 92.
@@ -2332,14 +2613,14 @@ Underfull \hbox (badness 10000) in paragraph at lines 97--99
 
  []
 
-[13 <./temp_data_rawpng.png (PNG copy)> <./temp_data_graph.png (PNG copy)>]
-<temp_data.png, id=262, 109.00725pt x 197.538pt>
+[49 <./temp_data_rawpng.png (PNG copy)> <./temp_data_graph.png (PNG copy)>]
+<temp_data.png, id=843, 109.00725pt x 197.538pt>
 File: temp_data.png Graphic file (type png)
 <use temp_data.png>
 Package pdftex.def Info: temp_data.png  used on input line 112.
 (pdftex.def)             Requested size: 128.0387pt x 232.03784pt.
 
-[14 <./temp_data.png (PNG copy)>]
+[50 <./temp_data.png (PNG copy)>]
 
 Package caption Warning: The option `hypcap=true' will be ignored for this
 (caption)                particular \caption on input line 125.
@@ -2390,14 +2671,14 @@ Overfull \hbox (14.10098pt too wide) in paragraph at lines 47--47
 0 '[]\T1/cmtt/m/n/10 ])|  
  []
 
-[15
+[51
 
 ])
 Underfull \hbox (badness 10000) in paragraph at lines 183--186
 
  []
 
-<ice_data_rawpng.png, id=273, 546.24075pt x 189.1065pt>
+<ice_data_rawpng.png, id=854, 546.24075pt x 189.1065pt>
 File: ice_data_rawpng.png Graphic file (type png)
 <use ice_data_rawpng.png>
 Package pdftex.def Info: ice_data_rawpng.png  used on input line 191.
@@ -2417,12 +2698,12 @@ Underfull \hbox (badness 10000) in paragraph at lines 201--202
 
  []
 
-<ice_extent_monthly.png, id=275, 211.38976pt x 155.98276pt>
+<ice_extent_monthly.png, id=856, 211.38976pt x 155.98276pt>
 File: ice_extent_monthly.png Graphic file (type png)
 <use ice_extent_monthly.png>
 Package pdftex.def Info: ice_extent_monthly.png  used on input line 207.
 (pdftex.def)             Requested size: 298.75264pt x 220.46172pt.
-<ice_extent_data.png, id=277, 84.91725pt x 183.68625pt>
+<ice_extent_data.png, id=858, 84.91725pt x 183.68625pt>
 File: ice_extent_data.png Graphic file (type png)
 <use ice_extent_data.png>
 Package pdftex.def Info: ice_extent_data.png  used on input line 218.
@@ -2435,7 +2716,7 @@ See the caption package documentation for explanation.
 
 Underfull \vbox (badness 2653) has occurred while \output is active []
 
- [16 <./ice_data_rawpng.png (PNG copy)>] [17 <./ice_extent_monthly.png (PNG cop
+ [52 <./ice_data_rawpng.png (PNG copy)>] [53 <./ice_extent_monthly.png (PNG cop
 y)> <./ice_extent_data.png (PNG copy)>]
 \openout6 = `bachproef-tin.pyg'.
 
@@ -2451,17 +2732,17 @@ Underfull \hbox (badness 10000) in paragraph at lines 263--264
 
  []
 
-<combined_last_years.PNG, id=288, 202.356pt x 136.1085pt>
+<combined_last_years.PNG, id=869, 202.356pt x 136.1085pt>
 File: combined_last_years.PNG Graphic file (type png)
 <use combined_last_years.PNG>
 Package pdftex.def Info: combined_last_years.PNG  used on input line 269.
 (pdftex.def)             Requested size: 298.75264pt x 200.95766pt.
-<combined_months.PNG, id=290, 208.98074pt x 142.73325pt>
+<combined_months.PNG, id=871, 208.98074pt x 142.73325pt>
 File: combined_months.PNG Graphic file (type png)
 <use combined_months.PNG>
 Package pdftex.def Info: combined_months.PNG  used on input line 280.
 (pdftex.def)             Requested size: 298.75264pt x 204.05687pt.
-[18] [19 <./combined_last_years.PNG (PNG copy)> <./combined_months.PNG (PNG cop
+[54] [55 <./combined_last_years.PNG (PNG copy)> <./combined_months.PNG (PNG cop
 y)>]
 
 Package caption Warning: The option `hypcap=true' will be ignored for this
@@ -2472,7 +2753,7 @@ See the caption package documentation for explanation.
 
 
 (_minted-bachproef-tin/EB5A84BB652056417E9B74FDBD3FDAE0DA0431A2F0F3F41778154700
-1AFE5DE7.pygtex [20])
+1AFE5DE7.pygtex [56])
 
 Package caption Warning: The option `hypcap=true' will be ignored for this
 (caption)                particular \caption on input line 346.
@@ -2483,7 +2764,7 @@ See the caption package documentation for explanation.
 
 (_minted-bachproef-tin/81E75F549CCFDD3C23A334A5AC582122DA0431A2F0F3F41778154700
 1AFE5DE7.pygtex)
-<stationarity_univariate_non_seasonal.png, id=306, 197.538pt x 142.73325pt>
+<stationarity_univariate_non_seasonal.png, id=887, 197.538pt x 142.73325pt>
 File: stationarity_univariate_non_seasonal.png Graphic file (type png)
 <use stationarity_univariate_non_seasonal.png>
 Package pdftex.def Info: stationarity_univariate_non_seasonal.png  used on inpu
@@ -2500,13 +2781,13 @@ See the caption package documentation for explanation.
 
 (_minted-bachproef-tin/812DDDE227B834138FFC66680050E253DA0431A2F0F3F41778154700
 1AFE5DE7.pygtex)
-<stationarity_univariate_non_seasonal2.png, id=308, 212.59425pt x 142.131pt>
+<stationarity_univariate_non_seasonal2.png, id=889, 212.59425pt x 142.131pt>
 File: stationarity_univariate_non_seasonal2.png Graphic file (type png)
 <use stationarity_univariate_non_seasonal2.png>
 Package pdftex.def Info: stationarity_univariate_non_seasonal2.png  used on inp
 ut line 404.
 (pdftex.def)             Requested size: 298.75264pt x 199.76059pt.
- [21] [22 <./stationarity_univariate_non_seasonal.png (PNG copy)> <./stationari
+ [57] [58 <./stationarity_univariate_non_seasonal.png (PNG copy)> <./stationari
 ty_univariate_non_seasonal2.png (PNG copy)>]
 
 Package caption Warning: The option `hypcap=true' will be ignored for this
@@ -2527,10 +2808,10 @@ See the caption package documentation for explanation.
 
 
 (_minted-bachproef-tin/E34FE3EB31BD9057E3919E01216DBFDCDA0431A2F0F3F41778154700
-1AFE5DE7.pygtex [23]
+1AFE5DE7.pygtex [59]
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
- [24])
+ [60])
 
 Package caption Warning: The option `hypcap=true' will be ignored for this
 (caption)                particular \caption on input line 524.
@@ -2540,13 +2821,13 @@ See the caption package documentation for explanation.
 
 
 (_minted-bachproef-tin/AC41900FC362B1618F5B2B02638F6760DA0431A2F0F3F41778154700
-1AFE5DE7.pygtex [25])
-<uv_ns_ARIMA.png, id=336, 346.896pt x 224.63925pt>
+1AFE5DE7.pygtex [61])
+<uv_ns_ARIMA.png, id=917, 433.62pt x 258.36525pt>
 File: uv_ns_ARIMA.png Graphic file (type png)
 <use uv_ns_ARIMA.png>
 Package pdftex.def Info: uv_ns_ARIMA.png  used on input line 586.
-(pdftex.def)             Requested size: 298.75264pt x 193.4739pt.
- [26 <./uv_ns_ARIMA.png (PNG copy)>]
+(pdftex.def)             Requested size: 426.79135pt x 254.30794pt.
+ [62 <./uv_ns_ARIMA.png (PNG copy)>]
 
 Package caption Warning: The option `hypcap=true' will be ignored for this
 (caption)                particular \caption on input line 600.
@@ -2556,7 +2837,7 @@ See the caption package documentation for explanation.
 
 
 (_minted-bachproef-tin/C3930ADF514AAA8ADAF659DF07B50453DA0431A2F0F3F41778154700
-1AFE5DE7.pygtex [27
+1AFE5DE7.pygtex [63
 
 ])
 
@@ -2568,15 +2849,15 @@ See the caption package documentation for explanation.
 
 
 (_minted-bachproef-tin/45507993D320FDFB4CB862A5478AE4DFDA0431A2F0F3F41778154700
-1AFE5DE7.pygtex [28]
+1AFE5DE7.pygtex [64]
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
- [29])
-<uv_ns_LSTM_bar.png, id=357, 218.61674pt x 134.904pt>
+ [65])
+<uv_ns_LSTM_bar.png, id=938, 263.18324pt x 171.64125pt>
 File: uv_ns_LSTM_bar.png Graphic file (type png)
 <use uv_ns_LSTM_bar.png>
 Package pdftex.def Info: uv_ns_LSTM_bar.png  used on input line 764.
-(pdftex.def)             Requested size: 298.75264pt x 184.37274pt.
+(pdftex.def)             Requested size: 426.79135pt x 278.36893pt.
 
 
 Package caption Warning: The option `hypcap=true' will be ignored for this
@@ -2587,19 +2868,17 @@ See the caption package documentation for explanation.
 
 
 (_minted-bachproef-tin/7C093E216B0B64BB294769EF238482EADA0431A2F0F3F41778154700
-1AFE5DE7.pygtex [30 <./uv_ns_LSTM_bar.png (PNG copy)>])
-LaTeX Font Info:    Font shape `T1/ptm/bx/n' in size <12> not available
-(Font)              Font shape `T1/ptm/b/n' tried instead on input line 836.
+1AFE5DE7.pygtex [66 <./uv_ns_LSTM_bar.png (PNG copy)>])
 
+LaTeX Warning: Reference `fig:uvns' on page 67 undefined on input line 836.
 
-LaTeX Warning: Reference `fig:uvns' on page 31 undefined on input line 836.
-
-<uv_ns_LSTM.png, id=363, 349.90726pt x 224.037pt>
+[67]
+<uv_ns_LSTM.png, id=948, 439.04025pt x 255.354pt>
 File: uv_ns_LSTM.png Graphic file (type png)
 <use uv_ns_LSTM.png>
 Package pdftex.def Info: uv_ns_LSTM.png  used on input line 842.
-(pdftex.def)             Requested size: 298.75264pt x 191.28354pt.
-[31] [32 <./uv_ns_LSTM.png (PNG copy)>]
+(pdftex.def)             Requested size: 426.79135pt x 248.23079pt.
+ [68 <./uv_ns_LSTM.png (PNG copy)>]
 
 Package caption Warning: The option `hypcap=true' will be ignored for this
 (caption)                particular \caption on input line 850.
@@ -2619,14 +2898,14 @@ See the caption package documentation for explanation.
 
 
 (_minted-bachproef-tin/2F3AB713D1BF8D3CD6D9E52010C079C8DA0431A2F0F3F41778154700
-1AFE5DE7.pygtex [33
+1AFE5DE7.pygtex [69
 
 ])
-<uv_ns_prophet.png, id=379, 341.47575pt x 202.95825pt>
+<uv_ns_prophet.png, id=960, 424.58624pt x 255.95625pt>
 File: uv_ns_prophet.png Graphic file (type png)
 <use uv_ns_prophet.png>
 Package pdftex.def Info: uv_ns_prophet.png  used on input line 943.
-(pdftex.def)             Requested size: 298.75264pt x 177.56635pt.
+(pdftex.def)             Requested size: 426.79135pt x 257.29912pt.
 
 
 Package caption Warning: The option `hypcap=true' will be ignored for this
@@ -2637,13 +2916,16 @@ See the caption package documentation for explanation.
 
 
 (_minted-bachproef-tin/66AECABE94CA477B8263351FCFC43930DA0431A2F0F3F41778154700
-1AFE5DE7.pygtex [34]) [35 <./uv_ns_prophet.png (PNG copy)>]
-<uv_ns_result.png, id=392, 280.6485pt x 54.2025pt>
+1AFE5DE7.pygtex [70]
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [71 <./uv_ns_prophet.png (PNG copy)>]) [72]
+<uv_ns_result.png, id=977, 280.6485pt x 54.2025pt>
 File: uv_ns_result.png Graphic file (type png)
 <use uv_ns_result.png>
 Package pdftex.def Info: uv_ns_result.png  used on input line 1016.
 (pdftex.def)             Requested size: 298.75264pt x 57.70331pt.
-<uv_ns_result_graph.png, id=393, 197.538pt x 439.04025pt>
+<uv_ns_result_graph.png, id=978, 197.538pt x 439.04025pt>
 File: uv_ns_result_graph.png Graphic file (type png)
 <use uv_ns_result_graph.png>
 Package pdftex.def Info: uv_ns_result_graph.png  used on input line 1023.
@@ -2677,9 +2959,9 @@ See the caption package documentation for explanation.
 
 
 (_minted-bachproef-tin/07421A7BF7E6EE4FB79CC3968B190D56DA0431A2F0F3F41778154700
-1AFE5DE7.pygtex) [36
+1AFE5DE7.pygtex) [73
 
- <./uv_ns_result.png (PNG copy)>] [37 <./uv_ns_result_graph.png (PNG copy)>]
+ <./uv_ns_result.png (PNG copy)>] [74 <./uv_ns_result_graph.png (PNG copy)>]
 
 Package caption Warning: The option `hypcap=true' will be ignored for this
 (caption)                particular \caption on input line 1069.
@@ -2689,14 +2971,14 @@ See the caption package documentation for explanation.
 
 
 (_minted-bachproef-tin/A6203F3B5CE8787E7A0F1A172EBF60AADA0431A2F0F3F41778154700
-1AFE5DE7.pygtex [38
+1AFE5DE7.pygtex [75
 
 ])
-<uvsstationarity.png, id=410, 590.80725pt x 215.00325pt>
+<uvsstationarity.png, id=995, 590.80725pt x 215.00325pt>
 File: uvsstationarity.png Graphic file (type png)
 <use uvsstationarity.png>
 Package pdftex.def Info: uvsstationarity.png  used on input line 1133.
-(pdftex.def)             Requested size: 298.75264pt x 108.72177pt.
+(pdftex.def)             Requested size: 426.79135pt x 155.32056pt.
 
 
 Package caption Warning: The option `hypcap=true' will be ignored for this
@@ -2707,18 +2989,17 @@ See the caption package documentation for explanation.
 
 
 (_minted-bachproef-tin/30210D0F14F3D5B2CDDCFAC6D4556F00DA0431A2F0F3F41778154700
-1AFE5DE7.pygtex)
-<uvsstationarityseasonal.png, id=412, 608.2725pt x 221.02576pt>
+1AFE5DE7.pygtex) [76 <./uvsstationarity.png (PNG copy)>]
+<uvsstationarityseasonal.png, id=1002, 608.2725pt x 221.02576pt>
 File: uvsstationarityseasonal.png Graphic file (type png)
 <use uvsstationarityseasonal.png>
 Package pdftex.def Info: uvsstationarityseasonal.png  used on input line 1156.
-(pdftex.def)             Requested size: 298.75264pt x 108.55988pt.
- [39 <./uvsstationarity.png (PNG copy)>]
-<uvsstationarityrw.png, id=419, 585.98924pt x 201.75375pt>
+(pdftex.def)             Requested size: 426.79135pt x 155.08458pt.
+<uvsstationarityrw.png, id=1004, 585.98924pt x 201.75375pt>
 File: uvsstationarityrw.png Graphic file (type png)
 <use uvsstationarityrw.png>
 Package pdftex.def Info: uvsstationarityrw.png  used on input line 1165.
-(pdftex.def)             Requested size: 298.75264pt x 102.86226pt.
+(pdftex.def)             Requested size: 426.79135pt x 146.94652pt.
 
 
 Package caption Warning: The option `hypcap=true' will be ignored for this
@@ -2729,93 +3010,610 @@ See the caption package documentation for explanation.
 
 
 (_minted-bachproef-tin/1DB9BFFD3FF7838AB0411B09D636C5EBDA0431A2F0F3F41778154700
-1AFE5DE7.pygtex) [40 <./uvsstationarityseasonal.png (PNG copy)> <./uvsstationar
+1AFE5DE7.pygtex) [77 <./uvsstationarityseasonal.png (PNG copy)> <./uvsstationar
 ityrw.png (PNG copy)>]
-<uv_s_arima_diff.png, id=426, 668.4975pt x 292.09125pt>
+<uv_s_arima_diff.png, id=1012, 668.4975pt x 292.09125pt>
 File: uv_s_arima_diff.png Graphic file (type png)
 <use uv_s_arima_diff.png>
 Package pdftex.def Info: uv_s_arima_diff.png  used on input line 1198.
 (pdftex.def)             Requested size: 426.79135pt x 186.4876pt.
-<uv_s_arima_sdiff.png, id=428, 645.612pt x 284.262pt>
+<uv_s_arima_sdiff.png, id=1014, 645.612pt x 284.262pt>
 File: uv_s_arima_sdiff.png Graphic file (type png)
 <use uv_s_arima_sdiff.png>
 Package pdftex.def Info: uv_s_arima_sdiff.png  used on input line 1210.
 (pdftex.def)             Requested size: 426.79135pt x 187.91711pt.
- [41 <./uv_s_arima_diff.png (PNG copy)> <./uv_s_arima_sdiff.png (PNG copy)>]
-<uv_s_sarimax_diff.png, id=435, 666.69075pt x 294.50024pt>
+ [78 <./uv_s_arima_diff.png (PNG copy)>]
+<uv_s_sarimax_diff.png, id=1020, 666.69075pt x 294.50024pt>
 File: uv_s_sarimax_diff.png Graphic file (type png)
 <use uv_s_sarimax_diff.png>
 Package pdftex.def Info: uv_s_sarimax_diff.png  used on input line 1228.
 (pdftex.def)             Requested size: 426.79135pt x 188.52444pt.
-<uv_s_sarimax_s_diff.png, id=437, 645.00975pt x 282.45525pt>
+<uv_s_sarimax_s_diff.png, id=1022, 645.00975pt x 282.45525pt>
 File: uv_s_sarimax_s_diff.png Graphic file (type png)
 <use uv_s_sarimax_s_diff.png>
 Package pdftex.def Info: uv_s_sarimax_s_diff.png  used on input line 1240.
 (pdftex.def)             Requested size: 426.79135pt x 186.89511pt.
-<uv_s_lstm_s_diff.png, id=439, 637.1805pt x 283.0575pt>
-File: uv_s_lstm_s_diff.png Graphic file (type png)
-<use uv_s_lstm_s_diff.png>
-Package pdftex.def Info: uv_s_lstm_s_diff.png  used on input line 1256.
-(pdftex.def)             Requested size: 426.79135pt x 189.60002pt.
-
-Underfull \vbox (badness 2600) has occurred while \output is active []
-
- [42 <./uv_s_sarimax_diff.png (PNG copy)>] [43 <./uv_s_sarimax_s_diff.png (PNG 
-copy)> <./uv_s_lstm_s_diff.png (PNG copy)>] [44]
-<mv_ns_data.png, id=453, 613.0905pt x 457.10776pt>
-File: mv_ns_data.png Graphic file (type png)
-<use mv_ns_data.png>
-Package pdftex.def Info: mv_ns_data.png  used on input line 1278.
-(pdftex.def)             Requested size: 426.79135pt x 318.21556pt.
-<mv_ns_data_diff.png, id=455, 601.64775pt x 441.44925pt>
-File: mv_ns_data_diff.png Graphic file (type png)
-<use mv_ns_data_diff.png>
-Package pdftex.def Info: mv_ns_data_diff.png  used on input line 1289.
-(pdftex.def)             Requested size: 426.79135pt x 313.1617pt.
 
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
- [45
+ [79 <./uv_s_arima_sdiff.png (PNG copy)> <./uv_s_sarimax_diff.png (PNG copy)>]
+<uv_s_lstm_s_diff.png, id=1028, 644.4075pt x 281.25075pt>
+File: uv_s_lstm_s_diff.png Graphic file (type png)
+<use uv_s_lstm_s_diff.png>
+Package pdftex.def Info: uv_s_lstm_s_diff.png  used on input line 1256.
+(pdftex.def)             Requested size: 426.79135pt x 186.27837pt.
+ [80 <./uv_s_sarimax_s_diff.png (PNG copy)> <./uv_s_lstm_s_diff.png (PNG copy)>
+]
+<uv_s_prophet.png, id=1034, 668.4975pt x 302.3295pt>
+File: uv_s_prophet.png Graphic file (type png)
+<use uv_s_prophet.png>
+Package pdftex.def Info: uv_s_prophet.png  used on input line 1268.
+(pdftex.def)             Requested size: 426.79135pt x 193.02428pt.
+ [81
 
- <./mv_ns_data.png (PNG copy)>] [46 <./mv_ns_data_diff.png (PNG copy)>]
-<mv_ns_varmax.png, id=465, 606.46574pt x 283.65974pt>
+ <./uv_s_prophet.png (PNG copy)>]
+Underfull \hbox (badness 10000) in paragraph at lines 1274--1277
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 1278--1281
+
+ []
+
+<uv_s_results.png, id=1042, 386.6445pt x 125.268pt>
+File: uv_s_results.png Graphic file (type png)
+<use uv_s_results.png>
+Package pdftex.def Info: uv_s_results.png  used on input line 1289.
+(pdftex.def)             Requested size: 384.1096pt x 124.45149pt.
+<uv_s_graph1.png, id=1043, 357.13425pt x 525.76425pt>
+File: uv_s_graph1.png Graphic file (type png)
+<use uv_s_graph1.png>
+Package pdftex.def Info: uv_s_graph1.png  used on input line 1296.
+(pdftex.def)             Requested size: 426.79135pt x 628.32266pt.
+<uv_s_graph2.png, id=1044, 399.29175pt x 445.665pt>
+File: uv_s_graph2.png Graphic file (type png)
+<use uv_s_graph2.png>
+Package pdftex.def Info: uv_s_graph2.png  used on input line 1303.
+(pdftex.def)             Requested size: 426.79135pt x 476.36722pt.
+<mv_ns_data.png, id=1046, 613.0905pt x 457.10776pt>
+File: mv_ns_data.png Graphic file (type png)
+<use mv_ns_data.png>
+Package pdftex.def Info: mv_ns_data.png  used on input line 1318.
+(pdftex.def)             Requested size: 426.79135pt x 318.21556pt.
+[82
+
+ <./uv_s_results.png (PNG copy)>] [83 <./uv_s_graph1.png (PNG copy)>]
+[84 <./uv_s_graph2.png (PNG copy)>]
+<mv_ns_data_diff.png, id=1061, 601.64775pt x 441.44925pt>
+File: mv_ns_data_diff.png Graphic file (type png)
+<use mv_ns_data_diff.png>
+Package pdftex.def Info: mv_ns_data_diff.png  used on input line 1329.
+(pdftex.def)             Requested size: 426.79135pt x 313.1617pt.
+<mv_ns_varmax.png, id=1063, 606.46574pt x 283.65974pt>
 File: mv_ns_varmax.png Graphic file (type png)
 <use mv_ns_varmax.png>
-Package pdftex.def Info: mv_ns_varmax.png  used on input line 1303.
+Package pdftex.def Info: mv_ns_varmax.png  used on input line 1343.
 (pdftex.def)             Requested size: 426.79135pt x 199.62955pt.
 
+Underfull \vbox (badness 1648) has occurred while \output is active []
+
+ [85 <./mv_ns_data.png (PNG copy)>] [86 <./mv_ns_data_diff.png (PNG copy)> <./m
+v_ns_varmax.png (PNG copy)>]
 
 Package caption Warning: The option `hypcap=true' will be ignored for this
-(caption)                particular \caption on input line 1313.
+(caption)                particular \caption on input line 1353.
 See the caption package documentation for explanation.
 
 \openout6 = `bachproef-tin.pyg'.
 
 
 (_minted-bachproef-tin/78135AAAB853CBF9F63FEA7FA23CB8A1DA0431A2F0F3F41778154700
-1AFE5DE7.pygtex [47 <./mv_ns_varmax.png (PNG copy)>])
-<mv_ns_LSTM.png, id=474, 597.432pt x 282.45525pt>
+1AFE5DE7.pygtex [87])
+<mv_ns_LSTM.png, id=1079, 597.432pt x 282.45525pt>
 File: mv_ns_LSTM.png Graphic file (type png)
 <use mv_ns_LSTM.png>
-Package pdftex.def Info: mv_ns_LSTM.png  used on input line 1369.
+Package pdftex.def Info: mv_ns_LSTM.png  used on input line 1409.
 (pdftex.def)             Requested size: 426.79135pt x 201.78587pt.
-<mv_ns_result.png, id=477, 601.0455pt x 443.256pt>
+ [88 <./mv_ns_LSTM.png (PNG copy)>]
+<mv_ns_result.png, id=1086, 324.0105pt x 48.18pt>
 File: mv_ns_result.png Graphic file (type png)
 <use mv_ns_result.png>
-Package pdftex.def Info: mv_ns_result.png  used on input line 1380.
-(pdftex.def)             Requested size: 298.75264pt x 220.32208pt.
-<mv_ns_result_graph.png, id=478, 595.023pt x 436.029pt>
+Package pdftex.def Info: mv_ns_result.png  used on input line 1421.
+(pdftex.def)             Requested size: 426.79135pt x 63.46469pt.
+<mv_ns_result_graph.png, id=1087, 601.0455pt x 443.256pt>
 File: mv_ns_result_graph.png Graphic file (type png)
 <use mv_ns_result_graph.png>
-Package pdftex.def Info: mv_ns_result_graph.png  used on input line 1387.
-(pdftex.def)             Requested size: 426.79135pt x 312.75635pt.
-) [48] [49 <./mv_ns_LSTM.png (PNG copy)> <./mv_ns_result.png (PNG copy)>] [50 <
-./mv_ns_result_graph.png (PNG copy)>]
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 165.
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 165.
+Package pdftex.def Info: mv_ns_result_graph.png  used on input line 1428.
+(pdftex.def)             Requested size: 426.79135pt x 314.75453pt.
+ [89
+
+ <./mv_ns_result.png (PNG copy)> <./mv_ns_result_graph.png (PNG copy)>]
+<mv_s_varmax_diff.png, id=1094, 593.8185pt x 261.97874pt>
+File: mv_s_varmax_diff.png Graphic file (type png)
+<use mv_s_varmax_diff.png>
+Package pdftex.def Info: mv_s_varmax_diff.png  used on input line 1446.
+(pdftex.def)             Requested size: 426.79135pt x 188.28876pt.
+<mv_s_varmax_s_diff.png, id=1096, 713.66624pt x 313.77225pt>
+File: mv_s_varmax_s_diff.png Graphic file (type png)
+<use mv_s_varmax_s_diff.png>
+Package pdftex.def Info: mv_s_varmax_s_diff.png  used on input line 1458.
+(pdftex.def)             Requested size: 426.79135pt x 187.64238pt.
+<mv_s_lstm_diff.png, id=1098, 595.023pt x 259.56975pt>
+File: mv_s_lstm_diff.png Graphic file (type png)
+<use mv_s_lstm_diff.png>
+Package pdftex.def Info: mv_s_lstm_diff.png  used on input line 1470.
+(pdftex.def)             Requested size: 426.79135pt x 186.18506pt.
+ [90 <./mv_s_varmax_diff.png (PNG copy)>] [91 <./mv_s_varmax_s_diff.png (PNG co
+py)> <./mv_s_lstm_diff.png (PNG copy)>]
+<mv_s_lstm_s_diff.png, id=1108, 745.5855pt x 322.806pt>
+File: mv_s_lstm_s_diff.png Graphic file (type png)
+<use mv_s_lstm_s_diff.png>
+Package pdftex.def Info: mv_s_lstm_s_diff.png  used on input line 1482.
+(pdftex.def)             Requested size: 426.79135pt x 184.7845pt.
+ [92 <./mv_s_lstm_s_diff.png (PNG copy)>]
+Underfull \hbox (badness 10000) in paragraph at lines 1488--1489
+
+ []
+
+<mv_s_results.png, id=1115, 346.896pt x 77.088pt>
+File: mv_s_results.png Graphic file (type png)
+<use mv_s_results.png>
+Package pdftex.def Info: mv_s_results.png  used on input line 1497.
+(pdftex.def)             Requested size: 341.43437pt x 75.87859pt.
+<mv_s_results_graphs.png, id=1116, 354.72525pt x 526.3665pt>
+File: mv_s_results_graphs.png Graphic file (type png)
+<use mv_s_results_graphs.png>
+Package pdftex.def Info: mv_s_results_graphs.png  used on input line 1505.
+(pdftex.def)             Requested size: 426.79135pt x 633.30724pt.
+) (conclusie.tex [93
+
+ <./mv_s_results.png (PNG copy)>] [94 <./mv_s_results_graphs.png (PNG copy)>]
+Hoofdstuk 4.
+) (voorstel_v2/voorstel-inhoud.tex [95
+
+] [96
+
+]
+B"ylage A.
+[97]) (broncode.tex [98]
+B"ylage B.
+
+Package caption Warning: The option `hypcap=true' will be ignored for this
+(caption)                particular \caption on input line 8.
+See the caption package documentation for explanation.
+
+\openout6 = `bachproef-tin.pyg'.
+
+
+(_minted-bachproef-tin/73A7C5179066AD87164C75A947B059A5DA0431A2F0F3F41778154700
+1AFE5DE7.pygtex [99
+
+]
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [100]
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [101]
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [102]
+Overfull \hbox (21.08539pt too wide) in paragraph at lines 207--207
+\T1/cmtt/m/it/10 pd.concat([ice2[\TS1/cmtt/m/it/10 '\T1/cmtt/m/it/10 2016\TS1/c
+mtt/m/it/10 '\T1/cmtt/m/it/10 ],ice2[\TS1/cmtt/m/it/10 '\T1/cmtt/m/it/10 2017\T
+S1/cmtt/m/it/10 '\T1/cmtt/m/it/10 ],ice2[\TS1/cmtt/m/it/10 '\T1/cmtt/m/it/10 20
+18\TS1/cmtt/m/it/10 '\T1/cmtt/m/it/10 ],ice2[\TS1/cmtt/m/it/10 '\T1/cmtt/m/it/1
+0 2019\TS1/cmtt/m/it/10 '\T1/cmtt/m/it/10 ]]).reset_index()[0][]|  
+ []
+
+
+Overfull \hbox (3.60355pt too wide) in paragraph at lines 223--223
+\T1/cmtt/m/n/10 ice2_clean[].[]set_index([]\TS1/cmtt/m/n/10 '\T1/cmtt/m/n/10 Mo
+nth\TS1/cmtt/m/n/10 '[]\T1/cmtt/m/n/10 )[].[]astype([]float[])[].[]groupby([]\T
+S1/cmtt/m/n/10 '\T1/cmtt/m/n/10 Month\TS1/cmtt/m/n/10 '[]\T1/cmtt/m/n/10 ,sort[
+]=[][]False[])[].[]mean()|  
+ []
+
+
+Overfull \hbox (15.83667pt too wide) in paragraph at lines 226--226
+\T1/cmtt/m/it/10 ice2_monthly_mean.T.stack().reset_index(level=[\TS1/cmtt/m/it/
+10 '\T1/cmtt/m/it/10 Month\TS1/cmtt/m/it/10 '\T1/cmtt/m/it/10 ]).drop(columns=[
+\TS1/cmtt/m/it/10 '\T1/cmtt/m/it/10 Month\TS1/cmtt/m/it/10 '\T1/cmtt/m/it/10 ])
+[]|  
+ []
+
+
+Overfull \hbox (14.10098pt too wide) in paragraph at lines 227--227
+\T1/cmtt/m/n/10 ice2_monthly_mean[].[]T[].[]stack()[].[]reset_index(level[]=[][
+[]\TS1/cmtt/m/n/10 '\T1/cmtt/m/n/10 Month\TS1/cmtt/m/n/10 '[]\T1/cmtt/m/n/10 ])
+[].[]drop(columns[]=[][[]\TS1/cmtt/m/n/10 '\T1/cmtt/m/n/10 Month\TS1/cmtt/m/n/1
+0 '[]\T1/cmtt/m/n/10 ])|  
+ []
+
+
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [103]
+Overfull \hbox (14.10098pt too wide) in paragraph at lines 238--238
+\T1/cmtt/m/n/10 ice2_monthly_mean[].[]T[].[]stack()[].[]reset_index(level[]=[][
+[]\TS1/cmtt/m/n/10 '\T1/cmtt/m/n/10 Month\TS1/cmtt/m/n/10 '[]\T1/cmtt/m/n/10 ])
+[].[]drop(columns[]=[][[]\TS1/cmtt/m/n/10 '\T1/cmtt/m/n/10 Month\TS1/cmtt/m/n/1
+0 '[]\T1/cmtt/m/n/10 ])|  
+ []
+
+)
+Underfull \hbox (badness 2042) in paragraph at lines 287--287
+|[]\T1/ptm/b/n/20.74 Broncode voor het ver-ge-lij-ken van ARIMA,
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 287--287
+\T1/ptm/b/n/20.74 LSTM en Prop-het bij uni-va-ri-ate, niet-
+ []
+
+
+Package caption Warning: The option `hypcap=true' will be ignored for this
+(caption)                particular \caption on input line 288.
+See the caption package documentation for explanation.
+
+\openout6 = `bachproef-tin.pyg'.
+
+
+(_minted-bachproef-tin/0C68CCBC6CF99FCA7CCD7FF8D2EA33E5DA0431A2F0F3F41778154700
+1AFE5DE7.pygtex
+Underfull \vbox (badness 3439) has occurred while \output is active []
+
+ [104]
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+
+
+Package Fancyhdr Warning: \headheight is too small (14.5pt): 
+Make it at least 27.808pt.
+We now make it that large for the rest of the document.
+This may cause the page layout to be inconsistent, however.
+
+[105]
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [106]
+Overfull \hbox (3.60355pt too wide) in paragraph at lines 128--128
+\T1/cmtt/m/n/10 pd[].[]Series(np[].[]concatenate((zerosArray,predictionsArray))
+)[].[]replace([]0[],np[].[]NaN)|  
+ []
+
+
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [107]
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [108]
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [109]
+Overfull \hbox (73.57257pt too wide) in paragraph at lines 304--304
+\T1/cmtt/m/it/10 https://machinelearningmastery.com/tune-lstm-hyperparameters-k
+eras-time-series-forecasting/[]|  
+ []
+
+
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [110]
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [111]
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [112]
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [113]
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [114]
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [115]
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [116]
+Overfull \hbox (213.55228pt too wide) in paragraph at lines 689--689
+\T1/cmtt/m/n/10 [[MAE_ARIMA,time_ARIMA,last_MAE_ARIMA],[MAE_LSTM,time_LSTM,last
+_MAE_LSTM],[MAE_Prophet,time_Prophet,last_MAE_Prophet]]|  
+ []
+
+)
+Underfull \hbox (badness 2042) in paragraph at lines 1001--1001
+|[]\T1/ptm/b/n/20.74 Broncode voor het ver-ge-lij-ken van ARIMA,
+ []
+
+
+Package caption Warning: The option `hypcap=true' will be ignored for this
+(caption)                particular \caption on input line 1002.
+See the caption package documentation for explanation.
+
+
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [117]
+\openout6 = `bachproef-tin.pyg'.
+
+
+(_minted-bachproef-tin/FB378802B65236F37F518EAD7C990C73DA0431A2F0F3F41778154700
+1AFE5DE7.pygtex
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [118]
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [119]
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [120]
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [121]
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [122]
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [123]
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [124]
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [125]
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [126]
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [127]
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [128]
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [129]
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [130]
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [131]
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [132]
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [133]
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [134]
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [135]
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [136]
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [137]
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [138]
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [139]
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [140]
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [141]
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [142]
+Overfull \hbox (449.7446pt too wide) in paragraph at lines 1345--1345
+\T1/cmtt/m/n/10 ,index[]=[][[]\TS1/cmtt/m/n/10 '\T1/cmtt/m/n/10 ARIMA\TS1/cmtt/
+m/n/10 '[]\T1/cmtt/m/n/10 ,[]\TS1/cmtt/m/n/10 '\T1/cmtt/m/n/10 ARIMA_seasonal_d
+ifferencing\TS1/cmtt/m/n/10 '[]\T1/cmtt/m/n/10 ,[]\TS1/cmtt/m/n/10 '\T1/cmtt/m/
+n/10 SARIMA\TS1/cmtt/m/n/10 '[]\T1/cmtt/m/n/10 ,[]\TS1/cmtt/m/n/10 '\T1/cmtt/m/
+n/10 SARIMA_seasonal_differncing\TS1/cmtt/m/n/10 '[]\T1/cmtt/m/n/10 ,[]\TS1/cmt
+t/m/n/10 '\T1/cmtt/m/n/10 LSTM\TS1/cmtt/m/n/10 '[]\T1/cmtt/m/n/10 ,[]\TS1/cmtt/
+m/n/10 '\T1/cmtt/m/n/10 LSTM_seasonal_differencing\TS1/cmtt/m/n/10 '[]\T1/cmtt/
+m/n/10 ,[]\TS1/cmtt/m/n/10 '\T1/cmtt/m/n/10 Prophet\TS1/cmtt/m/n/10 '[]\T1/cmtt
+/m/n/10 ])[].[]round(decimals[]=[][]3[])|  
+ []
+
+)
+Underfull \hbox (badness 2042) in paragraph at lines 2390--2390
+|[]\T1/ptm/b/n/20.74 Broncode voor het ver-ge-lij-ken van ARIMA,
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 2390--2390
+\T1/ptm/b/n/20.74 LSTM en Prop-het bij mul-ti-va-ri-ate, niet-
+ []
+
+
+Package caption Warning: The option `hypcap=true' will be ignored for this
+(caption)                particular \caption on input line 2391.
+See the caption package documentation for explanation.
+
+
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [143]
+\openout6 = `bachproef-tin.pyg'.
+
+
+(_minted-bachproef-tin/1A5902F29E2F0D205748F8E8E648DFDEDA0431A2F0F3F41778154700
+1AFE5DE7.pygtex
+Overfull \hbox (3.60355pt too wide) in paragraph at lines 43--43
+\T1/cmtt/m/n/10 pd[].[]Series(np[].[]concatenate((zerosArray,predictionsArray))
+)[].[]replace([]0[],np[].[]NaN)|  
+ []
+
+
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [144]
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [145]
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [146]
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [147]
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [148]
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [149]
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [150]
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [151]
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [152]
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [153]
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [154]
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [155])
+Underfull \hbox (badness 2042) in paragraph at lines 3089--3089
+|[]\T1/ptm/b/n/20.74 Broncode voor het ver-ge-lij-ken van ARIMA,
+ []
+
+
+Package caption Warning: The option `hypcap=true' will be ignored for this
+(caption)                particular \caption on input line 3090.
+See the caption package documentation for explanation.
+
+
+Underfull \vbox (badness 1817) has occurred while \output is active []
+
+ [156]
+\openout6 = `bachproef-tin.pyg'.
+
+
+(_minted-bachproef-tin/C9A0B913BF07A1CED1B9B105EC5BF515DA0431A2F0F3F41778154700
+1AFE5DE7.pygtex
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [157]
+Overfull \hbox (3.60355pt too wide) in paragraph at lines 74--74
+\T1/cmtt/m/n/10 pd[].[]Series(np[].[]concatenate((zerosArray,predictionsArray))
+)[].[]replace([]0[],np[].[]NaN)|  
+ []
+
+
+Overfull \hbox (19.3497pt too wide) in paragraph at lines 88--88
+\T1/cmtt/m/n/10 pd[].[]Series(np[].[]concatenate((zerosArray,predicted[].[]flat
+ten())))[].[]replace([]0[],np[].[]NaN)|  
+ []
+
+
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [158]
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [159]
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [160]
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [161]
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [162]
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [163]
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [164]
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [165]
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [166]
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [167]
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [168]
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [169]
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [170]
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [171]
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [172]
+Overfull \hbox (66.58817pt too wide) in paragraph at lines 877--877
+\T1/cmtt/m/n/10 ,index[]=[][[]\TS1/cmtt/m/n/10 '\T1/cmtt/m/n/10 VARMAX\TS1/cmtt
+/m/n/10 '[]\T1/cmtt/m/n/10 ,[]\TS1/cmtt/m/n/10 '\T1/cmtt/m/n/10 VARMAX_seasonal
+\TS1/cmtt/m/n/10 '[]\T1/cmtt/m/n/10 ,[]\TS1/cmtt/m/n/10 '\T1/cmtt/m/n/10 LSTM\T
+S1/cmtt/m/n/10 '[]\T1/cmtt/m/n/10 ,[]\TS1/cmtt/m/n/10 '\T1/cmtt/m/n/10 LSTM_sea
+sonal\TS1/cmtt/m/n/10 '[]\T1/cmtt/m/n/10 ])[].[]round(decimals[]=[][]3[])|  
+ []
+
+)) [173] [174
+
+] [175]
+Underfull \hbox (badness 10000) in paragraph at lines 162--162
+[][]\T1/ptm/m/n/12 (+20) Sinha, P. (2019). LI-NEAR REGRESSION,LEAST-SQUARES RE-
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 162--162
+\T1/ptm/m/n/12 (+20) GRES-SION,OUTLIERS AND IN-FLU-EN-TIAL OB-SER-VA-TI-
+ []
+
+
+Underfull \hbox (badness 7081) in paragraph at lines 162--162
+\T1/ptm/m/n/12 (+20) ONS,RESIDUALS,LURKING VA-RIA-BLES,EXTRAPOLATION. Ver-kre-g
+en
+ []
+
+
+Underfull \hbox (badness 1584) in paragraph at lines 162--162
+\T1/ptm/m/n/12 (+20) squares -[] regressionoutliers -[] and -[] inuential -[] 
+observationsresidualslurking -[]
+ []
+
+[176]
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 164.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 164.
  (bachproef-tin.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 165.
-Package atveryend Info: Empty hook `AtEndAfterFileList' on input line 165.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 164.
+Package atveryend Info: Empty hook `AtEndAfterFileList' on input line 164.
 
 
 LaTeX Warning: There were undefined references.
@@ -2827,30 +3625,34 @@ Package logreq Info: Writing requests to 'bachproef-tin.run.xml'.
 
  ) 
 Here is how much of TeX's memory you used:
- 45599 strings out of 492946
- 873167 string characters out of 3126267
- 1522287 words of memory out of 3000000
- 48401 multiletter control sequences out of 15000+200000
- 612658 words of font info for 214 fonts, out of 3000000 for 9000
+ 46999 strings out of 492946
+ 895572 string characters out of 3126267
+ 1536792 words of memory out of 3000000
+ 49390 multiletter control sequences out of 15000+200000
+ 629576 words of font info for 267 fonts, out of 3000000 for 9000
  1141 hyphenation exceptions out of 8191
- 62i,12n,67p,819b,3844s stack positions out of 5000i,500n,10000p,200000b,50000s
-{C:/Users/Emiel/AppData/Local/Programs/MiKTeX 2.9/fonts/enc/dvips/base/8r.enc
-} <C:\Users\Emiel\AppData\Local\MiKTeX\2.9\fonts/pk/ljfour/jknappen/ec/dpi600\t
-cit1000.pk> <C:\Users\Emiel\AppData\Local\MiKTeX\2.9\fonts/pk/ljfour/jknappen/e
-c/dpi600\tctt1000.pk> <C:\Users\Emiel\AppData\Local\MiKTeX\2.9\fonts/pk/ljfour/
-jknappen/ec/dpi600\ectt1000.pk> <C:\Users\Emiel\AppData\Local\MiKTeX\2.9\fonts/
-pk/ljfour/jknappen/ec/dpi600\ecit1000.pk><C:/Users/Emiel/AppData/Local/Programs
-/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmmi10.pfb><C:/Users/Emiel/AppData/L
-ocal/Programs/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmsy10.pfb><C:/Users/Em
-iel/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/urw/avantgar/uagd8a.pfb><C:/U
-sers/Emiel/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/urw/avantgar/uagk8a.pf
-b><C:/Users/Emiel/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/urw/times/utmb8
-a.pfb><C:/Users/Emiel/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/urw/times/u
-tmr8a.pfb><C:/Users/Emiel/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/urw/tim
-es/utmri8a.pfb>
-Output written on bachproef-tin.pdf (52 pages, 2364603 bytes).
+ 62i,12n,83p,1111b,3844s stack positions out of 5000i,500n,10000p,200000b,50000s
+ <C:\Users\Emiel\AppData\Local\MiKTeX\2.9\fonts/pk/ljfour/jknappen/ec/dpi600\
+tcit1000.pk> <C:\Users\Emiel\AppData\Local\MiKTeX\2.9\fonts/pk/ljfour/jknappen/
+ec/dpi600\tctt1000.pk> <C:\Users\Emiel\AppData\Local\MiKTeX\2.9\fonts/pk/ljfour
+/jknappen/ec/dpi600\ectt1000.pk> <C:\Users\Emiel\AppData\Local\MiKTeX\2.9\fonts
+/pk/ljfour/jknappen/ec/dpi600\ecit1000.pk>{C:/Users/Emiel/AppData/Local/Program
+s/MiKTeX 2.9/fonts/enc/dvips/base/8r.enc}<C:/Users/Emiel/AppData/Local/Programs
+/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmex10.pfb><C:/Users/Emiel/AppData/L
+ocal/Programs/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmmi10.pfb><C:/Users/Em
+iel/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmr10.pfb>
+<C:/Users/Emiel/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/public/amsfonts/c
+m/cmsy10.pfb><C:/Users/Emiel/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/urw/
+avantgar/uagd8a.pfb><C:/Users/Emiel/AppData/Local/Programs/MiKTeX 2.9/fonts/typ
+e1/urw/avantgar/uagk8a.pfb><C:/Users/Emiel/AppData/Local/Programs/MiKTeX 2.9/fo
+nts/type1/urw/symbol/usyr.pfb><C:/Users/Emiel/AppData/Local/Programs/MiKTeX 2.9
+/fonts/type1/urw/symbol/usyr.pfb><C:/Users/Emiel/AppData/Local/Programs/MiKTeX 
+2.9/fonts/type1/urw/times/utmb8a.pfb><C:/Users/Emiel/AppData/Local/Programs/MiK
+TeX 2.9/fonts/type1/urw/times/utmr8a.pfb><C:/Users/Emiel/AppData/Local/Programs
+/MiKTeX 2.9/fonts/type1/urw/times/utmri8a.pfb>
+Output written on bachproef-tin.pdf (178 pages, 4962263 bytes).
 PDF statistics:
- 773 PDF objects out of 1000 (max. 8388607)
- 131 named destinations out of 1000 (max. 500000)
- 38256 words of extra memory for PDF output out of 42996 (max. 10000000)
+ 2011 PDF objects out of 2073 (max. 8388607)
+ 408 named destinations out of 1000 (max. 500000)
+ 45383 words of extra memory for PDF output out of 51595 (max. 10000000)
 

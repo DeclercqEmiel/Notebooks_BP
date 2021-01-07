@@ -1,0 +1,50 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{c+c1}{\PYGZsh{} univariate lstm voorbeeld}
+\PYG{k+kn}{from} \PYG{n+nn}{numpy} \PYG{k+kn}{import} \PYG{n}{array}
+\PYG{k+kn}{from} \PYG{n+nn}{keras.models} \PYG{k+kn}{import} \PYG{n}{Sequential}
+\PYG{k+kn}{from} \PYG{n+nn}{keras.layers} \PYG{k+kn}{import} \PYG{n}{LSTM}
+\PYG{k+kn}{from} \PYG{n+nn}{keras.layers} \PYG{k+kn}{import} \PYG{n}{Dense}
+
+\PYG{c+c1}{\PYGZsh{} Opslitsen van univariate sequentie in samples}
+\PYG{k}{def} \PYG{n+nf}{split\PYGZus{}sequence}\PYG{p}{(}\PYG{n}{sequence}\PYG{p}{,} \PYG{n}{n\PYGZus{}steps}\PYG{p}{):}
+\PYG{n}{X}\PYG{p}{,} \PYG{n}{y} \PYG{o}{=} \PYG{n+nb}{list}\PYG{p}{(),} \PYG{n+nb}{list}\PYG{p}{()}
+\PYG{k}{for} \PYG{n}{i} \PYG{o+ow}{in} \PYG{n+nb}{range}\PYG{p}{(}\PYG{n+nb}{len}\PYG{p}{(}\PYG{n}{sequence}\PYG{p}{)):}
+\PYG{c+c1}{\PYGZsh{} vinden van het einde van dit patroon}
+\PYG{n}{end\PYGZus{}ix} \PYG{o}{=} \PYG{n}{i} \PYG{o}{+} \PYG{n}{n\PYGZus{}steps}
+\PYG{c+c1}{\PYGZsh{} nagaan of we ons na de sequentie bevinden}
+\PYG{k}{if} \PYG{n}{end\PYGZus{}ix} \PYG{o}{\PYGZgt{}} \PYG{n+nb}{len}\PYG{p}{(}\PYG{n}{sequence}\PYG{p}{)}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{:}
+\PYG{k}{break}
+\PYG{c+c1}{\PYGZsh{} verwerven van invoer en uitvoerdelen van het patroon}
+\PYG{n}{seq\PYGZus{}x}\PYG{p}{,} \PYG{n}{seq\PYGZus{}y} \PYG{o}{=} \PYG{n}{sequence}\PYG{p}{[}\PYG{n}{i}\PYG{p}{:}\PYG{n}{end\PYGZus{}ix}\PYG{p}{],} \PYG{n}{sequence}\PYG{p}{[}\PYG{n}{end\PYGZus{}ix}\PYG{p}{]}
+\PYG{n}{X}\PYG{o}{.}\PYG{n}{append}\PYG{p}{(}\PYG{n}{seq\PYGZus{}x}\PYG{p}{)}
+\PYG{n}{y}\PYG{o}{.}\PYG{n}{append}\PYG{p}{(}\PYG{n}{seq\PYGZus{}y}\PYG{p}{)}
+\PYG{k}{return} \PYG{n}{array}\PYG{p}{(}\PYG{n}{X}\PYG{p}{),} \PYG{n}{array}\PYG{p}{(}\PYG{n}{y}\PYG{p}{)}
+
+\PYG{c+c1}{\PYGZsh{} Bepalen van de sequentie}
+\PYG{n}{raw\PYGZus{}seq} \PYG{o}{=} \PYG{p}{[}\PYG{l+m+mi}{10}\PYG{p}{,} \PYG{l+m+mi}{20}\PYG{p}{,} \PYG{l+m+mi}{30}\PYG{p}{,} \PYG{l+m+mi}{40}\PYG{p}{,} \PYG{l+m+mi}{50}\PYG{p}{,} \PYG{l+m+mi}{60}\PYG{p}{,} \PYG{l+m+mi}{70}\PYG{p}{,} \PYG{l+m+mi}{80}\PYG{p}{,} \PYG{l+m+mi}{90}\PYG{p}{]}
+
+\PYG{c+c1}{\PYGZsh{} bepalen van het aantal tijdsstappen}
+\PYG{n}{n\PYGZus{}steps} \PYG{o}{=} \PYG{l+m+mi}{3}
+
+\PYG{c+c1}{\PYGZsh{} onderverdelen in samples}
+\PYG{n}{X}\PYG{p}{,} \PYG{n}{y} \PYG{o}{=} \PYG{n}{split\PYGZus{}sequence}\PYG{p}{(}\PYG{n}{raw\PYGZus{}seq}\PYG{p}{,} \PYG{n}{n\PYGZus{}steps}\PYG{p}{)}
+
+\PYG{c+c1}{\PYGZsh{} reshape from [samples, timesteps] into [samples, timesteps, features]}
+\PYG{n}{n\PYGZus{}features} \PYG{o}{=} \PYG{l+m+mi}{1}
+\PYG{n}{X} \PYG{o}{=} \PYG{n}{X}\PYG{o}{.}\PYG{n}{reshape}\PYG{p}{((}\PYG{n}{X}\PYG{o}{.}\PYG{n}{shape}\PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{],} \PYG{n}{X}\PYG{o}{.}\PYG{n}{shape}\PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{],} \PYG{n}{n\PYGZus{}features}\PYG{p}{))}
+
+\PYG{c+c1}{\PYGZsh{} definieer model}
+\PYG{n}{model} \PYG{o}{=} \PYG{n}{Sequential}\PYG{p}{()}
+\PYG{n}{model}\PYG{o}{.}\PYG{n}{add}\PYG{p}{(}\PYG{n}{LSTM}\PYG{p}{(}\PYG{l+m+mi}{50}\PYG{p}{,} \PYG{n}{activation}\PYG{o}{=}\PYG{l+s+s1}{\PYGZsq{}relu\PYGZsq{}}\PYG{p}{,} \PYG{n}{input\PYGZus{}shape}\PYG{o}{=}\PYG{p}{(}\PYG{n}{n\PYGZus{}steps}\PYG{p}{,} \PYG{n}{n\PYGZus{}features}\PYG{p}{)))}
+\PYG{n}{model}\PYG{o}{.}\PYG{n}{add}\PYG{p}{(}\PYG{n}{Dense}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{p}{))}
+\PYG{n}{model}\PYG{o}{.}\PYG{n}{compile}\PYG{p}{(}\PYG{n}{optimizer}\PYG{o}{=}\PYG{l+s+s1}{\PYGZsq{}adam\PYGZsq{}}\PYG{p}{,} \PYG{n}{loss}\PYG{o}{=}\PYG{l+s+s1}{\PYGZsq{}mse\PYGZsq{}}\PYG{p}{)}
+
+\PYG{c+c1}{\PYGZsh{} fit model}
+\PYG{n}{model}\PYG{o}{.}\PYG{n}{fit}\PYG{p}{(}\PYG{n}{X}\PYG{p}{,} \PYG{n}{y}\PYG{p}{,} \PYG{n}{epochs}\PYG{o}{=}\PYG{l+m+mi}{200}\PYG{p}{,} \PYG{n}{verbose}\PYG{o}{=}\PYG{l+m+mi}{0}\PYG{p}{)}
+
+\PYG{c+c1}{\PYGZsh{} demonstreer voorspelling}
+\PYG{n}{x\PYGZus{}input} \PYG{o}{=} \PYG{n}{array}\PYG{p}{([}\PYG{l+m+mi}{70}\PYG{p}{,} \PYG{l+m+mi}{80}\PYG{p}{,} \PYG{l+m+mi}{90}\PYG{p}{])}
+\PYG{n}{x\PYGZus{}input} \PYG{o}{=} \PYG{n}{x\PYGZus{}input}\PYG{o}{.}\PYG{n}{reshape}\PYG{p}{((}\PYG{l+m+mi}{1}\PYG{p}{,} \PYG{n}{n\PYGZus{}steps}\PYG{p}{,} \PYG{n}{n\PYGZus{}features}\PYG{p}{))}
+\PYG{n}{yhat} \PYG{o}{=} \PYG{n}{model}\PYG{o}{.}\PYG{n}{predict}\PYG{p}{(}\PYG{n}{x\PYGZus{}input}\PYG{p}{,} \PYG{n}{verbose}\PYG{o}{=}\PYG{l+m+mi}{0}\PYG{p}{)}
+\PYG{n+nb}{print}\PYG{p}{(}\PYG{n}{yhat}\PYG{p}{)}
+\end{Verbatim}

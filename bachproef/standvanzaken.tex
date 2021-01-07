@@ -691,7 +691,22 @@ Wanneer de dataset waarvan een voorspelling gemaakt moet worden meerdere invoerp
 
 Prophet is een procedure om tijdreeksen te voorspellen ontwikkeld door Facebook.~\autocite{Prophet2020} Deze procedure baseert zich op een additief model waar niet-lineaire trends gefit worden aan jaarlijkse, wekelijkse en dagelijkse seizoensgebondenheid hierbij zal ook rekening gehouden worden met zogenaamde ``holiday effects'', fluctuaties in de data die veroorzaakt worden door vakantieperiodes. Deze techniek zal best werken met tijdreeksen die een sterk seizoensgebonden effect hebben en waarvan ook meerdere seizoenen aan historische data beschikbaar zal zijn. Daarnaast houdt Prophet ook rekening met ontbrekende data, verschuivingen in de trend en zal het ook rekening houden met uitschieters. 
 
-Het is eenvoudig om te gebruiken maar er zijn ook optimalisaties mogelijk indien men het model wil finetunen. Prophet is zowel beschikbaar in R als in Python
+Het is eenvoudig om te gebruiken maar er zijn ook optimalisaties mogelijk indien men het model wil finetunen. Prophet is zowel beschikbaar in R als in Python.
+\\
+
+Hier zullen voornamelijk 2 parameters gebruikt worden om dit te optimaliseren.
+De eerste parameter changepoint\textunderscore prior\textunderscore scale zal aangeven in hoeverre de trend aan de data gefit zal worden. Hierbij zal een te hoge waarde voor overfitting zorgen. Dit houdt in dat het model te hard gefixeerd is op de trainingsdata en de verbanden in de trainingsset te nauwgezet volgt waardoor het de testdata moeilijk zal kunnen voorspellen. Een te lage waarde  zal voor underfitting zorgen waarbij trendlijn de data te onnauwkeurig zal representeren. Het concept van underfitting en overfitting wordt weergegeven op Figuur \ref{fig:fittingcurve}.\\
+
+De andere parameter die geoptimaliseerd zal worden is de seasonality\textunderscore prior\textunderscore scale. Deze parameter zal weergeven hoe strikt een seizoenstrend gevolgd zal worden dit . Deze parameter zal enkel gebruikt worden wanneer er met seizoensgebonden data gewerkt wordt.
+
+
+% TODO: \usepackage{graphicx} required
+\begin{figure}
+    \centering
+    \caption{Grafische weergave van underfitting en overfitting ~\autocite{Decorte2019}}
+    \label{fig:fittingcurve}
+    \includegraphics[width=1\linewidth]{fittingcurve}
+\end{figure}
 
 
 

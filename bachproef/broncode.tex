@@ -1,278 +1,95 @@
-\chapter{}
+\chapter{Broncode}
 \label{ch:Broncode}
+Hier staat alle code afgebeeld die gebruikt is voor het opstellen van deze bachelorproef.
+De broncode kan ook teruggevonden worden op dit adres: \url{https://github.com/DeclercqEmiel/Notebooks_BP}
 
+\section{Broncode datavoorbereiding}  % The \section*{} command stops section numbering
 
-\section{Broncode} % The \section*{} command stops section numbering
-\label{sec:Broncode}
-
-\lstset{language=Python}
-\lstset{frame=lines}
-\lstset{caption={Code gebruikt voor de voorspelling}}
-\lstset{label={lst:code_direct}}
-\lstset{basicstyle=\footnotesize}
-\begin{lstlisting}
-
+\captionof{listing}{Broncode datavoorbereiding}
+\begin{minted}[
+frame=lines,
+framesep=2mm,
+fontsize=\footnotesize,
+linenos,breaklines
+]{python}
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[1]:
-
-
-get_ipython().system('jupyter nbconvert --to script "Regression model Belgium.ipynb"')
-
--Specifieker definieren van gebruikte data en !onderzoeksvraag
--LSTM toelichten in code
 # In[2]:
 
 
 import pandas as pd
-import matplotlib.pyplot as plt
-import matplotlib
+import matplotlib.pylab as plt
 import numpy as np
-from datetime import datetime
-
-Time based
-
-regressietechnieken
-polynomial regression
-Probleemstelling(en)
-Focus op 1 om een eenvoudig model op te stellen
-features en output identificeren
-Lopend gemiddelde van de vorige 7 dagen op pieken uit te vlakken
-Datums per row, dagen relatief nummeren
-Alles onder de 10 gevallen niet gebruiken
-Per dag een nieuwe waarde dagen sinds lockdown, -1 of 0 voor de dagen voor lockdown
-Population density
-Total population
-
-Mean age of the population
-Literatuurstudie:
-Recurrente neurale netwerken, keras tijdsreeksen
-https://hogent-my.sharepoint.com/personal/johan_decorte_hogent_be/Documents/Chatbestanden%20van%20Microsoft%20Teams/RNN_Sentiment_Analysis.ipynb
-
-https://www.vrt.be/vrtnws/nl/2020/04/22/belgische-corona-aanpak-door-de-ogen-van-de-internationale-pers/?fbclid=IwAR2f8RG09CeLFgiE0dxSdWDWdaOH9k4l-W1UX03Ox1o8HnVV-ovF7abitXM
-https://www.demorgen.be/nieuws/oversterfte-door-covid-19-groter-dan-tijdens-voorbije-griepseizoenen-of-hittegolven~bee1a2ea/?fbclid=IwAR23Cff9T6ChYHM_7OmTVvV4NsdZiFA_-BnjibstU1vuIZzylhLdDuMFfng
-landen voorbij de piek gebruiken als trainingsdata
 
 
-# # Intresting parameters
--Mean of how many values
--Polynomial degree
+# # Dataset exploration
+
+# ## Dataset #1: seaice
+
+# source: https://www.kaggle.com/nsidcorg/daily-sea-ice-extent-data
+
 # In[3]:
 
 
-# Minimum voor bp:
-# Model en evaluatie van het model
+ice = pd.read_csv('./data/seaice.csv')
+ice.columns = ['Year', 'Month', 'Day', 'Extent', 'Missing', 'Source Data',
+'hemisphere']
+ice
 
-
-# In[4]:
-
-
-pd.set_option('display.max_columns', 500)
-
-
-# In[ ]:
-
-
-
-
-
-# # Retrieval
 
 # In[5]:
 
 
-confirmed = pd.read_csv("https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_global.csv",index_col=0,parse_dates=[0]).reset_index()
-deaths = pd.read_csv("https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_global.csv",index_col=0,parse_dates=[0]).reset_index()
-recovered = pd.read_csv("https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_recovered_global.csv",index_col=0,parse_dates=[0]).reset_index()
+plt.plot(ice[['Extent']])
 
-
-# # Formatting
-
-# ### Select most reliable countries
 
 # In[6]:
 
 
-confirmed.sort_values('Country/Region').head(120).tail(60)
+ice.groupby('hemisphere').count()
 
 
 # In[7]:
 
 
-confirmed[confirmed['Province/State'] == 'New South Wales']
+ice.groupby('Year').count()[['Extent']]
 
 
 # In[8]:
 
 
-confirmed[confirmed['Province/State'] == 'Hubei']
+ice.groupby('Year').mean()[['Extent']]
 
 
 # In[9]:
 
 
-eu = ['Belgium', 
-'Netherlands', 
-'Spain',
-'Italy',
-'Sweden',
-'United Kingdom',
-'Germany',
-'France',
-'Switzerland',
-'Portugal',
-'Austria',
-'Ireland',
-'Norway',
-'Denmark',
-'Slovenia',
-'Czechia',
-'Belarus',
-'Singapore',
-'Thailand'
-]
-
-confirmedDataEu = confirmed[(confirmed['Country/Region'].isin(eu)) & (confirmed['Province/State'].isnull()) ]
-
-confirmedDataEu = confirmedDataEu.set_index('Country/Region').drop(['Lat','Long','Province/State'],axis=1)
+plt.scatter(ice.groupby('Year').mean()[['Extent']][:-1].index, ice.groupby('Year').mean()[['Extent']][:-1])
 
 
 # In[10]:
 
 
-# Replace values bellow 10 with -1
-def to_min_1(v): 
-if v < 10 :
-return -1
-return v
+ice.groupby(['Year','hemisphere']).count().tail(60)
 
 
 # In[11]:
 
 
-population = [9006398, 9449323,11589623,10708981,5792202,65273511,
-83783942,4937786,60461826,17134872,5421241,10196709,
-2078938,46754778,10099265,8654622,67886011,5639000, 69799978
-]
-confirmedDataEuPM = confirmedDataEu.T / population * 1000000
-confirmedDataEuPM = confirmedDataEuPM.T
+plt.xlabel('Years')
+plt.ylabel('Extent')
+plt.plot(ice[ice['hemisphere'] == 'north'].groupby('Year').mean()[['Extent']][:-1].index, ice[ice['hemisphere'] == 'north'].groupby('Year').mean()[['Extent']][:-1],label='Northern hemisphere')
+plt.plot(ice[ice['hemisphere'] == 'south'].groupby('Year').mean()[['Extent']][:-1].index, ice[ice['hemisphere'] == 'south'].groupby('Year').mean()[['Extent']][:-1],label='Southern hemisphere')
+plt.legend()
 
 
 # In[12]:
 
 
-for date in confirmedDataEuPM.columns:
-confirmedDataEuPM[date] = confirmedDataEuPM[date].map(to_min_1)
-
-
-# ### Shift starting point to minimum of 10 cases
-
-# In[13]:
-
-
-(4926.130902-4947.701923
-)*11.5
-
-
-# In[14]:
-
-
-confirmedDataEuPM
-
-
-# In[15]:
-
-
-for countryLoc in confirmedDataEuPM.index:
-
-coronaFreeDays = confirmedDataEuPM.T[countryLoc].value_counts()[-1]
-print(coronaFreeDays)
-confirmedDataEuPM.loc[countryLoc, confirmedDataEuPM.columns] = confirmedDataEuPM.loc[countryLoc, confirmedDataEuPM.columns].shift(periods=-coronaFreeDays)
-
-
-# In[16]:
-
-
-confirmedDataEuPM
-
-
-# In[17]:
-
-
-np.arange(1, confirmedDataEuPM.columns[3:].size-1)
-
-
-# In[18]:
-
-
-confirmedDataEuPM
-
-
-# In[19]:
-
-
-# Rename columns
-seq = np.arange(1, confirmedDataEuPM.columns.size+1)
-seq = [ 'day_' + str(s) for s in seq]
-confirmedDataEuPM.rename(columns=dict(zip(confirmedDataEuPM.columns, seq)),inplace=True)
-
-
-# In[20]:
-
-
-# Remove unnecessary days
-confirmedDataEuPM.dropna(axis = 1, how = 'all', inplace = True)
-
-
-# In[21]:
-
-
-confirmedDataEuPM
-
-
-# In[22]:
-
-
-confirmedDataEuPMT = confirmedDataEuPM.T
-
-
-# In[23]:
-
-
-confirmedDataEuPMT
-
-
-# ### Replace values with mean of value from last 7 days
-
-# In[24]:
-
-
-# confirmedDataEuT.ewm(span = 7, min_periods = 7).mean().head(50)
-confirmedDataEuPMTFlattened = confirmedDataEuPMT.rolling(7).mean()
-
-# confirmedDataEuPMTFlattened = confirmedDataEuPMT
-
-
-# In[25]:
-
-
-confirmedDataEuPMT
-
-
-# ### Cumulative values to relative values
-
-# In[26]:
-
-
-confirmedDataEuPMTFlattened = confirmedDataEuPMTFlattened - confirmedDataEuPMTFlattened.shift(1)
-confirmedDataEuPMT = confirmedDataEuPMT - confirmedDataEuPMT.shift(1)
-
-
-# In[27]:
-
-
-confirmedDataEuPMTFlattened.columns
+plt.xlabel('Years')
+plt.ylabel('Extent')
+plt.scatter(ice.groupby('Year').mean()[['Extent']][:-1].index, ice.groupby('Year').mean()[['Extent']][:-1])
 
 
 # In[ ]:
@@ -281,489 +98,3888 @@ confirmedDataEuPMTFlattened.columns
 
 
 
+# In[13]:
+
+
+print('start : ' + str(ice['Year'][0]))
+print('end : ' + str(ice['Year'].tail(1).iloc[0]))
+
+
+# In[14]:
+
+
+2019-1978
+
+
+# ## Dataset #1: Toronto_temp
+
+# In[8]:
+
+
+tt
+
+
+# In[4]:
+
+
+# Source: https://www.kaggle.com/rainbowgirl/climate-data-toronto-19372018
+tt = pd.read_csv('./data/Toronto_temp.csv')
+tt = tt[tt['Day'] == 1]
+tt['Year'] = tt['Year'].replace({'2,013':'2013',
+'2,014':'2014',
+'2,015':'2015',
+'2,016':'2016',
+'2,017':'2017',
+'2,018':'2018'})
+# tt.groupby('Year').count()
+tt = tt[(tt['Year'] != '1937')]
+ttt = tt.groupby('Year').count()
+#ttt.head(50)
+#tt.groupby('Year').count().tail(50)
+meantt = tt.groupby('Year').mean()['Mean Temp (C)']
+meantt
+#meantt.index
+#meantt
+meantt.sort_index(inplace=True)
+
+plt.xlabel('Years')
+plt.ylabel('Temperature (C)')
+plt.xticks(np.array(range(0,meantt.size,10)))
+plt.scatter(meantt.index, meantt)
+
+print('start : ' + meantt.index[0])
+print('end : ' + meantt.index[-1])
+
+new_row = pd.Series({'Mean Temp (C)' : 0.555556, 'Year': '2018', 'Month':12})
+tt = tt.append(new_row, ignore_index=True)
+tt['Year'] = tt['Year'].astype(int)
+mean_temp_monthly = tt[['Year','Month','Mean Temp (C)']].set_index(['Year','Month']).sort_index()
+# mean_temp_monthly
+mean_temp_monthly = mean_temp_monthly[mean_temp_monthly.index.get_level_values(0).astype(int) >= 1979 ]
+mean_temp_monthly
+
+
+# In[6]:
+
+
+tt
+
+
+# ## Dataset #3: seaice2
+
+# Completer version of dataset #1
+# 
+# source: https://nsidc.org/arcticseaicenews/sea-ice-tools/
+
+# In[13]:
+
+
+ice2.mean()[1:-2]
+
+
+# In[17]:
+
+
+ice2_mean
+
+
+# In[19]:
+
+
+ice2.mean()[1:-2]
+
+
+# In[24]:
+
+
+ice2.mean()
+
+
+# In[26]:
+
+
+ice2
+
+
+# In[27]:
+
+
+ice2 = pd.read_csv('./data/seaice2.csv')
+# ice2
+ice2_mean = ice2.mean()[1:-2]
+ice2_mean
+ice2_mean.index = ice2_mean.index.values.astype(int)
+
+plt.title('Yearly ice extent')
+plt.scatter(ice2_mean.index,ice2_mean)
+plt.xlabel('Years')
+plt.ylabel('Extent')
+plt.show()
+
+# ice2['2018']
+# pd.concat([ice2['2016'],ice2['2017'],ice2['2018'],ice2['2019']]).reset_index()[0]
+# ice2[['2018']].append(ice2[['2019']])
+ice2.rename(columns={'Unnamed: 0' : 'Month', 'Unnamed: 1' : 'Day'}, inplace = True)
+ice2.drop([' ','1981-2010','Day','1978','2020'],axis=1,inplace=True)
+values = ice2.values
+i = 0
+for row in values :
+if type(row[0]) != str :
+values[i][0] = month
+else:
+month = row[0]
+i = i +1
+# ice2.columns.values
+ice2_clean = pd.DataFrame(values)
+ice2_clean.columns = ice2.columns.values
+# ice2_clean.head(5)
+ice2_monthly_mean = ice2_clean.set_index('Month').astype(float).groupby('Month',sort=False).mean()
+# ice2_monthly_mean
+# ice2_monthly_mean.T.stack().index.get_level_values(0)
+# ice2_monthly_mean.T.stack().reset_index(level=['Month']).drop(columns=['Month'])
+ice2_monthly_mean_chron = ice2_monthly_mean.T.stack().reset_index(level=['Month']).drop(columns=['Month'])
+# ice2.columns.size
+plt.title('Monthly ice extent')
+plt.plot(ice2_monthly_mean_chron.values)
+plt.xticks(np.array(range(0,500,75)))
+plt.xlabel('Cumulative month')
+plt.ylabel('Extent')
+plt.show()
+
+# np.unique(ice2_monthly_mean_chron.index.values).size*12
+print('from ' + ice2_monthly_mean_chron.index.values[0] + ' until ' + ice2_monthly_mean_chron.index.values[-1])
+ice2_monthly_mean_chron = ice2_monthly_mean.T.stack().reset_index(level=['Month']).drop(columns=['Month'])
+ice2_monthly_mean_chron.columns = ['ice_extent']
+ice2_monthly_mean_chron
+
+
+# # Dataset Combination
+
+# In[54]:
+
+
+ice2_monthly_mean_chron_cut = ice2_monthly_mean_chron[:-12]
+# ice2_monthly_mean_chron
+# ice2_monthly_mean_chron_cut
+# mean_temp_monthly
+# ice2_monthly_mean_chron_cut
+combined = mean_temp_monthly[mean_temp_monthly.index.get_level_values(0) >= 1979]
+combined['ice_extent'] = ice2_monthly_mean_chron_cut.values
+# combined
+combined.rename(columns={'Mean Temp (C)': 'mean_temp'}, inplace=True)
+dataframe_monthly = combined
+# dataframe_monthly
+# dataframe_monthly[['mean_temp']]
+plt.plot(dataframe_monthly[['mean_temp']].values[-24:],label='temperature')
+plt.plot(dataframe_monthly[['ice_extent']].values[-24:],label='ice extent')
+plt.legend()
+plt.show()
+dataframe_yearly = combined.groupby('Year').mean()
+# dataframe_yearly
+# dataframe_monthly[['mean_temp']].values
+plt.plot(dataframe_monthly[['mean_temp']].values,label='temperature')
+plt.plot(dataframe_monthly[['ice_extent']].values,label='ice extent')
+plt.legend()
+dataframe_monthly.to_csv('./data/dataframe_monthly.csv')
+dataframe_yearly.to_csv('./data/dataframe_yearly.csv')
+\end{minted}
+
+\section{Broncode voor het vergelijken van ARIMA, LSTM en Prophet bij univariate, niet-seizoensgebonden tijdreeksen}  % The \section*{} command stops  numbering
+\captionof{listing}{code voor differentiatie}
+\begin{minted}[
+frame=lines,
+framesep=2mm,
+fontsize=\footnotesize,
+linenos,breaklines
+]{python}
+
+#!/usr/bin/env python
+# coding: utf-8
+
+# # Imports 
+
+# In[1]:
+
+
+import pandas as pd
+import numpy as np
+import matplotlib.pylab as plt
+get_ipython().run_line_magic('matplotlib', 'inline')
+from matplotlib.pylab import rcParams
+rcParams['figure.figsize'] = 15,5
+from sklearn.model_selection import TimeSeriesSplit
+from sklearn.metrics import mean_absolute_error
+import warnings
+from statsmodels.tsa.arima_model import ARIMA
+import timeit
+from numpy import array
+from keras.models import Sequential
+from keras.layers import LSTM
+from keras.layers import Dense
+import tensorflow as tf
+from fbprophet import Prophet
+
+
+# # Dataprep
+
+# In[2]:
+
+
+# read time series
+ts = pd.read_csv('./data/dataframe_yearly.csv', index_col=0, usecols=[0,2])
+
+# print out first values
+ts.head()
+
+
+# In[3]:
+
+
+# plot time series
+plt.plot(ts)
+
+
+# ## Differentiatie
+
+# In[4]:
+
+
+# define method to visualise the stationarity of a time series
+def test_stationarity(timeseries):
+    
+    #Determing rolling statistics
+    rolmean = timeseries.rolling(12).mean()
+    rolstd = timeseries.rolling(12).std()
+
+    #Plot rolling statistics:
+    orig = plt.plot(timeseries, color='blue',label='Original')
+    mean = plt.plot(rolmean, color='red', label='Rolling Mean')
+    std = plt.plot(rolstd, color='black', label = 'Rolling Std')
+    plt.legend(loc='best')
+    plt.title('Rolling Mean & Standard Deviation')
+    plt.show(block=False)
+    
+# check stationarity of time serie
+test_stationarity(ts)
+
+
+# In[5]:
+
+
+# take the random walk difference of the time serie
+ts_diff = ts - ts.shift(1)
+ts_diff = ts_diff.dropna()
+
+# display stationarity of the newly differenced time serie
+test_stationarity(ts_diff)
+
+
+# ## Cross validation setup
+
+# In[6]:
+
+
+# initialize TimeSeriesSplit object
+tscv = TimeSeriesSplit(n_splits = 8)
+
+# loop trough all split time series that have a trainingsset with more than 20 values
+for train_index, test_index in tscv.split(ts_diff):
+    if train_index.size > 20:
+
+        # initialize cross validation train and test sets
+        cv_train, cv_test = ts_diff.iloc[train_index], ts_diff.iloc[test_index]
+        
+         # visiualize cross_validation structure for reference
+        print("TRAIN:", train_index.size)
+        print("TEST:", test_index.size)
+        print()
+
+
+# ## General methods
+
+# In[7]:
+
+
+# plot
+plt.plot(ts, marker='o', color='blue',label='Actual values')
+plt.ylim([0,15])
+plt.legend()
+
+plt.show()
+
+
+# In[8]:
+
+
+# define functions used troughout the notebook
+
+# define function for plotting last prediction and the actual data
+def full_graph(predicted_diff, title):
+    
+    # format predictions by adding NaN values in front
+    predictionsArray = np.asarray(revert_diff(predicted_diff, ts))
+    zerosArray = np.zeros(ts.values.size-len(predictionsArray.flatten()))
+    cleanPrediction = pd.Series(np.concatenate((zerosArray,predictionsArray))).replace(0,np.NaN)
+    cleanPrediction.index = ts.index.values
+    
+    # plot
+    plt.title(title)
+    plt.plot(ts, marker='o', color='blue',label='Actual values')
+    plt.plot(cleanPrediction, marker='o', color='red',label='Last 4 year prediction')
+    plt.ylim([0,15])
+    plt.legend()
+
+    plt.show()
+
+# define function for reverting a differenced dataset
+def revert_diff(predicted_diff, og_data):
+    
+    # retrieve last value
+    last_value = og_data.iloc[-predicted_diff.size-1][0]
+    
+    # initialize reverted array
+    predicted_actual = np.array([])
+    
+    # add each value in the differenced array with the last actual value
+    for value_diff in predicted_diff:
+        actual_value = last_value + value_diff
+        predicted_actual = np.append(predicted_actual, actual_value)
+        last_value = actual_value
+        
+    return predicted_actual
+
+
+# # ARIMA
+
+# In[9]:
+
+
+# ARIMA
+from statsmodels.tsa.arima_model import ARIMA
+import itertools
+import warnings
+import sys
+from sklearn.metrics import mean_absolute_error
+
+
+
+# Define the p, d and q parameters to take any value between 0 and 2
+p = q = range(0, 5)
+d = range(0,3)
+
+# Generate all different combinations of p, q and q triplets
+pdq = list(itertools.product(p, d, q))
+
+# initialize variables
+best_pdq = pdq
+best_mean_mae = np.inf
+
+# specify to ignore warning messages to reduce visual clutter
+warnings.filterwarnings("ignore") 
+
+# loop trough all possible parameter combinations of pdq
+for param in pdq:
+    print(param)
+    
+    # some parametercombinations might lead to crash, so catch exceptions and continue
+    try:  
+        
+        # initialize the array which will contain the mean average errors
+        maes = []
+        
+        # loop trough all split time series that have a trainingsset with more than 20 values
+        for train_index, test_index in tscv.split(ts_diff):
+            if train_index.size > 20:
+                
+                # initialize cross validation train and test sets
+                cv_train, cv_test = ts_diff.iloc[train_index], ts_diff.iloc[test_index]
+
+                # build model
+                model = ARIMA(cv_train, order=(param))
+                
+                # fit model
+                model_fit = model.fit()
+
+                # make predictions
+                predictions =  model_fit.predict(start=len(cv_train), end=len(cv_train)+cv_test.size-1, dynamic=False)
+                
+                # renaming for clarity
+                prediction_values = predictions.values
+                true_values = cv_test.values
+                
+                # error calculation this part of the cross validation
+                maes.append(mean_absolute_error(true_values, prediction_values))
+
+        
+        # error calculation for this parameter combination
+        mean_mae = np.mean(maes)
+        print('MAE: ' + str(mean_mae))    
+
+        # store parameters resulting in the lowest mean MAE
+        if mean_mae < best_mean_mae:
+            best_mean_mae = mean_mae
+            best_maes = maes
+            best_pdq = param
+            best_predictions = prediction_values
+            
+    except Exception as e:
+        print(e)
+        continue
+
+# logging
+print()
+print('Best MAE = ' + str(best_mean_mae))
+print(best_pdq)
+
+# best range(0,10): 
+
+
+# In[10]:
+
+
+# # result
+# best_pdq = (3, 0, 0)
+
+
+# In[11]:
+
+
+start_time = timeit.default_timer()
+
+# specify to ignore warning messages
+warnings.filterwarnings("ignore") 
+
+print("----")
+
+# initialize the array which will contain the mean average errors
+maes = []
+
+# loop trough all split time series that have a trainingsset with more than 20 values
+for train_index, test_index in tscv.split(ts_diff):
+    if train_index.size > 20:
+
+        # initialize cross validation train and test sets
+        cv_train, cv_test = ts_diff.iloc[train_index], ts_diff.iloc[test_index]
+
+        # build model
+        arima = ARIMA(cv_train, best_pdq).fit(start_ar_lags=1,disp=False)
+
+        # make predictions
+        predictions = arima.forecast(steps=4)
+        prediction_values = predictions[0]
+        true_values = cv_test.values
+
+        # error calc
+        maes.append(mean_absolute_error(true_values, prediction_values))
+
+        # last actual prediction 
+        last_prediction_ARIMA = prediction_values
+
+        print("I",end="")
+
+# store results to variables
+time_ARIMA = timeit.default_timer() - start_time
+mae_mean = np.mean(maes)
+MAE_ARIMA = mae_mean
+last_MAE_ARIMA = maes[-1]
+
+# logging
+print()
+print('Mean MAE: %.3f x 1 000 000 km\u00b2' % MAE_ARIMA)
+print('MAE of last prediction: %.3f x 1 000 000 km\u00b2' % last_MAE_ARIMA)
+print('Execution time: %.3f seconds' % time_ARIMA)
+full_graph(last_prediction_ARIMA, 'Last prediction ARIMA')
+print('Mean average errors:')
+print(maes)
+
+
+# # LSTM
+
+# https://machinelearningmastery.com/tune-lstm-hyperparameters-keras-time-series-forecasting/
+
+# ## Functions 
+
+# In[12]:
+
+
+from keras.layers import Dropout
+# split a univariate sequence into samples
+def split_sequence(sequence, n_steps_in, n_steps_out):
+    X, y = list(), list()
+    for i in range(len(sequence)):
+        # find the end of this pattern
+        end_ix = i + n_steps_in
+        out_end_ix = end_ix + n_steps_out
+        
+        # check if we are beyond the sequence
+        if out_end_ix > len(sequence):
+            break
+            
+        # gather input and output parts of the pattern
+        seq_x, seq_y = sequence[i:end_ix], sequence[end_ix:out_end_ix]
+        X.append(seq_x)
+        y.append(seq_y)
+    return array(X), array(y)
+ 
+def build_model(raw_seq, n_steps_in, n_steps_out, n_features, n_neurons, dropout, batch_s):
+    
+    # split into samples
+    X, y = split_sequence(raw_seq.values.flatten(), n_steps_in, n_steps_out)
+    
+    # reshape from [samples, timesteps] into [samples, timesteps, features]
+    X = X.reshape((X.shape[0], X.shape[1], n_features))
+    
+    # define model
+    model = Sequential()
+    model.add(LSTM(n_neurons, activation='relu'))
+    model.add(Dropout(dropout))
+    model.add(Dense(n_steps_out))
+    model.compile(optimizer='adam', loss='mae')
+    
+    # fit model
+    model.fit(X, y, batch_size=batch_s, epochs=100, verbose=0)
+    
+    return model
+
+
+def predict(x_input, model, n_features):
+    n_features = 1
+    
+    # reshape data
+    x_input = x_input.reshape((1, n_steps_in, n_features))
+    
+    # predict
+    yhat = model.predict(x_input, verbose=0)
+    
+    return yhat
+
+
+# ## Determine hyperparameters 
+
+# In[24]:
+
+
+# Disabled tf warning because of visual clutter
+tf.compat.v1.logging.set_verbosity(tf.compat.v1.logging.ERROR)
+
+
+# constant variables
+n_steps_in = 4
+n_steps_out = 4
+n_features  = 1
+maes = []
+global_maes = []
+
+# optimizable variables
+n_neurons_array = [1,10,20]
+dropout_array = [0,0.5,0.99]
+batch_size_array = [1,8]
+
+
+# initialize values
+best_MAE = 100
+best_n_neurons = 0
+best_activation = 'none'
+best_dropout = 0
+best_batch_size = 0
+
+# loop over all possible parameter combinations
+for n_neurons in n_neurons_array:
+    for dropout in dropout_array:
+        for batch_size in batch_size_array:
+
+            print("----")
+            
+            # loop trough all split time series that have a trainingsset with more than 20 values
+            for train_index, test_index in tscv.split(ts_diff): 
+                if train_index.size > 20:  
+                    
+                    # initialize cross validation train and test sets
+                    y_train, y_test = ts_diff.iloc[train_index], ts_diff.iloc[test_index]
+
+                    # build model
+                    lstm_model = build_model(y_train, n_steps_in, n_steps_out, n_features, n_neurons, dropout, batch_size)
+
+                    # make predictions
+                    x_input = array(y_test)
+                    y_predicted = predict(x_input, lstm_model, n_features).flatten()
+                    y_actual = y_test.values
+
+                    # error calculation this part of the cross validation
+                    maes.append(mean_absolute_error(y_actual, y_predicted))
+
+                    print("I",end="")
+
+                    # last actual prediction 
+                    last_prediction_LSTM = y_predicted
+
+            # error calculation for this parameter combination
+            MAE_LSTM = np.mean(maes)
+            last_MAE_LSTM = maes[-1]
+            global_maes.append(MAE_LSTM)
+
+            # store parameters resulting in the lowest mean MAE
+            if best_MAE > MAE_LSTM:
+                best_n_neurons = n_neurons
+                best_dropout = dropout
+                best_batch_size = batch_size
+                best_MAE = MAE_LSTM
+                
+            # log values for parameter combination
+            print()
+            print(n_neurons)
+            print(dropout)
+            print(batch_size)
+            print(MAE_LSTM)
+            print()    
+
+# log parameter combination with best result
+print('Best:')
+print('N neurons')
+print(best_n_neurons)
+print('Dropout rate')
+print(best_dropout)
+print('Batch size')
+print(best_batch_size)
+print('MAE')
+print(best_MAE)
+plt.bar(range(0,len(global_maes)), global_maes)
+
+
+# In[25]:
+
+
+# Run #1 Best:
+# 1
+# 0
+# 1
+# 0.1919512481592649
+# Wall time: 8min 36s
+
+# Run #2 Best:
+# 1
+# 0.5
+# 1
+# 0.19969739902546374
+# Wall time: 7min 16s
+
+# Run #3 Best:
+# 5
+# 0.99
+# 8
+# 0.20111841616444215
+# Wall time: 6min 47s
+
+
+# In[26]:
+
+
+best_n_neurons = 1
+best_dropout = 0
+best_batch_s = 8
+
+
+# ## Final result LSTM
+
+# In[27]:
+
+
+start_time = timeit.default_timer()
+
+# Disabled tf warning because of visual clutter
+tf.compat.v1.logging.set_verbosity(tf.compat.v1.logging.ERROR)
+
+
+# constant variables
+n_steps_in = 4
+n_steps_out = 4
+n_features  = 1
+maes = []
+
+
+# optimizable variables
+n_neurons = best_n_neurons
+dropout = best_dropout
+batch_s = best_batch_s
+
+print("----")
+
+# loop trough all split time series that have a trainingsset with more than 20 values
+for train_index, test_index in tscv.split(ts_diff):
+    if train_index.size > 20:  
+        # initialize cross validation train and test sets
+        y_train, y_test = ts_diff.iloc[train_index], ts_diff.iloc[test_index]
+
+        # build model
+        lstm_model = build_model(y_train, n_steps_in, n_steps_out, n_features, n_neurons, dropout, batch_s)
+
+        # make predictions
+        x_input = array(y_test)
+        y_predicted = predict(x_input, lstm_model, n_features).flatten()
+        y_actual = y_test.values
+
+        # error calc
+        maes.append(mean_absolute_error(y_actual, y_predicted))
+
+        print("I",end="")
+
+# last actual prediction 
+last_prediction_LSTM = y_predicted
+ 
+# store variables
+time_LSTM = timeit.default_timer() - start_time
+MAE_LSTM = np.mean(maes)
+last_MAE_LSTM = maes[-1]
+
+# visualisation
+print()
+print('Mean MAE: %.3f x 1 000 000 km\u00b2' % MAE_LSTM)
+print('MAE of last prediction: %.3f x 1 000 000 km\u00b2' % last_MAE_LSTM)
+print('Execution time: %.3f seconds' % time_LSTM)
+full_graph(last_prediction_LSTM, 'Last prediction LSTM')
+print('Mean average errors')
+print(maes)
+
+
+# # Prophet
+
 # In[28]:
 
 
-confirmedDataEuPMTFlattened.tail(50)
-
-
-# In[29]:
-
-
-confirmedDataEuPMTFlattened.tail(60)
-
-
-# In[30]:
-
-
-
-plt.plot(confirmedDataEuPMTFlattened.index, confirmedDataEuPMTFlattened['Belgium'], label = "Belgium")
-plt.plot(confirmedDataEuPMTFlattened.index, confirmedDataEuPMTFlattened['Italy'], label = "Italy")
-plt.plot(confirmedDataEuPMTFlattened.index, confirmedDataEuPMTFlattened['France'], label = "France")
-plt.plot(confirmedDataEuPMTFlattened.index, confirmedDataEuPMTFlattened['Thailand'], label = "Thailand")
-plt.xlabel('Dates')
-plt.ylabel('Amount')
-
-plt.title('Combined chart per million inhabitants')
-plt.xticks(np.arange(-1, 120, step=10))
-
-plt.legend()
-plt.show()
-
-fig=plt.figure(figsize=(20, 20))
-
-
-# In[31]:
-
-
-confirmedDataEuPM.columns[41:]
-
-
-# In[32]:
-
-
-confirmedDataEuPMTFlattened['Belgium'].head(50)
-
-
-# In[33]:
-
-
-confirmedDataEuPMTFlattened.columns
-
-
-# # Modelling 
-
-# In[34]:
-
-
-# 1 vgl tussen verschillende landen
-# 2 Curve per land individueel doortrekken
-#   veeltermvgl
-#   times series
-
-
-# ### Polynomial
-
-# #### Example
-https://towardsdatascience.com/machine-learning-polynomial-regression-with-python-5328e4e8a386
-# In[35]:
-
-
-# import numpy as np
-# import matplotlib.pyplot as plt
-# import pandas as pd
-
-# # Importing the dataset
-# dataset = pd.read_csv('https://s3.us-west-2.amazonaws.com/public.gamelab.fun/dataset/position_salaries.csv')
-# X = dataset.iloc[:, 1:2].values
-# y = dataset.iloc[:, 2].values
-
-# # Splitting the dataset into the Training set and Test set
-# from sklearn.model_selection import train_test_split 
-# X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=0)
-
-# # Fitting Linear Regression to the dataset
-# from sklearn.linear_model import LinearRegression
-# lin_reg = LinearRegression()
-# lin_reg.fit(X, y)
-
-# # Visualizing the Linear Regression results
-# def viz_linear():
-#     plt.scatter(X, y, color='red')
-#     plt.plot(X, lin_reg.predict(X), color='blue')
-#     plt.title('Truth or Bluff (Linear Regression)')
-#     plt.xlabel('Position level')
-#     plt.ylabel('Salary')
-#     plt.show()
-#     return
-# viz_linear()
-
-# # Fitting Polynomial Regression to the dataset
-# from sklearn.preprocessing import PolynomialFeatures
-# poly_reg = PolynomialFeatures(degree=4)
-# X_poly = poly_reg.fit_transform(X)
-# pol_reg = LinearRegression()
-# pol_reg.fit(X_poly, y)
-
-# # Visualizing the Polymonial Regression results
-# def viz_polymonial():
-#     plt.scatter(X, y, color='red')
-#     plt.plot(X, pol_reg.predict(poly_reg.fit_transform(X)), color='blue')
-#     plt.title('Truth or Bluff (Linear Regression)')
-#     plt.xlabel('Position level')
-#     plt.ylabel('Salary')
-#     plt.show()
-#     return
-# viz_polymonial()
-
-# # Predicting a new result with Linear Regression
-# lin_reg.predict([[5.5]])
-# #output should be 249500
-
-# # Predicting a new result with Polymonial Regression
-# pol_reg.predict(poly_reg.fit_transform([[5.5]]))
-# #output should be 132148.43750003
-
-
-# #### Actual
-
-# In[36]:
-
-
-BEPrep = confirmedDataEuPMTFlattened.Belgium.shift(-7).dropna().reset_index().reset_index()
-ITPrep = confirmedDataEuPMTFlattened.Italy.shift(-7).dropna().reset_index().reset_index()
-
-BEPrep.columns = ['day_nr','day','confirmed_cases']
-BEPrep['day_nr'] += 1
-
-ITPrep.columns = ['day_nr','day','confirmed_cases']
-ITPrep['day_nr'] += 1
-
-BEPrep = BEPrep.drop('day',axis=1)
-ITPrep = ITPrep.drop('day',axis=1)
-
-
-# In[37]:
-
-
-confirmedDataEuPMTFlattened.Belgium.dropna().reset_index().reset_index()
+# formatting dataframe
+ts_formated_prophet = ts_diff.reset_index().rename(columns = {'Year' : 'ds', 'ice_extent' : 'y'})
+ts_formated_prophet['ds'] = pd.DataFrame(pd.to_datetime(ts_formated_prophet['ds'].astype(str), format='%Y'))
 
 
 # In[38]:
 
 
-y = BEPrep.iloc[:, 1].values
-X = BEPrep.iloc[:, 0].values
+# Python
+import itertools
+import numpy as np
+import pandas as pd
 
-# Splitting the dataset into the Training set and Test set
-from sklearn.model_selection import train_test_split 
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=0)
+# define dataframe
+df = ts_formated_prophet
+
+param_grid = {  
+    'changepoint_prior_scale': [0.001, 0.01, 0.1, 1, 2, 5, 10, 15, 20, 25],
+}
+
+# Generate all combinations of parameters
+all_params = [dict(zip(param_grid.keys(), v)) for v in itertools.product(*param_grid.values())]
+
+# initialize variables
+maes = []  
+global_maes = []
+best_MAE_prophet = np.inf
+
+# Use cross validation to evaluate all parameters
+for params in all_params:
+
+    # loop trough all split time series that have a trainingsset with more than 20 values
+    for train_index, test_index in tscv.split(ts_formated_prophet):    
+        if train_index.size > 20:  
+            
+            # initialize cross validation train and test sets
+            train  = ts_formated_prophet.iloc[train_index]
+            y_test = ts_formated_prophet.iloc[test_index][['y']].values.flatten()
+            X_test = ts_formated_prophet.iloc[test_index][['ds']]
+
+            # Fit model with given params
+            model = Prophet(**params, weekly_seasonality=False, daily_seasonality=False)
+            model = model.fit(train)
+            
+            # make predictions
+            forecast = model.predict(X_test)
+            y_pred = forecast['yhat'].values
+            
+            # last actual prediction 
+            last_prediction_prophet = y_pred
+            
+            # error calculation this part of the cross validation
+            maes.append(mean_absolute_error(y_test, y_pred))
+            
+    # error calculation for this parameter combination
+    MAE_prophet = np.mean(maes)
+    last_MAE_prophet = maes[-1]
+    global_maes.append(MAE_prophet)
+    
+    # logging
+    print('changepoint_prior_scale: ' + str(params['changepoint_prior_scale']))
+    
+    # store parameters resulting in the lowest mean MAE
+    if best_MAE_prophet > MAE_prophet:
+        best_params = params
+        best_MAE_prophet = MAE_prophet
+
+# log optimal result          
+print('changepoint_prior_scale: ' + str(best_params['changepoint_prior_scale']))
+print(best_MAE_prophet)
+            
 
 
 # In[39]:
 
 
-degree = 2
+# best_params = {'changepoint_prior_scale': 2}
 
 
 # In[40]:
 
 
-# Fitting Polynomial Regression to the dataset
-from sklearn.preprocessing import PolynomialFeatures
-from sklearn.linear_model import LinearRegression
+# Disabled tf warning because of clutter
+warnings.filterwarnings("ignore") # specify to ignore warning messages
+
+start_time = timeit.default_timer()
+
+# initialize variables
+maes = []
+
+for train_index, test_index in tscv.split(ts_formated_prophet):
+    if train_index.size > 20:  
+        
+        # initialize cross validation train and test sets
+        train  = ts_formated_prophet.iloc[train_index]
+        y_test = ts_formated_prophet.iloc[test_index][['y']].values.flatten()
+        X_test = ts_formated_prophet.iloc[test_index][['ds']]
+
+        # build model
+        model = Prophet(**best_params, weekly_seasonality=False, daily_seasonality=False)
+        model.fit(train)
+
+        # make predictions
+        forecast = model.predict(X_test)
+        y_pred = forecast['yhat'].values
+
+        # error calc
+        maes.append(mean_absolute_error(y_test, y_pred))
+
+        # last actual prediction 
+        last_prediction_prophet = y_pred
 
 
-poly_reg = PolynomialFeatures(degree=degree)
+# store results
+time_Prophet = timeit.default_timer() - start_time
+MAE_Prophet = np.mean(maes)
+last_MAE_Prophet = maes[-1]
 
-X_poly = poly_reg.fit_transform(X.reshape(-1,1))
-pol_reg = LinearRegression()
-pol_reg.fit(X_poly, y)
+# visualize results
+print()
+print('Mean MAE: %.3f x 1 000 000 km\u00b2' % MAE_Prophet)
+print('MAE of last prediction: %.3f x 1 000 000 km\u00b2' % last_MAE_Prophet)
+print('Execution time: %.3f seconds' % time_Prophet)
+full_graph(last_prediction_prophet, "Last 4 year prediction prophet")
+print('Mean average errors')
+print(maes)
 
-# Visualizing the Polymonial Regression results
-def viz_polymonial():
-plt.scatter(X, y, color='red')
-plt.plot(X, pol_reg.predict(poly_reg.fit_transform(X.reshape(-1,1))), color='blue')
-plt.title('')
-plt.xlabel('Day')
-plt.ylabel('New Cases')
-plt.ylim(bottom=0)
-plt.xlim(right=100)
-plt.show()
-return
-viz_polymonial()
+
+# # Evaluation
+
+# In[33]:
+
+
+# formatting
+results = [[MAE_ARIMA,time_ARIMA,last_MAE_ARIMA],[MAE_LSTM,time_LSTM,last_MAE_LSTM],[MAE_Prophet,time_Prophet,last_MAE_Prophet]]
+
+# display results
+pd.DataFrame(results, columns=['Mean MAE (x 1 000 000 km\u00b2)','Execution time (s)','Last MAE (x 1 000 000 km\u00b2)'],index=['ARIMA','LSTM','Prophet']).round(decimals=3)
+
+
+# In[34]:
+
+
+# visualize results of last prediction
+full_graph(last_prediction_ARIMA, "Last prediction ARIMA")
+full_graph(last_prediction_LSTM, "Last prediction LSTM")
+full_graph(last_prediction_prophet, "Last prediction Prophet")
+
+
+
+\end{minted}
+
+\section{Broncode voor het vergelijken van ARIMA, LSTM en Prophet bij univariate, seizoensgebonden tijdreeksen}  % The \section*{} command stops section numbering
+\captionof{listing}{Broncode voor het vergelijken van ARIMA, LSTM en Prophet bij univariate, seizoensgebonden tijdreeksen}
+\begin{minted}[
+frame=lines,
+framesep=2mm,
+fontsize=\footnotesize,
+linenos,breaklines
+]{python}
+
+#!/usr/bin/env python
+# coding: utf-8
+
+# In[40]:
+
+
+# Voorspellen voor 1 jaar
+# Of voorspellen op 3 jaar apart omdat voorspellen van 1 jaar misschien de algemene trend minder volgt
+# SARIMA proberen anders gwn ARIMA
 
 
 # In[41]:
 
 
-# Predicting a new result with Polymonial Regression
-pol_reg.predict(poly_reg.fit_transform([[12]]))[0]
+import pandas as pd
+import numpy as np
+# matplotlib is the Python library for drawing diagrams
+import matplotlib.pylab as plt
+get_ipython().run_line_magic('matplotlib', 'inline')
+# set the size of the diagrams
+from matplotlib.pylab import rcParams
+rcParams['figure.figsize'] = 15,5
+import timeit
+import warnings
+from sklearn.model_selection import TimeSeriesSplit
 
+
+# # General functions
 
 # In[42]:
 
 
-i = BEPrep.shape[0]+1
-BEPred = BEPrep
-while i <= 100 :
-BEPred = BEPred.append({'day_nr':i,'confirmed_cases': pol_reg.predict(poly_reg.fit_transform([[i]]))[0]}, ignore_index=True)
-i += 1
+def test_stationarity(timeseries):
+    
+    #Determing rolling statistics
+    rolmean = timeseries.rolling(36).mean()
+    rolstd = timeseries.rolling(24).std()
 
+    #Plot rolling statistics:
+    orig = plt.plot(timeseries, color='blue',label='Original')
+    mean = plt.plot(rolmean, color='red', label='Rolling Mean')
+    std = plt.plot(rolstd, color='black', label = 'Rolling Std')
+    plt.legend(loc='best')
+    plt.title('Rolling Mean & Standard Deviation')
+    plt.show(block=False)
+    
+def full_graph(predicted, og_dataset, title):
+    zerosArray = np.zeros(og_dataset.values.size-len(predicted.flatten()))
+    cleanPrediction = pd.Series(np.concatenate((zerosArray,predicted))).replace(0,np.NaN)
+    
+    # plot
+    plt.title(title)
+    plt.plot(og_dataset.index, og_dataset.values,marker='o', color='blue',label='Actual values')
+    plt.plot(og_dataset.index, cleanPrediction,marker='o', color='red',label='Last 2 year prediction')
+    plt.ylim([0,20])
+    plt.legend()
+
+    plt.show()
+    
+def revert_diff(predicted_diff, og_data):
+    last_value = og_data.iloc[-predicted_diff.size-1][0]
+    predicted_actual = np.array([])
+    for value_diff in predicted_diff:
+        actual_value = last_value + value_diff
+        predicted_actual = np.append(predicted_actual, actual_value)
+        last_value = actual_value
+    return predicted_actual
+
+def revert_seasonal_diff_recursion(last_seasons_value, diff_value):
+    return last_seasons_value + diff_value
+
+def revert_diff_seasonal(predicted_diff, og_data):
+    prediction_size = predicted_diff.size
+    
+    history = ts[:-prediction_size].values.flatten()
+    for value_diff in predicted_diff[-prediction_size:]:
+        new_value = revert_seasonal_diff_recursion(history[-12], value_diff)
+        history = np.append(history,new_value)
+    return history[-prediction_size:]
+
+
+# ## Dataprep
 
 # In[43]:
 
 
-y = BEPred.iloc[:, 1].values
-X = BEPred.iloc[:, 0].values
-
-
-# Visualizing the Polymonial Regression results
-def viz_polymonial():
-plt.scatter(X, y, color='red')
-plt.plot(X, pol_reg.predict(poly_reg.fit_transform(X.reshape(-1,1))), color='blue')
-plt.title('')
-plt.xlabel('Day')
-plt.ylabel('New Cases')
-plt.ylim(bottom=0,top=200)
-plt.xlim(right=100)
-plt.show()
-return
-viz_polymonial()
+ts = pd.read_csv('./data/dataframe_monthly.csv', index_col=0, usecols=[0,1,3]).reset_index()
 
 
 # In[44]:
 
 
-BEPred
+ts
+
 
 # In[45]:
 
 
-BEPrep['confirmed_cases'].to_list()
+ts['date'] = pd.to_datetime(ts['Month'].astype(str) + ts['Year'].astype(str), format='%m%Y', errors='ignore')
 
 
 # In[46]:
 
 
-# univariate lstm example
-from numpy import array
-from keras.models import Sequential
-from keras.layers import LSTM
-from keras.layers import Dense
-
-# split a univariate sequence into samples
-def split_sequence(sequence, n_steps):
-X, y = list(), list()
-for i in range(len(sequence)):
-# find the end of this pattern
-end_ix = i + n_steps
-# check if we are beyond the sequence
-if end_ix > len(sequence)-1:
-break
-# gather input and output parts of the pattern
-seq_x, seq_y = sequence[i:end_ix], sequence[end_ix]
-X.append(seq_x)
-y.append(seq_y)
-return array(X), array(y)
-
-# choose a number of time steps
-n_steps = 7
-# split into samples
-X, y = split_sequence(ITPrep['confirmed_cases'].to_list(), n_steps)
-# reshape from [samples, timesteps] into [samples, timesteps, features]
-n_features = 1
-X = X.reshape((X.shape[0], X.shape[1], n_features))
-# define model
-model = Sequential()
-model.add(LSTM(50, activation='relu', input_shape=(n_steps, n_features)))
-model.add(Dense(1))
-model.compile(optimizer='adam', loss='mse')
-# fit model
-model.fit(X, y, epochs=300, verbose=2)
+ts
 
 
 # In[47]:
 
 
-a = 2
+ts = ts[['date','ice_extent']]
+ts.set_index('date', inplace=True)
+plt.plot(ts[['ice_extent']])
+
+
+# In[48]:
+
+
+test_stationarity(ts)
+
+
+# ### Differencing
 
 # In[49]:
 
 
-model.summary()
+ts_diff_seasonal = ts - ts.shift(12)
+ts_diff_seasonal = ts_diff_seasonal.dropna()
+test_stationarity(ts_diff_seasonal)
 
 
 # In[50]:
 
 
-X
+ts_diff = ts - ts.shift(1)
+ts_diff = ts_diff.dropna()
+test_stationarity(ts_diff)
 
+
+# ### Cross validation setup
 
 # In[51]:
 
 
-BEPrep
+def display_cross_validation(dataset, n_splits):
+    tscv = TimeSeriesSplit(n_splits = n_splits)
+    
+    for train_index, test_index in tscv.split(dataset):
+        if train_index.size > 300:
+            # initialize cross validation train and test sets
+            cv_train, cv_test = dataset.iloc[train_index], dataset.iloc[test_index]
+
+            print("TRAIN:", train_index.size) # visiualize cross_validation structure for reference
+            print("TEST:", test_index.size)
+            print()
 
 
 # In[52]:
 
 
-BEPredLSTM = BEPrep
-
-while BEPredLSTM.shape[0] < ITPrep.shape[0]+90:
-counter = BEPredLSTM.shape[0]
-
-x_input = array(BEPredLSTM['confirmed_cases'].tail(7).to_list())
-x_input = x_input.reshape((1, n_steps, n_features))
-
-predicted_value = model.predict(x_input, verbose=2).item(0)
-print(predicted_value)
-BEPredLSTM = BEPredLSTM.append({'confirmed_cases': predicted_value,'day_nr':counter +1 }, ignore_index=True)
+ts_diff = ts_diff[:-5] # need the -5 to get testsets for 24 months/2 years
+display_cross_validation(ts_diff, 18)
+tscv_diff = TimeSeriesSplit(n_splits = 18)
 
 
 # In[53]:
 
 
-BEPredLSTM.tail(100)
+display_cross_validation(ts_diff_seasonal, 18)
+tscv_diff_seasonal = TimeSeriesSplit(n_splits = 18)
+
+
+# # ARIMA
+
+# ## random walk differencing
+
+# ### Determine hyperparameters
+
+# In[20]:
+
+
+# ARIMA
+from statsmodels.tsa.arima_model import ARIMA
+import itertools
+import warnings
+import sys
+from sklearn.metrics import mean_absolute_error
+
+
+
+# Define the p, d and q parameters to take any value between 0 and 2
+p = q = range(0, 5)
+d = range(0,3)
+
+# Generate all different combinations of p, q and q triplets
+pdq = list(itertools.product(p, d, q))
+best_pdq = pdq
+best_mean_mae = np.inf
+warnings.filterwarnings("ignore") # specify to ignore warning messages
+for param in pdq:
+    print(param)
+    try:   # some parametercombinations might lead to crash, so catch exceptions and continue
+        maes = []
+        for train_index, test_index in tscv_diff.split(ts_diff):
+            if train_index.size > 300:
+                # initialize cross validation train and test sets
+                cv_train, cv_test = ts_diff.iloc[train_index], ts_diff.iloc[test_index]
+
+                # build model
+                model = ARIMA(cv_train, order=(param))
+                model_fit = model.fit()
+
+                # make predictions
+                predictions =  model_fit.predict(start=len(cv_train), end=len(cv_train)+cv_test.size-1, dynamic=False)
+                prediction_values = predictions.values
+                true_values = cv_test.values
+                # error calc
+                #     print(true_values)
+                #     print(predictions.values)
+                maes.append(mean_absolute_error(true_values, prediction_values))
+
+        
+        mean_mae = np.mean(maes)
+        print('MAE: ' + str(mean_mae))    
+
+        if mean_mae < best_mean_mae:
+            best_mean_mae = mean_mae
+            best_maes = maes
+            best_pdq = param
+            best_predictions = prediction_values
+    except Exception as e:
+        print(e)
+        continue
+   
+print()
+print('Best MAE = ' + str(best_mean_mae))
+print(best_pdq)
+
+
+# best range(0,10)
+# Best MAE = 0.23763938034311669
+# (8, 0, 9)
+# Wall time: 1h 32min 14s
 
 
 # In[54]:
 
 
-# # Fitting Polynomial Regression to the dataset
-# from sklearn.preprocessing import PolynomialFeatures
-# from sklearn.linear_model import LinearRegression
+# best_pdq = (8, 0, 9) # range 10
+best_pdq = (3,0,3)
 
 
-# poly_reg = PolynomialFeatures(degree=8)
-
-# X_poly = poly_reg.fit_transform(X.reshape(-1,1))
-# pol_reg = LinearRegression()
-# pol_reg.fit(X_poly, y)
-
-# # Visualizing the Polymonial Regression results
-# def viz_polymonial():
-#     plt.scatter(X, y, color='red')
-#     plt.plot(X, pol_reg.predict(poly_reg.fit_transform(X.reshape(-1,1))), color='blue')
-#     plt.title('')
-#     plt.xlabel('Day')
-#     plt.ylabel('New Cases')
-#     plt.ylim(bottom=0)
-#     plt.show()
-#     return
-# viz_polymonial()
-
+# ### Final result
 
 # In[55]:
 
 
-plt.plot(BEPredLSTM.index, BEPredLSTM['confirmed_cases'], label = "Belgium")
-plt.xlabel('Dates')
-plt.ylabel('Amount')
-plt.ylim(bottom=0)
-plt.legend()
-plt.show()
+from statsmodels.tsa.arima_model import ARIMA
+from sklearn.metrics import mean_absolute_error
 
-fig=plt.figure(figsize=(20, 20))
 
+start_time = timeit.default_timer()
+
+warnings.filterwarnings("ignore") # specify to ignore warning messages
+
+print("-------")
+
+maes = []
+
+for train_index, test_index in tscv_diff.split(ts_diff):
+    if train_index.size > 300:
+        # initialize cross validation train and test sets
+        cv_train, cv_test = ts_diff.iloc[train_index], ts_diff.iloc[test_index]
+
+        # build model
+        model = ARIMA(cv_train, order=(best_pdq))
+        model_fit = model.fit()
+
+        # make predictions
+        predictions =  model_fit.predict(start=len(cv_train), end=len(cv_train)+cv_test.size-1, dynamic=False)
+        prediction_values = predictions.values
+        true_values = cv_test.values
+
+        # error calc
+    #     print(true_values)
+    #     print(predictions.values)
+        maes.append(mean_absolute_error(true_values, prediction_values))
+
+        print("I",end="")
+
+time_ARIMA = timeit.default_timer() - start_time
+mae_mean = np.mean(maes)
+MAE_ARIMA = mae_mean
+last_MAE_ARIMA = maes[-1]
+last_prediction_ARIMA = prediction_values
+
+print()
+print('Mean MAE: %.3f x 1 000 000 km\u00b2' % MAE_ARIMA)
+print('MAE of last prediction: %.3f x 1 000 000 km\u00b2' % last_MAE_ARIMA)
+print('Execution time: %.3f seconds' % time_ARIMA)
+
+reverted_prediction_values = revert_diff(last_prediction_ARIMA, ts[:-5])
+full_graph(reverted_prediction_values, ts[:-5],'Last 2 year prediction ARIMA with regular differencing')
+print(maes)
+
+
+# ## Seasonal differencing
+
+# ### Determine hyperparameters
+
+# In[22]:
+
+
+# ARIMA
+from statsmodels.tsa.arima_model import ARIMA
+import itertools
+import warnings
+import sys
+from sklearn.metrics import mean_absolute_error
+
+
+
+# Define the p, d and q parameters to take any value between 0 and 2
+p = q = range(0, 5)
+d = range(0,3)
+
+# Generate all different combinations of p, q and q triplets
+pdq = list(itertools.product(p, d, q))
+best_pdq = pdq
+best_mean_mae = np.inf
+warnings.filterwarnings("ignore") # specify to ignore warning messages
+for param in pdq:
+    print(param)
+    try:   # some parametercombinations might lead to crash, so catch exceptions and continue
+        maes = []
+        for train_index, test_index in tscv_diff_seasonal.split(ts_diff_seasonal):
+            if train_index.size > 300:
+                # initialize cross validation train and test sets
+                cv_train, cv_test = ts_diff_seasonal.iloc[train_index], ts_diff_seasonal.iloc[test_index]
+
+                # build model
+                model = ARIMA(cv_train, order=(param))
+                model_fit = model.fit()
+
+                # make predictions
+                predictions =  model_fit.predict(start=len(cv_train), end=len(cv_train)+cv_test.size-1, dynamic=False)
+                prediction_values = predictions.values
+                true_values = cv_test.values
+                # error calc
+                #     print(true_values)
+                #     print(predictions.values)
+                maes.append(mean_absolute_error(true_values, prediction_values))
+
+        
+        mean_mae = np.mean(maes)
+        print('MAE: ' + str(mean_mae))    
+
+        if mean_mae < best_mean_mae:
+            best_mean_mae = mean_mae
+            best_maes = maes
+            best_pdq = param
+            best_predictions = prediction_values
+    except Exception as e:
+        print(e)
+        continue
+   
+print()
+print('Best MAE = ' + str(best_mean_mae))
+print(best_pdq)
+
+
+
+# ### Final result
 
 # In[56]:
 
 
-BEPrep.shape[0]
+best_pdq=(3,0,3) # pq range 4
+# best_pdq=(8, 0, 6) # pq range 10
 
 
 # In[57]:
 
 
-ITPrep.shape[0]
+from statsmodels.tsa.arima_model import ARIMA
+from sklearn.metrics import mean_absolute_error
+
+
+start_time = timeit.default_timer()
+
+warnings.filterwarnings("ignore") # specify to ignore warning messages
+
+print("------")
+
+maes = []
+
+for train_index, test_index in tscv_diff_seasonal.split(ts_diff_seasonal):
+    if train_index.size > 300:
+        # initialize cross validation train and test sets
+        cv_train, cv_test = ts_diff_seasonal.iloc[train_index], ts_diff_seasonal.iloc[test_index]
+
+        # build model
+        model = ARIMA(cv_train, order=(best_pdq))
+        model_fit = model.fit()
+
+        # make predictions
+        predictions =  model_fit.predict(start=len(cv_train), end=len(cv_train)+cv_test.size-1, dynamic=False)
+        prediction_values = predictions.values
+        true_values = cv_test.values
+
+        # error calc
+    #     print(true_values)
+    #     print(predictions.values)
+        maes.append(mean_absolute_error(true_values, prediction_values))
+
+        print("I",end="")
+
+time_ARIMA_seasonal = timeit.default_timer() - start_time
+mae_mean = np.mean(maes)
+MAE_ARIMA_seasonal = mae_mean
+last_MAE_ARIMA_seasonal = maes[-1]
+last_prediction_ARIMA_seasonal = prediction_values
+
+print()
+print('Mean MAE: %.3f x 1 000 000 km\u00b2' % MAE_ARIMA_seasonal)
+print('MAE of last prediction: %.3f x 1 000 000 km\u00b2' % last_MAE_ARIMA_seasonal)
+print('Execution time: %.3f seconds' % time_ARIMA_seasonal)
+
+reverted_prediction_values = revert_diff_seasonal(last_prediction_ARIMA_seasonal, ts)
+full_graph(reverted_prediction_values, ts,'Last 2 year prediction ARIMA with seasonal differencing')
+print(maes)
+
+
+# # SARIMAX
+
+# ## Random walk differencing
+
+# In[76]:
+
+
+# SARIMAX
+
+import itertools
+import warnings
+import sys
+from statsmodels.tsa.statespace.sarimax import SARIMAX
+
+
+# Define the p, d and q parameters to take any value between 0 and 2
+p = q = P = D = Q = range(0, 3)
+d = D = range(0, 2)
+
+# Generate all different combinations of p, q and q triplets
+pdqPDQ = list(itertools.product(p, d, q , P, D, Q))
+best_pdqPDQ = pdqPDQ
+best_mean_mae = np.inf
+warnings.filterwarnings("ignore") # specify to ignore warning messages
+for param in pdqPDQ:
+    print(param)
+    try:   # some parametercombinations might lead to crash, so catch exceptions and continue
+        maes = []
+        for train_index, test_index in tscv_diff.split(ts_diff):
+            if train_index.size > 300:
+                # initialize cross validation train and test sets
+                cv_train, cv_test = ts_diff.iloc[train_index], ts_diff.iloc[test_index]
+
+                # build model
+                model = SARIMAX(cv_train, 
+                order=param[:3], 
+                seasonal_order=(12,)+param[3:])
+                model_fit = model.fit()
+
+                # make predictions
+#                 predictions =  model_fit.predict(start=len(cv_train), end=len(cv_train)+cv_test.size-1, dynamic=False)
+                predictions =  model_fit.forecast(steps=24)
+                prediction_values = predictions.values
+                true_values = cv_test.values
+                # error calc
+                #     print(true_values)
+                #     print(predictions.values)
+                maes.append(mean_absolute_error(true_values, prediction_values))
+
+        
+        mean_mae = np.mean(maes)
+        print('MAE: ' + str(mean_mae))    
+
+        if mean_mae < best_mean_mae:
+            best_mean_mae = mean_mae
+            best_maes = maes
+            best_pdqPDQ = param
+            best_predictions = prediction_values
+    except Exception as e:
+        print(e)
+        continue
+
+print(best_predictions.size)
+print(data_test.index.size)
+
+        
+predictions_df = pd.DataFrame(best_predictions).set_index(keys=data_test.index)
+
+# plot
+print()
+print('Best MAE = ' + str(best_mean_mae))
+print(best_pdqPDQ)
+plt.plot(data_test,color='blue')
+plt.plot(predictions_df, color='red')
+plt.show()
+
+# best range(0,2):
+# Best MAE = 0.2524024604742092
+# (1, 0, 1, 1, 1, 1)
+# Wall time: 14min 50s
+
+# best range(0,2):
+
+# Best MAE = 0.22780663319275937
+# (1, 0, 2, 0, 1, 2)
+# Wall time: 2h 6min 26s
 
 
 # In[58]:
 
 
-BEPredLSTM['confirmed_cases']= BEPredLSTM['confirmed_cases'].multiply(11,589623)
+best_pdqPDQ = (1, 0, 2, 0, 1, 2)
 
 
 # In[59]:
 
 
-plt.plot(BEPredLSTM.index, BEPredLSTM['confirmed_cases'])
-plt.xlabel('Dates')
-plt.ylabel('Amount')
-plt.ylim(bottom=0)
-plt.xlim(right=200)
+from sklearn.metrics import mean_absolute_error
+from statsmodels.tsa.statespace.sarimax import SARIMAX
 
+
+start_time = timeit.default_timer()
+
+warnings.filterwarnings("ignore") # specify to ignore warning messages
+
+print("-------")
+
+maes = []
+
+for train_index, test_index in tscv_diff.split(ts_diff):
+    if train_index.size > 300:
+
+        # initialize cross validation train and test sets
+        cv_train, cv_test = ts_diff.iloc[train_index], ts_diff.iloc[test_index]
+
+        # build model
+        model = SARIMAX(cv_train, 
+                order=best_pdqPDQ[:3], 
+                seasonal_order=(best_pdqPDQ[3:]+(12,)))
+        model_fit = model.fit()
+
+        # make predictions
+        predictions =  model_fit.predict(start=len(cv_train), end=len(cv_train)+cv_test.size-1, dynamic=False)
+        prediction_values = predictions.values
+        true_values = cv_test.values
+
+        # error calc
+    #     print(true_values)
+    #     print(predictions.values)
+        maes.append(mean_absolute_error(true_values, prediction_values))
+        print("I",end="")
+
+
+
+time_SARIMA = timeit.default_timer() - start_time
+mae_mean = np.mean(maes)
+MAE_SARIMA = mae_mean
+last_MAE_SARIMA = maes[-1]
+last_prediction_SARIMA = prediction_values
+
+
+print()
+print('Mean MAE: %.3f x 1 000 000 km\u00b2' % MAE_SARIMA)
+print('MAE of last prediction: %.3f x 1 000 000 km\u00b2' % last_MAE_SARIMA)
+print('Execution time: %.3f seconds' % time_SARIMA)
+
+reverted_prediction_values = revert_diff(last_prediction_SARIMA, ts[:-5])
+full_graph(reverted_prediction_values, ts[:-5],'Last 2 year prediction SARIMAX')
+print(maes)
+
+
+# ## Seasonal differencing
+
+# ### Determine hyperparameters
+
+# In[79]:
+
+
+# SARIMAX
+
+import itertools
+import warnings
+import sys
+from statsmodels.tsa.statespace.sarimax import SARIMAX
+
+
+# Define the p, d and q parameters to take any value between 0 and 2
+p = q = P = D = Q = range(0, 3)
+d = D = range(0, 2)
+
+# Generate all different combinations of p, q and q triplets
+pdqPDQ = list(itertools.product(p, d, q , P, D, Q))
+best_pdqPDQ = pdqPDQ
+best_mean_mae = np.inf
+warnings.filterwarnings("ignore") # specify to ignore warning messages
+for param in pdqPDQ:
+    print(param)
+    try:   # some parametercombinations might lead to crash, so catch exceptions and continue
+        maes = []
+        for train_index, test_index in tscv_diff_seasonal.split(ts_diff_seasonal):
+            if train_index.size > 300:
+                # initialize cross validation train and test sets
+                cv_train, cv_test = ts_diff_seasonal.iloc[train_index], ts_diff_seasonal.iloc[test_index]
+
+                # build model
+                model = SARIMAX(cv_train, 
+                order=param[:3], 
+                seasonal_order=(12,)+param[3:])
+                model_fit = model.fit()
+
+                # make predictions
+#                 predictions =  model_fit.predict(start=len(cv_train), end=len(cv_train)+cv_test.size-1, dynamic=False)
+                predictions =  model_fit.forecast(steps=24)
+                prediction_values = predictions.values
+                true_values = cv_test.values
+                # error calc
+                #     print(true_values)
+                #     print(predictions.values)
+                maes.append(mean_absolute_error(true_values, prediction_values))
+
+        
+        mean_mae = np.mean(maes)
+        print('MAE: ' + str(mean_mae))    
+
+        if mean_mae < best_mean_mae:
+            best_mean_mae = mean_mae
+            best_maes = maes
+            best_pdqPDQ = param
+            best_predictions = prediction_values
+    except Exception as e:
+        print(e)
+        continue
+
+print(best_predictions.size)
+print(data_test.index.size)
+
+        
+predictions_df = pd.DataFrame(best_predictions).set_index(keys=data_test.index)
+
+# plot
+print()
+print('Best MAE = ' + str(best_mean_mae))
+print(best_pdqPDQ)
+plt.plot(data_test,color='blue')
+plt.plot(predictions_df, color='red')
 plt.show()
 
-fig=plt.figure(figsize=(20, 20))
+# best range(0,2):
+# Best MAE = 0.2524024604742092
+# (1, 0, 1, 1, 1, 1)
+# Wall time: 14min 50s
+
+# best range(0,2):
+
+# Best MAE = 0.22780663319275937
+# (1, 0, 2, 0, 1, 2)
+# Wall time: 2h 6min 26s
 
 
 # In[60]:
 
 
-BEPredLSTM['confirmed_cases']= BEPredLSTM['confirmed_cases'].divide(11,589623)
-BEPrepLSTMTail = BEPredLSTM[40:90]
+best_pdqPDQ = (1, 0, 2, 0, 1, 2)
+
+
+# In[61]:
+
+
+from sklearn.metrics import mean_absolute_error
+from statsmodels.tsa.statespace.sarimax import SARIMAX
+
+
+start_time = timeit.default_timer()
+
+warnings.filterwarnings("ignore") # specify to ignore warning messages
+
+print("------")
+
+maes = []
+
+for train_index, test_index in tscv_diff_seasonal.split(ts_diff_seasonal):
+    if train_index.size > 300:
+
+        # initialize cross validation train and test sets
+        cv_train, cv_test = ts_diff_seasonal.iloc[train_index], ts_diff_seasonal.iloc[test_index]
+
+        # build model
+        model = SARIMAX(cv_train, 
+                order=best_pdqPDQ[:3], 
+                seasonal_order=(best_pdqPDQ[3:]+(12,)))
+        model_fit = model.fit()
+
+        # make predictions
+        predictions =  model_fit.predict(start=len(cv_train), end=len(cv_train)+cv_test.size-1, dynamic=False)
+        prediction_values = predictions.values
+        true_values = cv_test.values
+
+        # error calc
+    #     print(true_values)
+    #     print(predictions.values)
+        maes.append(mean_absolute_error(true_values, prediction_values))
+        print("I",end="")
+
+
+
+time_SARIMA_seasonal = timeit.default_timer() - start_time
+mae_mean = np.mean(maes)
+MAE_SARIMA_seasonal = mae_mean
+last_MAE_SARIMA_seasonal = maes[-1]
+last_prediction_SARIMA_seasonal = prediction_values
+
+
+print()
+print('Mean MAE: %.3f x 1 000 000 km\u00b2' % MAE_SARIMA_seasonal)
+print('MAE of last prediction: %.3f x 1 000 000 km\u00b2' % last_MAE_SARIMA_seasonal)
+print('Execution time: %.3f seconds' % time_SARIMA_seasonal)
+
+reverted_prediction_values = revert_diff_seasonal(last_prediction_SARIMA_seasonal, ts)
+full_graph(reverted_prediction_values, ts,'Last 2 year prediction SARIMAX')
+print(maes)
+
+
+# # LSTM
+
+# In[62]:
+
+
+from keras.layers import Dropout
+from numpy import array
+from keras.models import Sequential
+from keras.layers import LSTM
+from keras.layers import Dense
+
+
+# split a univariate sequence into samples
+def split_sequence(sequence, n_steps_in, n_steps_out):
+    X, y = list(), list()
+    for i in range(len(sequence)):
+        # find the end of this pattern
+        end_ix = i + n_steps_in
+        out_end_ix = end_ix + n_steps_out
+        
+        # check if we are beyond the sequence
+        if out_end_ix > len(sequence):
+            break
+            
+        # gather input and output parts of the pattern
+        seq_x, seq_y = sequence[i:end_ix], sequence[end_ix:out_end_ix]
+        X.append(seq_x)
+        y.append(seq_y)
+    return array(X), array(y)
+ 
+def build_model(raw_seq, n_steps_in, n_steps_out, n_features, n_neurons, dropout, batch_s):
+    
+    # split into samples
+    X, y = split_sequence(raw_seq.values.flatten(), n_steps_in, n_steps_out)
+    
+    # reshape from [samples, timesteps] into [samples, timesteps, features]
+    X = X.reshape((X.shape[0], X.shape[1], n_features))
+    
+    # define model
+    model = Sequential()
+    model.add(LSTM(n_neurons, activation='relu'))
+    model.add(Dropout(dropout))
+    model.add(Dense(n_steps_out))
+    model.compile(optimizer='adam', loss='mae')
+    
+    # fit model
+    model.fit(X, y, batch_size=batch_s, epochs=100, verbose=0)
+    
+    return model
+
+
+def predict(x_input, model, n_features):
+    n_features = 1
+    x_input = x_input.reshape((1, n_steps_in, n_features))
+    yhat = model.predict(x_input, verbose=0)
+    return yhat
+
+
+# ## Regular differencing 
+
+# In[32]:
+
+
+import timeit
+import tensorflow as tf
+
+
+start_time = timeit.default_timer()
+
+# Disabled tf warning because of visual clutter
+tf.compat.v1.logging.set_verbosity(tf.compat.v1.logging.ERROR)
+
+
+# constant variables
+n_steps_in = 24
+n_steps_out = 24
+n_features  = 1
+maes = []
+global_maes = []
+
+# optimizable variables
+n_neurons_array = [1,10,20]
+dropout_array = [0,0.99]
+batch_size_array = [1,2,8]
+
+# n_neurons_array = [1,20]
+# dropout_array = [0]
+# batch_size_array = [1,8]
+
+
+
+# initialize values
+best_MAE = 100
+best_n_neurons = 0
+best_activation = 'none'
+best_dropout = 0
+best_batch_size = 0
+
+for n_neurons in n_neurons_array:
+    for dropout in dropout_array:
+        for batch_size in batch_size_array:
+            print("-----")
+#             tscv = TimeSeriesSplit(n_splits = 17)
+            for train_index, test_index in tscv_diff.split(ts_diff): 
+                if train_index.size > 300:  
+                    # initialize cross validation train and test sets
+                    y_train, y_test = ts_diff.iloc[train_index], ts_diff.iloc[test_index]
+
+                    # build model
+                    lstm_model = build_model(y_train, n_steps_in, n_steps_out, n_features, n_neurons, dropout, batch_size)
+
+                    # make predictions
+                    x_input = array(y_test)
+                    y_predicted = predict(x_input, lstm_model, n_features).flatten()
+                    y_actual = y_test.values
+
+                    # error calc
+                    maes.append(mean_absolute_error(y_actual, y_predicted))
+
+                    print("I",end="")
+
+                    # last actual prediction 
+                    last_prediction_LSTM = y_predicted
+
+            time_LSTM = timeit.default_timer() - start_time
+            MAE_LSTM = np.mean(maes)
+            last_MAE_LSTM = maes[-1]
+            global_maes.append(MAE_LSTM)
+
+            if best_MAE > MAE_LSTM:
+                best_n_neurons = n_neurons
+                best_dropout = dropout
+                best_batch_size = batch_size
+                best_MAE = MAE_LSTM
+
+            print()
+            print(n_neurons)
+            print(dropout)
+            print(batch_size)
+            print(MAE_LSTM)
+            print()    
+
+print('Best:')
+print('N neurons')
+print(best_n_neurons)
+print('Dropout rate')
+print(best_dropout)
+print('Batch size')
+print(best_batch_size)
+print('MAE')
+print(best_MAE)
+plt.bar(range(0,len(global_maes)), global_maes)
+
+
+# In[63]:
+
+
+best_n_neurons, best_dropout, best_batch_size = 1, 0, 1 # actual best params
+
+
+# In[64]:
+
+
+import timeit
+import tensorflow as tf
+
+
+start_time = timeit.default_timer()
+
+# Disabled tf warning because of visual clutter
+tf.compat.v1.logging.set_verbosity(tf.compat.v1.logging.ERROR)
+
+
+# constant variables
+n_steps_in = 24
+n_steps_out = 24
+n_features  = 1
+maes = []
+global_maes = []
+
+print("------")
+tscv = TimeSeriesSplit(n_splits = 18)
+for train_index, test_index in tscv.split(ts_diff): 
+    if train_index.size > 300:  
+        # initialize cross validation train and test sets
+        y_train, y_test = ts_diff.iloc[train_index], ts_diff.iloc[test_index]
+
+        # build model
+        lstm_model = build_model(y_train, n_steps_in, n_steps_out, n_features, best_n_neurons, best_dropout, best_batch_size)
+
+        # make predictions
+        x_input = array(y_test)
+        y_predicted = predict(x_input, lstm_model, n_features).flatten()
+        y_actual = y_test.values
+
+        # error calc
+        maes.append(mean_absolute_error(y_actual, y_predicted))
+
+        print("I",end="")
+
+time_LSTM = timeit.default_timer() - start_time
+MAE_LSTM = np.mean(maes)
+last_MAE_LSTM = maes[-1]
+global_maes.append(MAE_LSTM)
+last_prediction_LSTM = y_predicted
+
+# print('Best:')
+# print('N neurons')
+# print(best_n_neurons)
+# print('Dropout rate')
+# print(best_dropout)
+# print('Batch size')
+# print(best_batch_size)
+# print('MAE')
+# print(best_MAE)
+# plt.bar(range(0,len(global_maes)), global_maes)
+
+# time_ARIMA = timeit.default_timer() - start_time
+# mae_mean = np.mean(maes)
+# MAE_ARIMA = mae_mean
+# last_MAE_ARIMA = maes[-1]
+
+print()
+print('Mean MAE: %.3f x 1 000 000 km\u00b2' % MAE_LSTM)
+print('MAE of last prediction: %.3f x 1 000 000 km\u00b2' % last_MAE_LSTM)
+print('Execution time: %.3f seconds' % time_LSTM)
+
+reverted_prediction_values = revert_diff_seasonal(last_prediction_LSTM, ts)
+full_graph(reverted_prediction_values, ts,'Last 2 year prediction LSTM random walk differencing')
+
+print(maes)
+
+
+# ## Seasonal differencing
+
+# In[99]:
+
+
+# initialize values
+best_n_neurons = 1
+best_dropout = 0
+best_batch_size = 1
+
+
+# In[100]:
+
+
+import timeit
+import tensorflow as tf
+
+
+start_time = timeit.default_timer()
+
+# Disabled tf warning because of visual clutter
+tf.compat.v1.logging.set_verbosity(tf.compat.v1.logging.ERROR)
+
+
+# constant variables
+n_steps_in = 24
+n_steps_out = 24
+n_features  = 1
+maes = []
+global_maes = []
+
+# optimizable variables
+n_neurons_array = [1,5,10,20]
+dropout_array = [0,0.5,0.99]
+batch_size_array = [1,2,4,8]
+## set#2
+# n_neurons_array = [1,20]2
+# dropout_array = [0]
+# batch_size_array = [1,8]
+
+
+
+# initialize values
+best_MAE = 100
+best_n_neurons = 0
+best_activation = 'none'
+best_dropout = 0
+best_batch_size = 0
+
+for n_neurons in n_neurons_array:
+    for dropout in dropout_array:
+        for batch_size in batch_size_array:
+            print("------")
+#             tscv = TimeSeriesSplit(n_splits = 17)
+            for train_index, test_index in tscv_diff.split(ts_diff_seasonal): 
+                if train_index.size > 300:  
+                    # initialize cross validation train and test sets
+                    y_train, y_test = ts_diff_seasonal.iloc[train_index], ts_diff_seasonal.iloc[test_index]
+
+                    # build model
+                    lstm_model = build_model(y_train, n_steps_in, n_steps_out, n_features, n_neurons, dropout, batch_size)
+
+                    # make predictions
+                    x_input = array(y_test)
+                    y_predicted = predict(x_input, lstm_model, n_features).flatten()
+                    y_actual = y_test.values
+
+                    # error calc
+                    maes.append(mean_absolute_error(y_actual, y_predicted))
+
+                    print("I",end="")
+
+                    # last actual prediction 
+                    last_prediction_LSTM = y_predicted
+
+            time_LSTM = timeit.default_timer() - start_time
+            MAE_LSTM = np.mean(maes)
+            last_MAE_LSTM = maes[-1]
+            global_maes.append(MAE_LSTM)
+
+            if best_MAE > MAE_LSTM:
+                best_n_neurons = n_neurons
+                best_dropout = dropout
+                best_batch_size = batch_size
+                best_MAE = MAE_LSTM
+
+            print()
+            print(n_neurons)
+            print(dropout)
+            print(batch_size)
+            print(MAE_LSTM)
+            print()    
+
+print('Best:')
+print('N neurons')
+print(best_n_neurons)
+print('Dropout rate')
+print(best_dropout)
+print('Batch size')
+print(best_batch_size)
+print('MAE')
+print(best_MAE)
+plt.bar(range(0,len(global_maes)), global_maes)
+
+
+# In[65]:
+
+
+best_n_neurons, best_dropout, best_batch_size = 1, 0.99, 8 # ran for 5 hours
+
+
+# In[66]:
+
+
+import timeit
+import tensorflow as tf
+
+
+start_time = timeit.default_timer()
+
+# Disabled tf warning because of visual clutter
+tf.compat.v1.logging.set_verbosity(tf.compat.v1.logging.ERROR)
+
+
+# constant variables
+n_steps_in = 24
+n_steps_out = 24
+n_features  = 1
+maes = []
+global_maes = []
+
+print("------")
+tscv = TimeSeriesSplit(n_splits = 18)
+for train_index, test_index in tscv.split(ts_diff_seasonal): 
+    if train_index.size > 300:  
+        # initialize cross validation train and test sets
+        y_train, y_test = ts_diff_seasonal.iloc[train_index], ts_diff_seasonal.iloc[test_index]
+
+        # build model
+        lstm_model = build_model(y_train, n_steps_in, n_steps_out, n_features, best_n_neurons, best_dropout, best_batch_size)
+
+        # make predictions
+        x_input = array(y_test)
+        y_predicted = predict(x_input, lstm_model, n_features).flatten()
+        y_actual = y_test.values
+
+        # error calc
+        maes.append(mean_absolute_error(y_actual, y_predicted))
+
+        print("I",end="")
+
+        
+
+time_LSTM_seasonal = timeit.default_timer() - start_time
+MAE_LSTM_seasonal = np.mean(maes)
+last_MAE_LSTM_seasonal = maes[-1]
+global_maes.append(MAE_LSTM_seasonal)
+last_prediction_LSTM_seasonal = y_predicted
+# print('Best:')
+# print('N neurons')
+# print(best_n_neurons)
+# print('Dropout rate')
+# print(best_dropout)
+# print('Batch size')
+# print(best_batch_size)
+# print('MAE')
+# print(best_MAE)
+# plt.bar(range(0,len(global_maes)), global_maes)
+
+# time_ARIMA = timeit.default_timer() - start_time
+# mae_mean = np.mean(maes)
+# MAE_ARIMA = mae_mean
+# last_MAE_ARIMA = maes[-1]
+
+print()
+print('Mean MAE: %.3f x 1 000 000 km\u00b2' % MAE_LSTM_seasonal)
+print('MAE of last prediction: %.3f x 1 000 000 km\u00b2' % last_MAE_LSTM_seasonal)
+print('Execution time: %.3f seconds' % time_LSTM_seasonal)
+
+reverted_prediction_values = revert_diff_seasonal(last_prediction_LSTM_seasonal, ts)
+full_graph(reverted_prediction_values, ts,'Last 2 year prediction LSTM Seasonal')
+
+print(maes)
+
+
+# # Prophet
+
+# In[67]:
+
+
+ts_diff.reset_index()
+
+
+# In[68]:
+
+
+# formatting dataframe
+ts_formated_prophet = ts_diff.reset_index().rename(columns = {'date' : 'ds', 'ice_extent' : 'y'})
+ts_formated_prophet['ds'] = pd.DataFrame(pd.to_datetime(ts_formated_prophet['ds'].astype(str), format='%Y-%m-%d'))
+
+
+# In[69]:
+
+
+# initialize TimeSeriesSplit object
+tscv_prophet = TimeSeriesSplit(n_splits = 18)
+
+# loop trough all split time series that have a trainingsset with more than 20 values
+for train_index, test_index in tscv_prophet.split(ts_formated_prophet):
+    if train_index.size > 300:
+
+        # initialize cross validation train and test sets
+        cv_train, cv_test = ts_diff.iloc[train_index], ts_diff.iloc[test_index]
+        
+         # visiualize cross_validation structure for reference
+        print("TRAIN:", train_index.size)
+        print("TEST:", test_index.size)
+        print()
+
+
+# In[39]:
+
+
+# Python
+import itertools
+import numpy as np
+import pandas as pd
+from fbprophet import Prophet
+from sklearn.metrics import mean_absolute_error
+
+
+# define dataframe
+df = ts_formated_prophet
+
+param_grid = {  
+    'changepoint_prior_scale': [0.001, 0.01, 0.1, 0.5, 0.75, 1],
+    'seasonality_prior_scale': [0.001, 0.01, 0.1, 1, 2, 5, 10],
+}
+
+# Generate all combinations of parameters
+all_params = [dict(zip(param_grid.keys(), v)) for v in itertools.product(*param_grid.values())]
+
+# initialize variables
+maes = []  
+global_maes = []
+best_MAE_prophet = np.inf
+
+# Use cross validation to evaluate all parameters
+for params in all_params:
+
+    # loop trough all split time series that have a trainingsset with more than 20 values
+    for train_index, test_index in tscv_prophet.split(ts_formated_prophet):    
+        if train_index.size > 300:  
+            
+            # initialize cross validation train and test sets
+            train  = ts_formated_prophet.iloc[train_index]
+            y_test = ts_formated_prophet.iloc[test_index][['y']].values.flatten()
+            X_test = ts_formated_prophet.iloc[test_index][['ds']]
+
+            # Fit model with given params
+            model = Prophet(**params, weekly_seasonality=False, daily_seasonality=False)
+            model = model.fit(train)
+            
+            # make predictions
+            forecast = model.predict(X_test)
+            y_pred = forecast['yhat'].values
+            
+            # last actual prediction 
+            last_prediction_prophet = y_pred
+            
+            # error calculation this part of the cross validation
+            maes.append(mean_absolute_error(y_test, y_pred))
+            
+    # error calculation for this parameter combination
+    MAE_prophet = np.mean(maes)
+    last_MAE_prophet = maes[-1]
+    global_maes.append(MAE_prophet)
+    
+    # logging
+    print('changepoint_prior_scale: ' + str(params['changepoint_prior_scale']))
+    print('seasonality_prior_scale: ' + str(params['seasonality_prior_scale']))
+    print(MAE_prophet)
+    
+    # store parameters resulting in the lowest mean MAE
+    if best_MAE_prophet > MAE_prophet:
+        best_params = params
+        best_MAE_prophet = MAE_prophet
+
+# log optimal result          
+print('changepoint_prior_scale: ' + str(best_params['changepoint_prior_scale']))
+print('seasonality_prior_scale: ' + str(best_params['seasonality_prior_scale']))
+print(best_MAE_prophet)
+            
 
 
 # In[77]:
 
 
-BEPrepLSTMTail
+best_params = {'changepoint_prior_scale': 0.001, 'seasonality_prior_scale': 10}
 
 
-# ## Define Polynomial
-
-# In[137]:
+# In[78]:
 
 
-y = BEPrepLSTMTail.iloc[:, 1].values
-X = BEPrepLSTMTail.iloc[:, 0].values
+from fbprophet import Prophet
+# Disabled tf warning because of clutter
+warnings.filterwarnings("ignore") # specify to ignore warning messages
+
+start_time = timeit.default_timer()
+
+# initialize variables
+maes = []
+
+for train_index, test_index in tscv_prophet.split(ts_formated_prophet):
+    if train_index.size > 300:  
+        
+        # initialize cross validation train and test sets
+        train  = ts_formated_prophet.iloc[train_index]
+        y_test = ts_formated_prophet.iloc[test_index][['y']].values.flatten()
+        X_test = ts_formated_prophet.iloc[test_index][['ds']]
+
+        # build model
+        model = Prophet(**best_params, weekly_seasonality=False, daily_seasonality=False)
+        model.fit(train)
+
+        # make predictions
+        forecast = model.predict(X_test)
+        y_pred = forecast['yhat'].values
+
+        # error calc
+        maes.append(mean_absolute_error(y_test, y_pred))
+
+        
 
 
-# In[138]:
+# store results
+time_Prophet = timeit.default_timer() - start_time
+MAE_Prophet = np.mean(maes)
+last_MAE_Prophet = maes[-1]
+last_prediction_prophet = y_pred
+
+# visualize results
+print()
+print('Mean MAE: %.3f x 1 000 000 km\u00b2' % MAE_Prophet)
+print('MAE of last prediction: %.3f x 1 000 000 km\u00b2' % last_MAE_Prophet)
+print('Execution time: %.3f seconds' % time_Prophet)
+
+reverted_prediction_values = revert_diff_seasonal(last_prediction_prophet, ts)
+full_graph(reverted_prediction_values, ts, "Last 2 year prediction prophet")
+print('Mean average errors')
+print(maes)
 
 
-degree = 2
+# In[ ]:
 
 
-# In[139]:
+Mean MAE: 0.250 x 1 000 000 km²
 
 
-# Fitting Polynomial Regression to the dataset
-from sklearn.preprocessing import PolynomialFeatures
-from sklearn.linear_model import LinearRegression
+# # Evaluation
+
+# In[79]:
 
 
-poly_reg = PolynomialFeatures(degree=degree)
+# formatting
+results = [[MAE_ARIMA, time_ARIMA, last_MAE_ARIMA],
+           [MAE_ARIMA_seasonal, time_ARIMA_seasonal, last_MAE_ARIMA_seasonal],
+           [MAE_SARIMA, time_SARIMA, last_MAE_SARIMA],
+           [MAE_SARIMA_seasonal, time_SARIMA_seasonal, last_MAE_SARIMA_seasonal],
+           [MAE_LSTM, time_LSTM, last_MAE_LSTM],
+           [MAE_LSTM_seasonal, time_LSTM_seasonal, last_MAE_LSTM_seasonal],
+           [MAE_Prophet, time_Prophet, last_MAE_Prophet]]
 
-X_poly = poly_reg.fit_transform(X.reshape(-1,1))
-pol_reg = LinearRegression()
-pol_reg.fit(X_poly, y)
-
-
-# In[140]:
-
-
-
-
-# Fitting Polynomial Regression to the dataset
-from sklearn.preprocessing import PolynomialFeatures
-from sklearn.linear_model import LinearRegression
+# display results
+results = pd.DataFrame(results, columns=['Mean MAE (x 1 000 000 km\u00b2)','Execution time (s)','Last MAE (x 1 000 000 km\u00b2)']
+             ,index=['ARIMA','ARIMA_seasonal_differencing','SARIMA','SARIMA_seasonal_differncing','LSTM','LSTM_seasonal_differencing','Prophet']).round(decimals=3)
+results
 
 
-poly_reg = PolynomialFeatures(degree=degree)
-
-X_poly = poly_reg.fit_transform(X.reshape(-1,1))
-pol_reg = LinearRegression(fit_intercept=True)
-pol_reg.fit(X_poly, y)
-
-i = BEPrepLSTMTail.shape[0]+40
-BEPredLSTMTail = BEPrepLSTMTail
-while i <= 150 :
-BEPredLSTMTail = BEPredLSTMTail.append({'day_nr':i,'confirmed_cases': pol_reg.predict(poly_reg.fit_transform([[i]]))[0]}, ignore_index=True)
-i += 1
+# In[84]:
 
 
-# In[141]:
+reverted_prediction_values = revert_diff(last_prediction_ARIMA, ts[:-5])
+full_graph(reverted_prediction_values, ts[:-5],'Last prediction ARIMA')
+
+reverted_prediction_values = revert_diff_seasonal(last_prediction_ARIMA_seasonal, ts)
+full_graph(reverted_prediction_values, ts,'Last prediction ARIMA with seasonal differencing')
+
+reverted_prediction_values = revert_diff(last_prediction_SARIMA, ts[:-5])
+full_graph(reverted_prediction_values, ts[:-5],'Last prediction SARIMAX')
+
+reverted_prediction_values = revert_diff_seasonal(last_prediction_SARIMA_seasonal, ts)
+full_graph(reverted_prediction_values, ts,'Last prediction SARIMAX')
 
 
-y = BEPredLSTMTail.iloc[:, 1].values
-X = BEPredLSTMTail.iloc[:, 0].values
+# In[83]:
 
 
-# In[142]:
+
+reverted_prediction_values = revert_diff_seasonal(last_prediction_LSTM, ts)
+full_graph(reverted_prediction_values, ts,'Last prediction LSTM')
+
+reverted_prediction_values = revert_diff_seasonal(last_prediction_LSTM_seasonal, ts)
+full_graph(reverted_prediction_values, ts,'Last prediction LSTM Seasonal')
+
+reverted_prediction_values = revert_diff_seasonal(last_prediction_prophet, ts)
+full_graph(reverted_prediction_values, ts, "Last 2 year prediction Prophet")
 
 
-plt.scatter(X, y, color='red')
-plt.plot(X, pol_reg.predict(poly_reg.fit_transform(X.reshape(-1,1))), color='blue')
-plt.title('')
-plt.xlabel('Day')
-plt.ylabel('New Cases')
-plt.ylim(bottom=0)
-plt.xlim(right=150)
+
+\end{minted}
+
+\section{Broncode voor het vergelijken van ARIMA, LSTM en Prophet bij multivariate, niet-seizoensgebonden tijdreeksen}  % The \section*{} command stops section numbering
+\captionof{listing}{Broncode voor het vergelijken van ARIMA, LSTM en Prophet bij multivariate, niet-seizoensgebonden tijdreeksen}
+\begin{minted}[
+frame=lines,
+framesep=2mm,
+fontsize=\footnotesize,
+linenos,breaklines
+]{python}
+
+#!/usr/bin/env python
+# coding: utf-8
+
+# # Imports
+
+# In[1]:
+
+
+import numpy as np
+import pandas as pd
+# matplotlib is the Python library for drawing diagrams
+import matplotlib.pylab as plt
+get_ipython().run_line_magic('matplotlib', 'inline')
+# set the size of the diagrams
+from matplotlib.pylab import rcParams
+rcParams['figure.figsize'] = 15,5
+from math import sqrt
+from sklearn.metrics import mean_squared_error
+from sklearn.model_selection import TimeSeriesSplit
+
+
+# In[2]:
+
+
+def test_stationarity(timeseries, title):
+    
+    #Determing rolling statistics
+    rolmean = timeseries.rolling(12).mean()
+#     rolstd = timeseries.rolling(24).std()
+
+    #Plot rolling statistics:
+    orig = plt.plot(timeseries, color='blue',label='Original')
+    mean = plt.plot(rolmean, color='red', label='Rolling Mean')
+#     std = plt.plot(rolstd, color='black', label = 'Rolling Std')
+    plt.legend(loc='best')
+    plt.title('Rolling Mean & Standard Deviation from column: ' + title)
+    plt.show(block=False)
+    
+def full_graph(predicted_diff, title):
+    predictionsArray = np.asarray(revert_diff(predicted_diff, ts_ie))
+    zerosArray = np.zeros(ts_ie.values.size-len(predictionsArray.flatten()))
+    cleanPrediction = pd.Series(np.concatenate((zerosArray,predictionsArray))).replace(0,np.NaN)
+    
+    # plot
+    plt.title(title)
+    plt.plot(ts_ie.values,marker='o', color='blue',label='Actual values')
+    plt.plot(cleanPrediction,marker='o', color='red',label='Last 4 year prediction')
+    plt.ylim([0,15])
+    plt.legend()
+
+    plt.show()
+    
+def revert_diff(predicted_diff, og_data):
+    last_value = og_data.iloc[-predicted_diff.size-1][0]
+    predicted_actual = np.array([])
+    for value_diff in predicted_diff:
+        actual_value = last_value + value_diff
+        predicted_actual = np.append(predicted_actual, actual_value)
+        last_value = actual_value
+    return predicted_actual
+
+
+# ## Dataprep
+
+# In[3]:
+
+
+ts = pd.read_csv('./data/dataframe_yearly.csv', index_col=0).reset_index()
+ts.rename(columns={'Year':'year'}, inplace=True)
+ts.set_index('year', inplace=True)
+
+
+# In[4]:
+
+
+ts_ie = ts[['ice_extent']]
+
+
+# In[5]:
+
+
+ts
+
+
+# In[6]:
+
+
+plt.title('Temperature')
+plt.plot(ts.iloc[:,0], label='temperature')
+plt.ylabel('°C')
+plt.show()
+plt.title('Ice extent')
+plt.ylabel('x 1 000 000 km\u00b2')
+plt.plot(ts.iloc[:,1], label='ice extent')
+
+
+# In[7]:
+
+
+test_stationarity(ts[['ice_extent']], 'ice_extent')
+
+
+# ### Differencing
+
+# In[8]:
+
+
+ts_diff = ts - ts.shift(1)
+ts_diff = ts_diff.dropna()
+test_stationarity(ts_diff[['ice_extent']], 'ice_extent')
+test_stationarity(ts_diff[['mean_temp']], 'mean_temp')
+
+
+# Datasets are stationary now
+
+# # Cross validation setup
+
+# In[9]:
+
+
+tscv = TimeSeriesSplit(n_splits = 8)
+dataset = ts_diff
+
+for train_index, test_index in tscv.split(dataset):
+    if train_index.size > 20:
+
+        # initialize cross validation train and test sets
+        cv_train, cv_test = dataset.iloc[train_index], dataset.iloc[test_index]
+
+        print("TRAIN:", train_index.size) # visiualize cross_validation structure for reference
+        print("TEST:", test_index.size)
+        print()
+
+
+# # VARMAX
+
+# In[10]:
+
+
+from statsmodels.tsa.statespace.varmax import VARMAX
+import itertools
+import warnings
+import sys
+from sklearn.metrics import mean_absolute_error
+
+
+
+# Define the p, d and q parameters to take any value between 0 and 2
+p = q = range(0, 5)
+
+# Generate all different combinations of p, q and q triplets
+pq = list(itertools.product(p, q))
+best_pq = pq
+best_mean_mae = np.inf
+warnings.filterwarnings("ignore") # specify to ignore warning messages
+for param in pq:
+    print(param)
+    try:   # some parametercombinations might lead to crash, so catch exceptions and continue
+        maes = []
+        for train_index, test_index in tscv.split(dataset):
+            if train_index.size > 20:
+                # initialize cross validation train and test sets
+                cv_train, cv_test = dataset.iloc[train_index], dataset.iloc[test_index]
+
+                # build model
+                model = VARMAX(cv_train, order=(param))
+                model_fit = model.fit()
+
+                # make predictions
+                predictions =  model_fit.forecast(steps=4, dynamic=False)
+                prediction_values = predictions[['ice_extent']].values
+                true_values = cv_test[['ice_extent']].values
+                # error calc
+                maes.append(mean_absolute_error(true_values, prediction_values))
+
+        
+        mean_mae = np.mean(maes)
+        print('MAE: ' + str(mean_mae))    
+
+        if mean_mae < best_mean_mae:
+            best_mean_mae = mean_mae
+            best_maes = maes
+            best_pq = param
+            best_predictions = prediction_values
+    except Exception as e:
+        print(e)
+        continue
+   
+# plot
+print()
+print('Best MAE = ' + str(best_mean_mae))
+print(best_pq)
+
+# # best range(0,5)
+# Best MAE = 0.15358394799986985
+# (3, 3)
+# Wall time: 9min 27s
+
+
+# In[57]:
+
+
+best_pq = (3,3)
+
+
+# In[58]:
+
+
+from statsmodels.tsa.statespace.varmax import VARMAX
+from sklearn.metrics import mean_absolute_error
+import timeit
+import warnings
+
+
+start_time = timeit.default_timer()
+
+warnings.filterwarnings("ignore") # specify to ignore warning messages
+
+print("----")
+
+maes = []
+
+for train_index, test_index in tscv.split(dataset):
+    if train_index.size > 20:
+        # initialize cross validation train and test sets
+        cv_train, cv_test = dataset.iloc[train_index], dataset.iloc[test_index]
+
+        # build model
+        model = VARMAX(cv_train, order=(best_pq))
+        model_fit = model.fit()
+
+        # make predictions
+        predictions =  model_fit.forecast(steps=4, dynamic=False)
+        prediction_values = predictions[['ice_extent']].values
+        true_values = cv_test[['ice_extent']].values
+        # error calc
+        maes.append(mean_absolute_error(true_values, prediction_values))
+
+        print("I",end="")
+    
+
+time_VARMAX = timeit.default_timer() - start_time
+mae_mean = np.mean(maes)
+MAE_VARMAX = mae_mean
+last_MAE_VARMAX = maes[-1]
+last_predictions_VARMAX = prediction_values
+
+print()
+print('Mean MAE: %.3f x 1 000 000 km\u00b2' % MAE_VARMAX)
+print('MAE of last prediction: %.3f x 1 000 000 km\u00b2' % last_MAE_VARMAX)
+print('Execution time: %.3f seconds' % time_VARMAX)
+full_graph(last_predictions_VARMAX, 'Last prediction VARMAX')
+print(maes)
+
+
+# # LSTM
+
+# In[39]:
+
+
+# multivariate multi-step encoder-decoder lstm example
+from numpy import array
+from numpy import hstack
+from keras.models import Sequential
+from keras.layers import LSTM
+from keras.layers import Dense
+from keras.layers import RepeatVector
+from keras.layers import TimeDistributed
+import warnings
+
+warnings.filterwarnings("ignore") # specify to ignore warning messages
+
+
+# split a multivariate sequence into samples
+def split_sequences(sequences, n_steps_in, n_steps_out):
+	X, y = list(), list()
+	for i in range(len(sequences)):
+		# find the end of this pattern
+		end_ix = i + n_steps_in
+		out_end_ix = end_ix + n_steps_out
+		# check if we are beyond the dataset
+		if out_end_ix > len(sequences):
+			break
+		# gather input and output parts of the pattern
+		seq_x, seq_y = sequences[i:end_ix, :], sequences[end_ix:out_end_ix, :]
+		X.append(seq_x)
+		y.append(seq_y)
+	return array(X), array(y)
+
+def predict_LSTM(train, test, n_neurons, n_epochs):
+    test['sum'] = test['mean_temp'] + test['ice_extent']
+
+
+    # define input sequence
+    in_seq1 = train.values[:,0]
+    in_seq2 = train.values[:,1]
+    out_seq = array([in_seq1[i]+in_seq2[i] for i in range(len(in_seq1))])
+
+    # convert to [rows, columns] structure
+    in_seq1 = in_seq1.reshape((len(in_seq1), 1))
+    in_seq2 = in_seq2.reshape((len(in_seq2), 1))
+    out_seq = out_seq.reshape((len(out_seq), 1))
+    
+    # horizontally stack columns
+    dataset = hstack((in_seq1, in_seq2, out_seq))
+    
+    # choose a number of time steps
+    n_steps_in, n_steps_out = 4, 4
+    
+    # covert into input/output
+    X, y = split_sequences(dataset, n_steps_in, n_steps_out)
+    
+    # the dataset knows the number of features, e.g. 2
+    n_features = X.shape[2]
+    
+    # define model
+    model = Sequential()
+    model.add(LSTM(n_neurons, activation='relu', input_shape=(n_steps_in, n_features)))
+    model.add(RepeatVector(n_steps_out))
+    model.add(LSTM(n_neurons, activation='relu', return_sequences=True))
+    model.add(TimeDistributed(Dense(n_features)))
+    model.compile(optimizer='adam', loss='mae')
+    
+    # fit model
+    model.fit(X, y, epochs=n_epochs, verbose=0)
+    
+    # demonstrate prediction
+    x_input = test.values
+    x_input = x_input.reshape((1, n_steps_in, n_features))
+    yhat = model.predict(x_input, verbose=0)
+    return yhat
+    
+
+
+# In[109]:
+
+
+from statsmodels.tsa.statespace.varmax import VARMAX
+from sklearn.metrics import mean_absolute_error
+import timeit
+import tensorflow as tf
+
+start_time = timeit.default_timer()
+
+# warnings.filterwarnings("ignore") # specify to ignore warning messages
+tf.compat.v1.logging.set_verbosity(tf.compat.v1.logging.ERROR)
+
+maes = []
+global_maes = []
+best_MAE = np.inf
+
+
+n_neurons_array = [1,5,10,20]
+n_epochs_array = [100,200,300]
+
+print("----")
+
+maes = []
+for n_neurons in n_neurons_array:
+    for n_epochs in n_epochs_array:
+        for train_index, test_index in tscv.split(dataset):
+            if train_index.size > 20:
+                # initialize cross validation train and test sets
+                cv_train, cv_test = dataset.iloc[train_index], dataset.iloc[test_index]
+
+                yhat = predict_LSTM(cv_train, cv_test, n_neurons, n_epochs)
+
+
+                prediction_values = yhat[0][:,1]
+                true_values = cv_test[['ice_extent']].values
+
+                # error calc
+                maes.append(mean_absolute_error(true_values, prediction_values))
+
+                print("I",end="")
+        time_LSTM = timeit.default_timer() - start_time
+        MAE_LSTM = np.mean(maes)
+        last_MAE_LSTM = maes[-1]
+        global_maes.append(MAE_LSTM)
+
+        if best_MAE > MAE_LSTM:
+            best_n_neurons = n_neurons
+            best_n_epochs = n_epochs
+            best_MAE = MAE_LSTM
+
+        print()
+        print(n_neurons)
+        print(n_epochs)
+        print(MAE_LSTM)
+        print()    
+
+print('Best:')
+print('N neurons')
+print(best_n_neurons)
+print('Epochs size')
+print(best_n_epochs)
+print('MAE')
+print(best_MAE)
+
+
+# In[41]:
+
+
+best_n_neurons, best_n_epochs = 1, 200
+
+
+# In[42]:
+
+
+from sklearn.metrics import mean_absolute_error
+import timeit
+import tensorflow as tf
+
+start_time = timeit.default_timer()
+
+# warnings.filterwarnings("ignore") # specify to ignore warning messages
+tf.compat.v1.logging.set_verbosity(tf.compat.v1.logging.ERROR)
+
+
+print("----")
+
+maes = []
+
+for train_index, test_index in tscv.split(ts_diff):
+    if train_index.size > 20:
+
+        # initialize cross validation train and test sets
+        cv_train, cv_test = ts_diff.iloc[train_index], ts_diff.iloc[test_index]
+
+        yhat = predict_LSTM(cv_train, cv_test, best_n_neurons, best_n_epochs)
+
+
+        prediction_values = yhat[0][:,1]
+        true_values = cv_test[['ice_extent']].values
+
+        # error calc
+        maes.append(mean_absolute_error(true_values, prediction_values))
+
+        print("I",end="")
+    
+
+time_LSTM = timeit.default_timer() - start_time
+mae_mean = np.mean(maes)
+MAE_LSTM = mae_mean
+last_MAE_LSTM = maes[-1]
+last_predictions_LSTM = prediction_values
+
+print()
+print('Mean MAE: %.3f x 1 000 000 km\u00b2' % MAE_LSTM)
+print('MAE of last prediction: %.3f x 1 000 000 km\u00b2' % last_MAE_LSTM)
+print('Execution time: %.3f seconds' % time_LSTM)
+full_graph(last_predictions_LSTM, 'Last prediction LSTM')
+print(maes)
+
+
+# # Prophet
+
+# In[ ]:
+
+
+# formatting dataframe
+ts_formated_prophet = ts_diff.reset_index().rename(columns = {'year' : 'ds', 'ice_extent' : 'y'})
+ts_formated_prophet['ds'] = pd.DataFrame(pd.to_datetime(ts_formated_prophet['ds'].astype(str), format='%Y'))
+
+
+# In[ ]:
+
+
+from fbprophet import Prophet
+m = Prophet()
+m.add_regressor('mean_temp')
+m.fit(df_train)
+
+
+# In[ ]:
+
+
+# Python
+import itertools
+import numpy as np
+import pandas as pd
+
+warnings.filterwarnings("ignore") # specify to ignore warning messages
+
+# define dataframe
+df = ts_formated_prophet
+
+param_grid = {  
+    'changepoint_prior_scale': [0.001, 0.01, 0.1, 1, 2, 5, 10, 15, 20, 25],
+}
+
+# Generate all combinations of parameters
+all_params = [dict(zip(param_grid.keys(), v)) for v in itertools.product(*param_grid.values())]
+
+# initialize variables
+maes = []  
+global_maes = []
+best_MAE_prophet = np.inf
+
+# Use cross validation to evaluate all parameters
+for params in all_params:
+
+    # loop trough all split time series that have a trainingsset with more than 20 values
+    for train_index, test_index in tscv.split(ts_formated_prophet):    
+        if train_index.size > 20:  
+
+            # initialize cross validation train and test sets
+            train  = ts_formated_prophet.iloc[train_index]
+            y_test = ts_formated_prophet.iloc[test_index][['y']].values.flatten()
+            X_test = ts_formated_prophet.iloc[test_index][['ds','mean_temp']]
+
+            # Fit model with given params
+            model = Prophet(weekly_seasonality=False, daily_seasonality=False)
+            model = model.add_regressor('mean_temp')
+            model = model.fit(train)
+
+            # make predictions
+            forecast = model.predict(X_test)
+            y_pred = forecast['yhat'].values
+
+            # last actual prediction 
+            last_prediction_prophet = y_pred
+
+            # error calculation this part of the cross validation
+            maes.append(mean_absolute_error(y_test, y_pred))
+    
+    # error calculation for this parameter combination
+    MAE_prophet = np.mean(maes)
+    last_MAE_prophet = maes[-1]
+    global_maes.append(MAE_prophet)
+    
+    # logging
+    print('changepoint_prior_scale: ' + str(params['changepoint_prior_scale']))
+    
+    # store parameters resulting in the lowest mean MAE
+    if best_MAE_prophet > MAE_prophet:
+        best_params = params
+        best_MAE_prophet = MAE_prophet
+
+# log optimal result          
+print('changepoint_prior_scale: ' + str(best_params['changepoint_prior_scale']))
+print(best_MAE_prophet)
+
+
+# In[ ]:
+
+
+
+
+
+# In[57]:
+
+
+maes = []
+global_maes = []
+
+from sklearn.metrics import mean_absolute_error
+
+# loop trough all split time series that have a trainingsset with more than 20 values
+for train_index, test_index in tscv.split(ts_formated_prophet):    
+    if train_index.size > 20:  
+
+        # initialize cross validation train and test sets
+        train  = ts_formated_prophet.iloc[train_index]
+        y_test = ts_formated_prophet.iloc[test_index][['y']].values.flatten()
+        X_test = ts_formated_prophet.iloc[test_index][['ds','mean_temp']]
+
+        # Fit model with given params
+        model = Prophet(weekly_seasonality=False, daily_seasonality=False)
+        model = model.add_regressor('mean_temp')
+        model = model.fit(train)
+
+        # make predictions
+        forecast = model.predict(X_test)
+        y_pred = forecast['yhat'].values
+
+        # last actual prediction 
+        last_prediction_prophet = y_pred
+
+        # error calculation this part of the cross validation
+        maes.append(mean_absolute_error(y_test, y_pred))
+
+# error calculation for this parameter combination
+MAE_prophet = np.mean(maes)
+last_MAE_prophet = maes[-1]
+global_maes.append(MAE_prophet)
+print(np.mean(maes))
+
+
+# In[34]:
+
+
+# formatting dataframe
+ts_formated_prophet = ts_diff.reset_index().rename(columns = {'year' : 'ds', 'ice_extent' : 'y'})
+ts_formated_prophet['ds'] = pd.DataFrame(pd.to_datetime(ts_formated_prophet['ds'].astype(str), format='%Y'))
+
+
+# In[39]:
+
+
+df_train = ts_formated_prophet.iloc[:-4]
+df_test  = ts_formated_prophet.iloc[-4:]
+
+
+# In[40]:
+
+
+df_train.head()
+
+
+# In[41]:
+
+
+from fbprophet import Prophet
+m = Prophet()
+m.add_regressor('mean_temp')
+m.fit(df_train)
+
+
+# In[43]:
+
+
+forecast = m.predict(df_test.drop(columns="y"))
+forecast.set_index('ds')[['yhat']]
+
+
+# In[ ]:
+
+
+# example
+
+
+# In[2]:
+
+
+import pandas as pd
+df = pd.DataFrame(pd.date_range(start="2019-09-01", end="2019-09-30", freq='D', name='ds'))
+df["y"] = range(1,31)
+df["add1"] = range(101,131)
+df["add2"] = range(201,231)
+df.head()
+
+
+# In[3]:
+
+
+df_train = df.loc[df["ds"]<"2019-09-21"]
+df_test  = df.loc[df["ds"]>="2019-09-21"]
+
+
+# In[4]:
+
+
+from fbprophet import Prophet
+m = Prophet()
+m.add_regressor('add1')
+m.add_regressor('add2')
+m.fit(df_train)
+
+
+# In[10]:
+
+
+forecast = m.predict(df_test.drop(columns="y"))
+forecast.set_index('ds')[['yhat']]
+
+
+# ### Evaluation
+
+# In[112]:
+
+
+# formatting
+results = [[MAE_VARMAX, time_VARMAX, last_MAE_VARMAX],
+           [MAE_LSTM, time_LSTM, last_MAE_LSTM]]
+
+# display results
+results = pd.DataFrame(results, columns=['Mean MAE (x 1 000 000 km\u00b2)','Execution time (s)','Last MAE (x 1 000 000 km\u00b2)']
+             ,index=['VARMAX','LSTM']).round(decimals=3)
+results
+
+
+# In[65]:
+
+
+full_graph(last_predictions_VARMAX, 'Last prediction VARMAX')
+full_graph(last_predictions_LSTM, 'Last prediction LSTM')
+
+\end{minted}
+
+\section{Broncode voor het vergelijken van ARIMA, LSTM en Prophet bij multivariate, seizoensgebonden tijdreeksen}  % The \section*{} command stops section numbering
+\captionof{listing}{Broncode voor het vergelijken van ARIMA, LSTM en Prophet bij multivariate, seizoensgebonden tijdreeksen}
+\begin{minted}[
+frame=lines,
+framesep=2mm,
+fontsize=\footnotesize,
+linenos,breaklines
+]{python}
+
+#!/usr/bin/env python
+# coding: utf-8
+
+# In[54]:
+
+
+import pandas as pd
+import numpy as np
+# matplotlib is the Python library for drawing diagrams
+import matplotlib.pylab as plt
+get_ipython().run_line_magic('matplotlib', 'inline')
+# set the size of the diagrams
+from matplotlib.pylab import rcParams
+rcParams['figure.figsize'] = 15,5
+from sklearn.model_selection import TimeSeriesSplit
+
+
+# # General functions
+
+# In[100]:
+
+
+reverted_prediction_values
+
+
+# In[104]:
+
+
+ts[['ice_extent']].max()
+
+
+# In[119]:
+
+
+
+
+
+# In[112]:
+
+
+plt.plot(last_predictions_VARMAX_seasonal)
+
+
+# In[162]:
+
+
+
+# reverted_prediction_values = revert_diff_seasonal(last_predictions_VARMAX_seasonal, ts[['ice_extent']])
+full_graph_seasonal(last_predictions_VARMAX_seasonal, 'Last 2 year prediction ARIMA with seasonal differencing')
+
+
+# In[171]:
+
+
+def test_stationarity(timeseries, title):
+    
+    #Determing rolling statistics
+    rolmean = timeseries.rolling(12).mean()
+#     rolstd = timeseries.rolling(24).std()
+
+    #Plot rolling statistics:
+    orig = plt.plot(timeseries, color='blue',label='Original')
+    mean = plt.plot(rolmean, color='red', label='Rolling Mean')
+#     std = plt.plot(rolstd, color='black', label = 'Rolling Std')
+    plt.legend(loc='best')
+    plt.title('Rolling Mean & Standard Deviation from column: ' + title)
+    plt.show(block=False)
+    
+def full_graph(predicted_diff, title):
+    dataset_ie = ts[['ice_extent']][:-5]
+    predictionsArray = np.asarray(revert_diff(predicted_diff, dataset_ie))
+    zerosArray = np.zeros(dataset_ie.values.size-len(predictionsArray.flatten()))
+    cleanPrediction = pd.Series(np.concatenate((zerosArray,predictionsArray))).replace(0,np.NaN)
+    
+    # plot
+    plt.title(title)
+    plt.plot(dataset_ie.index, dataset_ie.values,marker='o', color='blue',label='Actual values')
+    plt.plot(dataset_ie.index, cleanPrediction,marker='o', color='red',label='Last 2 year prediction')
+    plt.ylim([0,20])
+    plt.legend()
+
+    plt.show()
+    
+def full_graph_seasonal(predicted, title):
+    predicted = predicted.flatten() + ts[['ice_extent']].values.flatten()[-48:-24]
+    zerosArray = np.zeros(ts[['ice_extent']].values.size-len(predicted.flatten()))
+    cleanPrediction = pd.Series(np.concatenate((zerosArray,predicted.flatten()))).replace(0,np.NaN)
+    
+    # plot
+    plt.title(title)
+    plt.plot(ts.index, ts[['ice_extent']].values,marker='o', color='blue',label='Actual values')
+    plt.plot(ts.index, cleanPrediction,marker='o', color='red',label='Last 2 year prediction')
+    plt.ylim([0,20])
+    plt.legend()
+
+    plt.show()
+    
+def revert_diff(predicted_diff, og_data):
+    last_value = og_data.iloc[-predicted_diff.size-1][0]
+    predicted_actual = np.array([])
+    for value_diff in predicted_diff:
+        actual_value = last_value + value_diff
+        predicted_actual = np.append(predicted_actual, actual_value)
+        last_value = actual_value
+    return predicted_actual
+
+
+# # Dataprep
+
+# In[56]:
+
+
+ts = pd.read_csv('./data/dataframe_monthly.csv', index_col=0).reset_index()
+
+
+# In[57]:
+
+
+ts
+
+
+# In[58]:
+
+
+ts['date'] = pd.to_datetime(ts['Month'].astype(str) + ts['Year'].astype(str), format='%m%Y', errors='ignore')
+
+
+# In[59]:
+
+
+ts
+
+
+# In[60]:
+
+
+ts = ts[['date','ice_extent','mean_temp']]
+ts.set_index('date', inplace=True)
+plt.plot(ts[['ice_extent']])
+plt.title('ice_extent')
+plt.show()
+plt.plot(ts[['mean_temp']])
+plt.title('mean_temp')
+
+
+# In[61]:
+
+
+test_stationarity(ts[['ice_extent']], 'ice_extent')
+test_stationarity(ts[['mean_temp']], 'mean_temp')
+
+
+# # Differencing
+
+# In[62]:
+
+
+ts_diff = ts - ts.shift(1)
+ts_diff = ts_diff.dropna()
+test_stationarity(ts_diff[['ice_extent']], 'ice_extent')
+test_stationarity(ts_diff[['mean_temp']], 'mean_temp')
+
+
+# In[63]:
+
+
+ts_diff_seasonal = ts - ts.shift(12)
+ts_diff_seasonal = ts_diff_seasonal.dropna()
+test_stationarity(ts_diff_seasonal[['ice_extent']], 'ice_extent')
+test_stationarity(ts_diff_seasonal[['mean_temp']], 'mean_temp')
+
+
+# In[64]:
+
+
+tscv = TimeSeriesSplit(n_splits = 18)
+dataset = ts_diff[:-5] # need the -5 to get testsets for 24 months/2 years
+
+for train_index, test_index in tscv.split(dataset):
+    if train_index.size > 300:
+
+        # initialize cross validation train and test sets
+        cv_train, cv_test = dataset.iloc[train_index], dataset.iloc[test_index]
+
+        print("TRAIN:", train_index.size) # visiualize cross_validation structure for reference
+        print("TEST:", test_index.size)
+        print()
+
+
+# In[65]:
+
+
+tscv = TimeSeriesSplit(n_splits = 18)
+
+for train_index, test_index in tscv.split(ts_diff_seasonal):
+    if train_index.size > 300:
+
+        # initialize cross validation train and test sets
+        cv_train, cv_test = ts_diff_seasonal.iloc[train_index], ts_diff_seasonal.iloc[test_index]
+
+        print("TRAIN:", train_index.size) # visiualize cross_validation structure for reference
+        print("TEST:", test_index.size)
+        print()
+
+
+# In[66]:
+
+
+# og_data = dataset[:-6]
+# seasonal_entries = 12
+# n_sets = int(og_data.shape[0]/seasonal_entries)
+# split_sets = np.array_split(dataset[:-6], n_sets)
+# ts_diff = pd.DataFrame(columns = og_data.columns)
+
+# i = 0 
+
+# for year in split_sets[:-1]:
+#     ## swap 0 and 1 around
+#     # take difference
+#     diff = split_sets[i+1].reset_index() - split_sets[i].reset_index()
+#     diff = diff.iloc[:,1:]
+
+#     # append to dataframe
+#     ts_diff = ts_diff.append(diff[['ice_extent','mean_temp']], ignore_index=True)
+#     i = i+1
+
+
+# In[67]:
+
+
+# wait 
+ts_seasonal_diff = (dataset - dataset.shift(12)).dropna()
+
+
+# ## VARMAX
+
+# ## Random walk differencing
+
+# In[53]:
+
+
+from statsmodels.tsa.statespace.varmax import VARMAX
+import itertools
+import warnings
+import sys
+from sklearn.metrics import mean_absolute_error
+
+
+
+# Define the p, d and q parameters to take any value between 0 and 2
+p = q = range(0, 5)
+
+# Generate all different combinations of p, q and q triplets
+pq = list(itertools.product(p, q))
+best_pq = pq
+best_mean_mae = np.inf
+warnings.filterwarnings("ignore") # specify to ignore warning messages
+for param in pq:
+    print(param)
+    try:   # some parametercombinations might lead to crash, so catch exceptions and continue
+        maes = []
+        for train_index, test_index in tscv.split(dataset):
+            if train_index.size > 300:
+                # initialize cross validation train and test sets
+                cv_train, cv_test = dataset.iloc[train_index], dataset.iloc[test_index]
+
+                # build model
+                model = VARMAX(cv_train, order=(param))
+                model_fit = model.fit()
+
+                # make predictions
+                predictions =  model_fit.forecast(steps=24, dynamic=False)
+                prediction_values = predictions[['ice_extent']].values
+                true_values = cv_test[['ice_extent']].values
+                # error calc
+                maes.append(mean_absolute_error(true_values, prediction_values))
+
+        
+        mean_mae = np.mean(maes)
+        print('MAE: ' + str(mean_mae))    
+
+        if mean_mae < best_mean_mae:
+            best_mean_mae = mean_mae
+            best_maes = maes
+            best_pq = param
+            best_predictions = prediction_values
+    except Exception as e:
+        print(e)
+        continue
+   
+# plot
+print()
+print('Best MAE = ' + str(best_mean_mae))
+print(best_pq)
+
+# best range(0,5)
+# Best MAE = 0.1772618201196872
+# (1, 1)
+# Wall time: 7min 53s
+
+
+# In[175]:
+
+
+best_pq = (4,1)
+
+
+# In[176]:
+
+
+from statsmodels.tsa.statespace.varmax import VARMAX
+from sklearn.metrics import mean_absolute_error
+import timeit
+
+
+start_time = timeit.default_timer()
+
+warnings.filterwarnings("ignore") # specify to ignore warning messages
+
+print("-------")
+
+maes = []
+
+for train_index, test_index in tscv.split(dataset):
+    if train_index.size > 300:
+        # initialize cross validation train and test sets
+        cv_train, cv_test = dataset.iloc[train_index], dataset.iloc[test_index]
+
+        # build model
+        model = VARMAX(cv_train, order=(best_pq))
+        model_fit = model.fit()
+
+        # make predictions
+        predictions =  model_fit.forecast(steps=24, dynamic=False)
+        prediction_values = predictions[['ice_extent']].values
+        true_values = cv_test[['ice_extent']].values
+        # error calc
+        maes.append(mean_absolute_error(true_values, prediction_values))
+
+        print("I",end="")
+    
+
+time_VARMAX = timeit.default_timer() - start_time
+mae_mean = np.mean(maes)
+MAE_VARMAX = mae_mean
+last_MAE_VARMAX = maes[-1]
+last_predictions_VARMAX = prediction_values
+
+print()
+print('Mean MAE: %.3f x 1 000 000 km\u00b2' % MAE_VARMAX)
+print('MAE of last prediction: %.3f x 1 000 000 km\u00b2' % last_MAE_VARMAX)
+print('Execution time: %.3f seconds' % time_VARMAX)
+full_graph(prediction_values, 'Last prediction VARMAX')
+print(maes)
+
+
+# ## Seasonal differencing
+
+# In[13]:
+
+
+from statsmodels.tsa.statespace.varmax import VARMAX
+import itertools
+import warnings
+import sys
+from sklearn.metrics import mean_absolute_error
+
+
+
+# Define the p, d and q parameters to take any value between 0 and 2
+p = q = range(0, 5)
+
+# Generate all different combinations of p, q and q triplets
+pq = list(itertools.product(p, q))
+best_pq = pq
+best_mean_mae = np.inf
+warnings.filterwarnings("ignore") # specify to ignore warning messages
+for param in pq:
+    print(param)
+    try:   # some parametercombinations might lead to crash, so catch exceptions and continue
+        maes = []
+        for train_index, test_index in tscv.split(ts_diff_seasonal):
+            if train_index.size > 300:
+                # initialize cross validation train and test sets
+                cv_train, cv_test = ts_diff_seasonal.iloc[train_index], ts_diff_seasonal.iloc[test_index]
+
+                # build model
+                model = VARMAX(cv_train, order=(param))
+                model_fit = model.fit()
+
+                # make predictions
+                predictions =  model_fit.forecast(steps=24, dynamic=False)
+                prediction_values = predictions[['ice_extent']].values
+                true_values = cv_test[['ice_extent']].values
+                # error calc
+                maes.append(mean_absolute_error(true_values, prediction_values))
+
+        
+        mean_mae = np.mean(maes)
+        print('MAE: ' + str(mean_mae))    
+
+        if mean_mae < best_mean_mae:
+            best_mean_mae = mean_mae
+            best_maes = maes
+            best_pq = param
+            best_predictions = prediction_values
+    except Exception as e:
+        print(e)
+        continue
+   
+# plot
+print()
+print('Best MAE = ' + str(best_mean_mae))
+print(best_pq)
+
+# best range(0,5) = (0,1)
+
+
+# In[70]:
+
+
+best_pq = (0,1)
+
+
+# In[163]:
+
+
+from statsmodels.tsa.statespace.varmax import VARMAX
+from sklearn.metrics import mean_absolute_error
+import timeit
+
+
+start_time = timeit.default_timer()
+
+warnings.filterwarnings("ignore") # specify to ignore warning messages
+
+print("-------")
+
+maes = []
+
+for train_index, test_index in tscv.split(ts_diff_seasonal):
+    if train_index.size > 300:
+        # initialize cross validation train and test sets
+        cv_train, cv_test = ts_diff_seasonal.iloc[train_index], ts_diff_seasonal.iloc[test_index]
+
+        # build model
+        model = VARMAX(cv_train, order=(best_pq))
+        model_fit = model.fit()
+
+        # make predictions
+        predictions =  model_fit.forecast(steps=24, dynamic=False)
+        prediction_values = predictions[['ice_extent']].values
+        true_values = cv_test[['ice_extent']].values
+        # error calc
+        maes.append(mean_absolute_error(true_values, prediction_values))
+
+        print("I",end="")
+    
+
+time_VARMAX_seasonal = timeit.default_timer() - start_time
+mae_mean_seasonal = np.mean(maes)
+MAE_VARMAX_seasonal = mae_mean
+last_MAE_VARMAX_seasonal = maes[-1]
+last_predictions_VARMAX_seasonal = prediction_values
+
+print()
+print('Mean MAE: %.3f x 1 000 000 km\u00b2' % MAE_VARMAX_seasonal)
+print('MAE of last prediction: %.3f x 1 000 000 km\u00b2' % last_MAE_VARMAX_seasonal)
+print('Execution time: %.3f seconds' % time_VARMAX_seasonal)
+full_graph_seasonal(last_predictions_VARMAX_seasonal, 'Last prediction VARMAX')
+print(maes)
+
+
+# # SARIMAX
+
+# In[171]:
+
+
+# setting up values for displaying prediction of the last 2 years
+data = dataset
+test_size = 24
+data_train = data[:-test_size]
+data_test = data[-test_size:]
+
+
+# In[194]:
+
+
+# singular test
+
+import itertools
+import warnings
+import sys
+from statsmodels.tsa.statespace.sarimax import SARIMAX
+from statsmodels.tsa.arima_model import ARIMA
+
+from sklearn.metrics import mean_absolute_error
+
+warnings.filterwarnings("ignore") # specify to ignore warning messages
+
+# Variables
+endog = data_train[['ice_extent']]
+exog = sm.add_constant(data_train[['mean_temp']])
+exog_test = sm.add_constant(data_test[['mean_temp']])
+
+# Fit the model
+mod = sm.tsa.statespace.SARIMAX(endog, exog)
+
+# fit model
+model_fit = model.fit()
+
+yhat = model_fit.forecast(steps = 24, exog=exog_test)
+
+mae = mean_absolute_error(yhat, data_test[['ice_extent']])
+
+# plot
+print(mae)
+plt.plot(data_test[['ice_extent']], color='blue')
+plt.plot(yhat, color='red')
 plt.show()
 
-\end{lstlisting}
+
+# Adding exogenous variables with SARIMAX requires to give the mean temperatures from the testset for forecasting, which is not in line with the other usecases, therefore it won't be further explored
+# (extra research!)
+
+# # LSTM
+
+# ## Random walk diff
+
+# In[72]:
+
+
+ts
+
+
+# In[73]:
+
+
+# multivariate multi-step encoder-decoder lstm example
+from numpy import array
+from numpy import hstack
+from keras.models import Sequential
+from keras.layers import LSTM
+from keras.layers import Dense
+from keras.layers import RepeatVector
+from keras.layers import TimeDistributed
+import warnings
+
+warnings.filterwarnings("ignore") # specify to ignore warning messages
+
+
+# split a multivariate sequence into samples
+def split_sequences(sequences, n_steps_in, n_steps_out):
+	X, y = list(), list()
+	for i in range(len(sequences)):
+		# find the end of this pattern
+		end_ix = i + n_steps_in
+		out_end_ix = end_ix + n_steps_out
+		# check if we are beyond the dataset
+		if out_end_ix > len(sequences):
+			break
+		# gather input and output parts of the pattern
+		seq_x, seq_y = sequences[i:end_ix, :], sequences[end_ix:out_end_ix, :]
+		X.append(seq_x)
+		y.append(seq_y)
+	return array(X), array(y)
+
+def predict_LSTM(train, test, n_neurons, n_epochs):
+    test['sum'] = test['mean_temp'] + test['ice_extent']
+
+
+    # define input sequence
+    in_seq1 = train.values[:,0]
+    in_seq2 = train.values[:,1]
+    out_seq = array([in_seq1[i]+in_seq2[i] for i in range(len(in_seq1))])
+
+    # convert to [rows, columns] structure
+    in_seq1 = in_seq1.reshape((len(in_seq1), 1))
+    in_seq2 = in_seq2.reshape((len(in_seq2), 1))
+    out_seq = out_seq.reshape((len(out_seq), 1))
+    
+    # horizontally stack columns
+    dataset = hstack((in_seq1, in_seq2, out_seq))
+    
+    # choose a number of time steps
+    n_steps_in, n_steps_out = 24, 24
+    
+    # covert into input/output
+    X, y = split_sequences(dataset, n_steps_in, n_steps_out)
+    
+    # the dataset knows the number of features, e.g. 2
+    n_features = X.shape[2]
+    
+    # define model
+    model = Sequential()
+    model.add(LSTM(n_neurons, activation='relu', input_shape=(n_steps_in, n_features)))
+    model.add(RepeatVector(n_steps_out))
+    model.add(LSTM(n_neurons, activation='relu', return_sequences=True))
+    model.add(TimeDistributed(Dense(n_features)))
+    model.compile(optimizer='adam', loss='mae')
+    
+    # fit model
+    model.fit(X, y, epochs=n_epochs, verbose=0)
+    
+    # demonstrate prediction
+    x_input = test.values
+    x_input = x_input.reshape((1, n_steps_in, n_features))
+    yhat = model.predict(x_input, verbose=0)
+    return yhat
+    
+
+
+# In[18]:
+
+
+from statsmodels.tsa.statespace.varmax import VARMAX
+from sklearn.metrics import mean_absolute_error
+import timeit
+import tensorflow as tf
+
+start_time = timeit.default_timer()
+
+# warnings.filterwarnings("ignore") # specify to ignore warning messages
+tf.compat.v1.logging.set_verbosity(tf.compat.v1.logging.ERROR)
+
+maes = []
+global_maes = []
+best_MAE = np.inf
+
+
+# n_neurons_array = [1,5,10,20]
+# n_epochs_array = [100,200,300]
+
+n_neurons_array = [1, 5, 10, 20, 30]
+n_epochs_array = [100,200,300]
+
+
+print("-------")
+
+maes = []
+for n_neurons in n_neurons_array:
+    for n_epochs in n_epochs_array:
+        for train_index, test_index in tscv.split(dataset):
+            if train_index.size > 300:
+                # initialize cross validation train and test sets
+                cv_train, cv_test = dataset.iloc[train_index], dataset.iloc[test_index]
+
+                yhat = predict_LSTM(cv_train, cv_test, n_neurons, n_epochs)
+
+
+                prediction_values = yhat[0][:,0]
+                true_values = cv_test[['ice_extent']].values
+
+                # error calc
+                maes.append(mean_absolute_error(true_values, prediction_values))
+
+                print("I",end="")
+        time_LSTM = timeit.default_timer() - start_time
+        MAE_LSTM = np.mean(maes)
+        last_MAE_LSTM = maes[-1]
+        global_maes.append(MAE_LSTM)
+
+        if best_MAE > MAE_LSTM:
+            best_n_neurons = n_neurons
+            best_n_epochs = n_epochs
+            best_MAE = MAE_LSTM
+
+        print()
+        print(n_neurons)
+        print(n_epochs)
+        print(MAE_LSTM)
+        print()    
+
+print('Best:')
+print('N neurons')
+print(best_n_neurons)
+print('Epochs size')
+print(best_n_epochs)
+print('MAE')
+print(best_MAE)
+plt.bar(range(0,len(global_maes)), global_maes)
+
+
+# In[177]:
+
+
+best_n_neurons, best_n_epochs = 30, 300
+
+
+# In[178]:
+
+
+from sklearn.metrics import mean_absolute_error
+import timeit
+import tensorflow as tf
+
+start_time = timeit.default_timer()
+
+# warnings.filterwarnings("ignore") # specify to ignore warning messages
+tf.compat.v1.logging.set_verbosity(tf.compat.v1.logging.ERROR)
+
+
+print("-------")
+
+maes = []
+
+for train_index, test_index in tscv.split(dataset):
+    if train_index.size > 300:
+        # initialize cross validation train and test sets
+        cv_train, cv_test = dataset.iloc[train_index], dataset.iloc[test_index]
+        yhat = predict_LSTM(cv_train, cv_test, best_n_neurons, best_n_epochs)
+
+
+        prediction_values = yhat[0][:,0]
+        true_values = cv_test[['ice_extent']].values
+
+        # error calc
+        maes.append(mean_absolute_error(true_values, prediction_values))
+
+        print("I",end="")
+    
+
+time_LSTM = timeit.default_timer() - start_time
+mae_mean = np.mean(maes)
+MAE_LSTM = mae_mean
+last_MAE_LSTM = maes[-1]
+last_predictions_LSTM = prediction_values
+
+print()
+print('Mean MAE: %.3f x 1 000 000 km\u00b2' % MAE_LSTM)
+print('MAE of last prediction: %.3f x 1 000 000 km\u00b2' % last_MAE_LSTM)
+print('Execution time: %.3f seconds' % time_LSTM)
+full_graph(last_predictions_LSTM, 'Last prediction LSTM')
+print(maes)
+
+
+# ## Seasonal differencing
+
+# In[76]:
+
+
+from statsmodels.tsa.statespace.varmax import VARMAX
+from sklearn.metrics import mean_absolute_error
+import timeit
+import tensorflow as tf
+
+start_time = timeit.default_timer()
+
+# warnings.filterwarnings("ignore") # specify to ignore warning messages
+tf.compat.v1.logging.set_verbosity(tf.compat.v1.logging.ERROR)
+
+maes = []
+global_maes = []
+best_MAE = np.inf
+
+
+# n_neurons_array = [1,5,10,20]
+# n_epochs_array = [100,200,300]
+
+n_neurons_array = [1, 5, 10, 20, 30]
+n_epochs_array = [100,200,300]
+
+
+print("-------")
+
+maes = []
+for n_neurons in n_neurons_array:
+    for n_epochs in n_epochs_array:
+        for train_index, test_index in tscv.split(ts_diff_seasonal):
+            if train_index.size > 300:
+                # initialize cross validation train and test sets
+                cv_train, cv_test = ts_diff_seasonal.iloc[train_index], ts_diff_seasonal.iloc[test_index]
+
+                yhat = predict_LSTM(cv_train, cv_test, n_neurons, n_epochs)
+
+
+                prediction_values = yhat[0][:,0]
+                true_values = cv_test[['ice_extent']].values
+
+                # error calc
+                maes.append(mean_absolute_error(true_values, prediction_values))
+
+                print("I",end="")
+        time_LSTM = timeit.default_timer() - start_time
+        MAE_LSTM = np.mean(maes)
+        last_MAE_LSTM = maes[-1]
+        global_maes.append(MAE_LSTM)
+
+        if best_MAE > MAE_LSTM:
+            best_n_neurons = n_neurons
+            best_n_epochs = n_epochs
+            best_MAE = MAE_LSTM
+
+        print()
+        print(n_neurons)
+        print(n_epochs)
+        print(MAE_LSTM)
+        print()    
+
+print('Best:')
+print('N neurons')
+print(best_n_neurons)
+print('Epochs size')
+print(best_n_epochs)
+print('MAE')
+print(best_MAE)
+plt.bar(range(0,len(global_maes)), global_maes)
+
+
+# In[164]:
+
+
+best_n_neurons, best_n_epochs = 1, 200
+
+
+# In[165]:
+
+
+from sklearn.metrics import mean_absolute_error
+import timeit
+import tensorflow as tf
+
+start_time = timeit.default_timer()
+
+# warnings.filterwarnings("ignore") # specify to ignore warning messages
+tf.compat.v1.logging.set_verbosity(tf.compat.v1.logging.ERROR)
+
+
+print("-------")
+
+maes = []
+
+for train_index, test_index in tscv.split(dataset):
+    if train_index.size > 300:
+        # initialize cross validation train and test sets
+        cv_train, cv_test = dataset.iloc[train_index], dataset.iloc[test_index]
+        yhat = predict_LSTM(cv_train, cv_test, best_n_neurons, best_n_epochs)
+
+
+        prediction_values = yhat[0][:,0]
+        true_values = cv_test[['ice_extent']].values
+
+        # error calc
+        maes.append(mean_absolute_error(true_values, prediction_values))
+
+        print("I",end="")
+    
+
+time_LSTM_seasonal = timeit.default_timer() - start_time
+mae_mean_seasonal = np.mean(maes)
+MAE_LSTM_seasonal = mae_mean
+last_MAE_LSTM_seasonal = maes[-1]
+last_predictions_LSTM_seasonal = prediction_values
+
+print()
+print('Mean MAE: %.3f x 1 000 000 km\u00b2' % MAE_LSTM_seasonal)
+print('MAE of last prediction: %.3f x 1 000 000 km\u00b2' % last_MAE_LSTM_seasonal)
+print('Execution time: %.3f seconds' % time_LSTM_seasonal)
+full_graph_seasonal(last_predictions_LSTM_seasonal, 'Last prediction LSTM')
+print(maes)
+
+
+# # Evaluation
+
+# In[181]:
+
+
+# formatting
+results = [[MAE_VARMAX, time_VARMAX, last_MAE_VARMAX],
+           [MAE_VARMAX_seasonal, time_VARMAX_seasonal, last_MAE_VARMAX_seasonal],
+           [MAE_LSTM, time_LSTM, last_MAE_LSTM],
+           [MAE_LSTM_seasonal, time_LSTM_seasonal, last_MAE_LSTM_seasonal]]
+
+# display results
+results = pd.DataFrame(results, columns=['Mean MAE (x 1 000 000 km\u00b2)','Execution time (s)','Last MAE (x 1 000 000 km\u00b2)']
+             ,index=['VARMAX','VARMAX_seasonal','LSTM','LSTM_seasonal']).round(decimals=3)
+results
+
+
+# In[182]:
+
+
+full_graph(last_predictions_VARMAX, 'Last prediction VARMAX with random walk differencing')
+full_graph_seasonal(last_predictions_VARMAX_seasonal, 'Last prediction VARMAX with seasonal differencing')
+full_graph(last_predictions_LSTM, 'Last prediction LSTM with random walk differencing')
+full_graph_seasonal(last_predictions_LSTM_seasonal, 'Last prediction LSTM with seasonal differencing')
+\end{minted}
 

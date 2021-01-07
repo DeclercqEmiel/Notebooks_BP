@@ -604,7 +604,7 @@ extendedchars=\true
 \RequirePackage{csquotes}
 \DeclareLanguageMapping{dutch}{dutch-apa}
 \addbibresource{bachproef-tin.bib} % BibTeX bibliography file
-\addbibresource{../voorstel/voorstel.bib}
+
 \defbibheading{bibempty}{}
 
 \RequirePackage{makeidx} % Required to make an index

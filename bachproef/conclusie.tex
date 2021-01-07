@@ -14,7 +14,12 @@
 % Heeft het onderzoek geleid tot nieuwe vragen die uitnodigen tot verder 
 %onderzoek?
 
-Uit dit onderzoek blijkt dat een voorspelling op basis van polynomiale regressie of LSTM het einde van de coronacrisis moeilijk kan definiëren. Het einde van de crisis houdt in dat het aantal nieuwe geregistreerde coronagevallen in België gedurende 2 weken onder 55 zou blijven. Een betrouwbare voorspelling is slechts voor 1 maximum, 2 weken mogelijk met gebruik van LSTM wat een te kort tijdsinterval is om dit te bepalen. Dit wordt hoogstwaarschijnlijk veroorzaakt door het gebrek aan data om het LSTM model te trainen. 
-het model werd getraind met Italiaanse data, aangezien Italië    het meest nabije land dat al het langst voorbij het minimum van 10 gevallen per miljoen inwoners is. Dit komt neer op een voorloopperiode van een 7 tal dagen in vergelijking met België. Hierdoor kan het model slechts echt betrouwbare voorspellingen van iets meer dan 7 dagen maken.
+Wanneer er wordt gewerkt met cross validation en de Mean Average Error wordt gebruikt als foutmaat. Zullen de volgende modellen de beste voorspellingen kunnen maken van de evolutie van het ijsoppervlak op de polen:
+\begin{itemize}
+    \item Bij de univariate niet-seizoensgebonden tijdreeks zal het ARIMA-model het beste resultaat behalen.
+    \item Bij de univariate seizoensgebonden tijdreeks presteert het SARIMA-model met random walk differentiatie het best.
+    \item Bij de multivariate niet-seizoensgebonden tijdreeks behaalt het VARMAX-model de beste resultaten.
+    \item Bij de multivariate seizoensgebonden tijdreeks zal het LSTM model de beste prestatie leveren.
+\end{itemize}
 
-Mogelijke onderwerpen voor verder onderzoek zouden dezelfde vraag kunnen beantwoorden maar met gebruik van andere data en middelen. Zo zou een multivatiate timeseries ook voorspeld kunnen worden met LSTM, een andere zeer interessante parameter zou de besmettingsgraad zijn bij deze vraag. Een andere type model om autoregressieve voorspellingen te maken zou het TP-SMN-AT model zijn. Een methode en ook de methode die het nauwst aansluit bij dit onderzoek zou het fitten van een hyperbolisch-achtige functie op de staart, de metingen en eventueel voorspellingen na de piek. Ook hierbij kunnen de curves van andere landen in beschouwing genomen. Ook modellen die goed scoren op korte termijn zouden een misschien kunnen aangepast worden om betere resultaten te bekomen op lange termijn, hieronder vallen ondermeer SVR, het stacking ensemble ~\autocite{Ribeiro2020} en de SutteARIMA methode.
+Mogelijke onderwerpen voor verder onderzoek zouden dieper in kunnen gaan op gevallen met externe regressoren waarbij bepaalde features in de tijdreeks ook in de testset meegegeven worden. Hiervoor zijn namelijk ingebouwde opties bij ARIMA- en Prophet-modellen. Daarnaast zou een uitgebreidere studie van LSTM-modellen bij deze data interessant kunnen zijn aangezien ze in deze bachelorproef slechts beperkt aan bod komen.

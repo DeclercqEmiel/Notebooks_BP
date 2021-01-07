@@ -43,6 +43,13 @@ In deze bachelorproef zullen verschillende voorspellingstechnieken voor verschil
     \item Tijdreeksen met enkel de tijd als onafhankelijke variabele en 1 afhankelijke variabele met een seizoensgebonden verband
     \item Tijdreeksen met 2 onafhankelijke variabelen waarvan 1 de tijd en 1 afhankelijke variabele zonder een seizoensgebonden verband
     \item Tijdreeksen met 2 onafhankelijke variabelen waarvan 1 de tijd en 1 afhankelijke variabele met een seizoensgebonden verband
-\end{itemize}
- De eerste voorspellingstechniek die onder de loep zal genomen is polynomiale regressie. De tweede techniek die zal toegepast worden is een
- ARIMA/VARMAX model. Tenslotte zal een  recurrent neuraal netwerk van het type LSTM (Long Term Short Memory) op dezelfde data toegepast worden. Voor elk van deze 4 types tijdreeksen zal dan bepaald worden welk van de 3 technieken het beste resultaat zal opleveren.
+\end{itemize} De eerste techniek die zal toegepast worden is een
+ ARIMA/VARMAX model. Als tweede zal een  recurrent neuraal netwerk van het type LSTM (Long Term Short Memory) op dezelfde data toegepast worden en tenslotte zal ook Prophet gebruikt worden om voorspellingen te maken. Voor elk van deze 4 types tijdreeksen werd bepaald welk modeltype de laagste MAE behaalde bij gebruik van cross validation. Dit werd toegepast een dataset van de poolijsdikte waaruit deze resultaten behaald werden:
+ \begin{itemize}
+     \item Bij de univariate niet-seizoensgebonden tijdreeks zal het ARIMA-model het beste resultaat behalen.
+     \item Bij de univariate seizoensgebonden tijdreeks presteert het SARIMA-model met random walk differentiatie het best.
+     \item Bij de multivariate niet-seizoensgebonden tijdreeks behaalt het VARMAX-model de beste resultaten.
+     \item Bij de multivariate seizoensgebonden tijdreeks zal het LSTM model de beste prestatie leveren.
+ \end{itemize}
+
+Tenslotte dient zeker nog vermeld te worden dat dit resultaat zal afhangen van tijdreeks tot tijdreeks en deze modellen niet bij elke reeks het meest optimale resultaat zullen behalen.

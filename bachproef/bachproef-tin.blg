@@ -1,9 +1,31 @@
 [0] Config.pm:304> INFO - This is Biber 2.12
 [0] Config.pm:307> INFO - Logfile is 'bachproef-tin.blg'
-[30] biber-MSWIN64:315> INFO - === 
-[59] Biber.pm:371> INFO - Reading 'bachproef-tin.bcf'
-[147] Biber.pm:889> INFO - Found 0 citekeys in bib section 0
-[152] Utils.pm:193> WARN - The file 'bachproef-tin.bcf' does not contain any citations!
-[159] bbl.pm:636> INFO - Writing 'bachproef-tin.bbl' with encoding 'UTF-8'
-[160] bbl.pm:739> INFO - Output to bachproef-tin.bbl
-[160] Biber.pm:110> INFO - WARNINGS: 1
+[32] biber-MSWIN64:315> INFO - === 
+[61] Biber.pm:371> INFO - Reading 'bachproef-tin.bcf'
+[180] Biber.pm:889> INFO - Found 26 citekeys in bib section 0
+[198] Biber.pm:4093> INFO - Processing section 0
+[211] Biber.pm:4254> INFO - Looking for bibtex format file 'bachproef-tin.bib' for section 0
+[214] bibtex.pm:1523> INFO - LaTeX decoding ...
+[246] bibtex.pm:1340> INFO - Found BibTeX data source 'bachproef-tin.bib'
+[248] Utils.pm:193> WARN - Duplicate entry key: 'Brownlee2017a' in file 'bachproef-tin.bib', skipping ...
+[253] Utils.pm:193> WARN - Entry 'Brown2020' (bachproef-tin.bib): Invalid format '26-11-20' of date field 'urldate' - ignoring
+[256] Utils.pm:193> WARN - Entry 'Swaminathan2018' (bachproef-tin.bib): Invalid format '26-11-20' of date field 'urldate' - ignoring
+[259] Utils.pm:193> WARN - Entry 'Sinha2019' (bachproef-tin.bib): Invalid format '11-12-20' of date field 'urldate' - ignoring
+[263] Utils.pm:193> WARN - Entry 'Hyndman2018' (bachproef-tin.bib): Invalid format '27-11-20' of date field 'urldate' - ignoring
+[268] Utils.pm:193> WARN - Entry 'Nau2020' (bachproef-tin.bib): Invalid format '2-12-20' of date field 'urldate' - ignoring
+[291] Utils.pm:193> WARN - Entry 'Brownlee2017b' (bachproef-tin.bib): Invalid format '2020-12-1' of date field 'urldate' - ignoring
+[296] Utils.pm:193> WARN - Entry 'Rahman2019' (bachproef-tin.bib): Invalid format '1-12-20' of date field 'urldate' - ignoring
+[297] Utils.pm:193> WARN - Entry 'Prophet2020' (bachproef-tin.bib): Invalid format '6-12-20' of date field 'urldate' - ignoring
+[299] Utils.pm:193> WARN - Entry 'Kampakis2020' (bachproef-tin.bib): Invalid format '6-12-20' of date field 'urldate' - ignoring
+[302] Utils.pm:193> WARN - Entry 'Shrivastava2020' (bachproef-tin.bib): Invalid format '8-12-20' of date field 'urldate' - ignoring
+[305] Utils.pm:193> WARN - I didn't find a database entry for 'Pant2019' (section 0)
+[305] Utils.pm:193> WARN - I didn't find a database entry for 'Salvi2020' (section 0)
+[305] Utils.pm:193> WARN - I didn't find a database entry for 'Colah2015' (section 0)
+[305] Utils.pm:193> WARN - I didn't find a database entry for 'Siami-Namini2018' (section 0)
+[334] UCollate.pm:68> INFO - Overriding locale 'nl-NL' defaults 'normalization = NFD' with 'normalization = prenormalized'
+[334] UCollate.pm:68> INFO - Overriding locale 'nl-NL' defaults 'variable = shifted' with 'variable = non-ignorable'
+[334] Biber.pm:3921> INFO - Sorting list 'apa/global//global/global' of type 'entry' with template 'apa' and locale 'nl-NL'
+[334] Biber.pm:3927> INFO - No sort tailoring available for locale 'nl-NL'
+[355] bbl.pm:636> INFO - Writing 'bachproef-tin.bbl' with encoding 'UTF-8'
+[364] bbl.pm:739> INFO - Output to bachproef-tin.bbl
+[364] Biber.pm:110> INFO - WARNINGS: 15

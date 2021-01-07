@@ -86,7 +86,6 @@
     </requires>
     <requires type="editable">
       <file>bachproef-tin.bib</file>
-      <file>../voorstel/voorstel.bib</file>
     </requires>
   </external>
 </requests>

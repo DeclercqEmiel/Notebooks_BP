@@ -1,0 +1,272 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{c+ch}{\PYGZsh{}!/usr/bin/env python}
+\PYG{c+c1}{\PYGZsh{} coding: utf\PYGZhy{}8}
+
+\PYG{c+c1}{\PYGZsh{} In[2]:}
+
+
+\PYG{k+kn}{import} \PYG{n+nn}{pandas} \PYG{k}{as} \PYG{n+nn}{pd}
+\PYG{k+kn}{import} \PYG{n+nn}{matplotlib.pylab} \PYG{k}{as} \PYG{n+nn}{plt}
+\PYG{k+kn}{import} \PYG{n+nn}{numpy} \PYG{k}{as} \PYG{n+nn}{np}
+
+
+\PYG{c+c1}{\PYGZsh{} \PYGZsh{} Dataset exploration}
+
+\PYG{c+c1}{\PYGZsh{} \PYGZsh{}\PYGZsh{} Dataset \PYGZsh{}1: seaice}
+
+\PYG{c+c1}{\PYGZsh{} source: https://www.kaggle.com/nsidcorg/daily\PYGZhy{}sea\PYGZhy{}ice\PYGZhy{}extent\PYGZhy{}data}
+
+\PYG{c+c1}{\PYGZsh{} In[3]:}
+
+
+\PYG{n}{ice} \PYG{o}{=} \PYG{n}{pd}\PYG{o}{.}\PYG{n}{read\PYGZus{}csv}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}./data/seaice.csv\PYGZsq{}}\PYG{p}{)}
+\PYG{n}{ice}\PYG{o}{.}\PYG{n}{columns} \PYG{o}{=} \PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}Year\PYGZsq{}}\PYG{p}{,} \PYG{l+s+s1}{\PYGZsq{}Month\PYGZsq{}}\PYG{p}{,} \PYG{l+s+s1}{\PYGZsq{}Day\PYGZsq{}}\PYG{p}{,} \PYG{l+s+s1}{\PYGZsq{}Extent\PYGZsq{}}\PYG{p}{,} \PYG{l+s+s1}{\PYGZsq{}Missing\PYGZsq{}}\PYG{p}{,} \PYG{l+s+s1}{\PYGZsq{}Source Data\PYGZsq{}}\PYG{p}{,}
+\PYG{l+s+s1}{\PYGZsq{}hemisphere\PYGZsq{}}\PYG{p}{]}
+\PYG{n}{ice}
+
+
+\PYG{c+c1}{\PYGZsh{} In[5]:}
+
+
+\PYG{n}{plt}\PYG{o}{.}\PYG{n}{plot}\PYG{p}{(}\PYG{n}{ice}\PYG{p}{[[}\PYG{l+s+s1}{\PYGZsq{}Extent\PYGZsq{}}\PYG{p}{]])}
+
+
+\PYG{c+c1}{\PYGZsh{} In[6]:}
+
+
+\PYG{n}{ice}\PYG{o}{.}\PYG{n}{groupby}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}hemisphere\PYGZsq{}}\PYG{p}{)}\PYG{o}{.}\PYG{n}{count}\PYG{p}{()}
+
+
+\PYG{c+c1}{\PYGZsh{} In[7]:}
+
+
+\PYG{n}{ice}\PYG{o}{.}\PYG{n}{groupby}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}Year\PYGZsq{}}\PYG{p}{)}\PYG{o}{.}\PYG{n}{count}\PYG{p}{()[[}\PYG{l+s+s1}{\PYGZsq{}Extent\PYGZsq{}}\PYG{p}{]]}
+
+
+\PYG{c+c1}{\PYGZsh{} In[8]:}
+
+
+\PYG{n}{ice}\PYG{o}{.}\PYG{n}{groupby}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}Year\PYGZsq{}}\PYG{p}{)}\PYG{o}{.}\PYG{n}{mean}\PYG{p}{()[[}\PYG{l+s+s1}{\PYGZsq{}Extent\PYGZsq{}}\PYG{p}{]]}
+
+
+\PYG{c+c1}{\PYGZsh{} In[9]:}
+
+
+\PYG{n}{plt}\PYG{o}{.}\PYG{n}{scatter}\PYG{p}{(}\PYG{n}{ice}\PYG{o}{.}\PYG{n}{groupby}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}Year\PYGZsq{}}\PYG{p}{)}\PYG{o}{.}\PYG{n}{mean}\PYG{p}{()[[}\PYG{l+s+s1}{\PYGZsq{}Extent\PYGZsq{}}\PYG{p}{]][:}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{]}\PYG{o}{.}\PYG{n}{index}\PYG{p}{,} \PYG{n}{ice}\PYG{o}{.}\PYG{n}{groupby}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}Year\PYGZsq{}}\PYG{p}{)}\PYG{o}{.}\PYG{n}{mean}\PYG{p}{()[[}\PYG{l+s+s1}{\PYGZsq{}Extent\PYGZsq{}}\PYG{p}{]][:}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{])}
+
+
+\PYG{c+c1}{\PYGZsh{} In[10]:}
+
+
+\PYG{n}{ice}\PYG{o}{.}\PYG{n}{groupby}\PYG{p}{([}\PYG{l+s+s1}{\PYGZsq{}Year\PYGZsq{}}\PYG{p}{,}\PYG{l+s+s1}{\PYGZsq{}hemisphere\PYGZsq{}}\PYG{p}{])}\PYG{o}{.}\PYG{n}{count}\PYG{p}{()}\PYG{o}{.}\PYG{n}{tail}\PYG{p}{(}\PYG{l+m+mi}{60}\PYG{p}{)}
+
+
+\PYG{c+c1}{\PYGZsh{} In[11]:}
+
+
+\PYG{n}{plt}\PYG{o}{.}\PYG{n}{xlabel}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}Years\PYGZsq{}}\PYG{p}{)}
+\PYG{n}{plt}\PYG{o}{.}\PYG{n}{ylabel}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}Extent\PYGZsq{}}\PYG{p}{)}
+\PYG{n}{plt}\PYG{o}{.}\PYG{n}{plot}\PYG{p}{(}\PYG{n}{ice}\PYG{p}{[}\PYG{n}{ice}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}hemisphere\PYGZsq{}}\PYG{p}{]} \PYG{o}{==} \PYG{l+s+s1}{\PYGZsq{}north\PYGZsq{}}\PYG{p}{]}\PYG{o}{.}\PYG{n}{groupby}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}Year\PYGZsq{}}\PYG{p}{)}\PYG{o}{.}\PYG{n}{mean}\PYG{p}{()[[}\PYG{l+s+s1}{\PYGZsq{}Extent\PYGZsq{}}\PYG{p}{]][:}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{]}\PYG{o}{.}\PYG{n}{index}\PYG{p}{,} \PYG{n}{ice}\PYG{p}{[}\PYG{n}{ice}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}hemisphere\PYGZsq{}}\PYG{p}{]} \PYG{o}{==} \PYG{l+s+s1}{\PYGZsq{}north\PYGZsq{}}\PYG{p}{]}\PYG{o}{.}\PYG{n}{groupby}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}Year\PYGZsq{}}\PYG{p}{)}\PYG{o}{.}\PYG{n}{mean}\PYG{p}{()[[}\PYG{l+s+s1}{\PYGZsq{}Extent\PYGZsq{}}\PYG{p}{]][:}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{],}\PYG{n}{label}\PYG{o}{=}\PYG{l+s+s1}{\PYGZsq{}Northern hemisphere\PYGZsq{}}\PYG{p}{)}
+\PYG{n}{plt}\PYG{o}{.}\PYG{n}{plot}\PYG{p}{(}\PYG{n}{ice}\PYG{p}{[}\PYG{n}{ice}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}hemisphere\PYGZsq{}}\PYG{p}{]} \PYG{o}{==} \PYG{l+s+s1}{\PYGZsq{}south\PYGZsq{}}\PYG{p}{]}\PYG{o}{.}\PYG{n}{groupby}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}Year\PYGZsq{}}\PYG{p}{)}\PYG{o}{.}\PYG{n}{mean}\PYG{p}{()[[}\PYG{l+s+s1}{\PYGZsq{}Extent\PYGZsq{}}\PYG{p}{]][:}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{]}\PYG{o}{.}\PYG{n}{index}\PYG{p}{,} \PYG{n}{ice}\PYG{p}{[}\PYG{n}{ice}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}hemisphere\PYGZsq{}}\PYG{p}{]} \PYG{o}{==} \PYG{l+s+s1}{\PYGZsq{}south\PYGZsq{}}\PYG{p}{]}\PYG{o}{.}\PYG{n}{groupby}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}Year\PYGZsq{}}\PYG{p}{)}\PYG{o}{.}\PYG{n}{mean}\PYG{p}{()[[}\PYG{l+s+s1}{\PYGZsq{}Extent\PYGZsq{}}\PYG{p}{]][:}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{],}\PYG{n}{label}\PYG{o}{=}\PYG{l+s+s1}{\PYGZsq{}Southern hemisphere\PYGZsq{}}\PYG{p}{)}
+\PYG{n}{plt}\PYG{o}{.}\PYG{n}{legend}\PYG{p}{()}
+
+
+\PYG{c+c1}{\PYGZsh{} In[12]:}
+
+
+\PYG{n}{plt}\PYG{o}{.}\PYG{n}{xlabel}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}Years\PYGZsq{}}\PYG{p}{)}
+\PYG{n}{plt}\PYG{o}{.}\PYG{n}{ylabel}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}Extent\PYGZsq{}}\PYG{p}{)}
+\PYG{n}{plt}\PYG{o}{.}\PYG{n}{scatter}\PYG{p}{(}\PYG{n}{ice}\PYG{o}{.}\PYG{n}{groupby}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}Year\PYGZsq{}}\PYG{p}{)}\PYG{o}{.}\PYG{n}{mean}\PYG{p}{()[[}\PYG{l+s+s1}{\PYGZsq{}Extent\PYGZsq{}}\PYG{p}{]][:}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{]}\PYG{o}{.}\PYG{n}{index}\PYG{p}{,} \PYG{n}{ice}\PYG{o}{.}\PYG{n}{groupby}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}Year\PYGZsq{}}\PYG{p}{)}\PYG{o}{.}\PYG{n}{mean}\PYG{p}{()[[}\PYG{l+s+s1}{\PYGZsq{}Extent\PYGZsq{}}\PYG{p}{]][:}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{])}
+
+
+\PYG{c+c1}{\PYGZsh{} In[ ]:}
+
+
+
+
+
+\PYG{c+c1}{\PYGZsh{} In[13]:}
+
+
+\PYG{n+nb}{print}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}start : \PYGZsq{}} \PYG{o}{+} \PYG{n+nb}{str}\PYG{p}{(}\PYG{n}{ice}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}Year\PYGZsq{}}\PYG{p}{][}\PYG{l+m+mi}{0}\PYG{p}{]))}
+\PYG{n+nb}{print}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}end : \PYGZsq{}} \PYG{o}{+} \PYG{n+nb}{str}\PYG{p}{(}\PYG{n}{ice}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}Year\PYGZsq{}}\PYG{p}{]}\PYG{o}{.}\PYG{n}{tail}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{p}{)}\PYG{o}{.}\PYG{n}{iloc}\PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{]))}
+
+
+\PYG{c+c1}{\PYGZsh{} In[14]:}
+
+
+\PYG{l+m+mi}{2019}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1978}
+
+
+\PYG{c+c1}{\PYGZsh{} \PYGZsh{}\PYGZsh{} Dataset \PYGZsh{}1: Toronto\PYGZus{}temp}
+
+\PYG{c+c1}{\PYGZsh{} In[8]:}
+
+
+\PYG{n}{tt}
+
+
+\PYG{c+c1}{\PYGZsh{} In[4]:}
+
+
+\PYG{c+c1}{\PYGZsh{} Source: https://www.kaggle.com/rainbowgirl/climate\PYGZhy{}data\PYGZhy{}toronto\PYGZhy{}19372018}
+\PYG{n}{tt} \PYG{o}{=} \PYG{n}{pd}\PYG{o}{.}\PYG{n}{read\PYGZus{}csv}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}./data/Toronto\PYGZus{}temp.csv\PYGZsq{}}\PYG{p}{)}
+\PYG{n}{tt} \PYG{o}{=} \PYG{n}{tt}\PYG{p}{[}\PYG{n}{tt}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}Day\PYGZsq{}}\PYG{p}{]} \PYG{o}{==} \PYG{l+m+mi}{1}\PYG{p}{]}
+\PYG{n}{tt}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}Year\PYGZsq{}}\PYG{p}{]} \PYG{o}{=} \PYG{n}{tt}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}Year\PYGZsq{}}\PYG{p}{]}\PYG{o}{.}\PYG{n}{replace}\PYG{p}{(\PYGZob{}}\PYG{l+s+s1}{\PYGZsq{}2,013\PYGZsq{}}\PYG{p}{:}\PYG{l+s+s1}{\PYGZsq{}2013\PYGZsq{}}\PYG{p}{,}
+\PYG{l+s+s1}{\PYGZsq{}2,014\PYGZsq{}}\PYG{p}{:}\PYG{l+s+s1}{\PYGZsq{}2014\PYGZsq{}}\PYG{p}{,}
+\PYG{l+s+s1}{\PYGZsq{}2,015\PYGZsq{}}\PYG{p}{:}\PYG{l+s+s1}{\PYGZsq{}2015\PYGZsq{}}\PYG{p}{,}
+\PYG{l+s+s1}{\PYGZsq{}2,016\PYGZsq{}}\PYG{p}{:}\PYG{l+s+s1}{\PYGZsq{}2016\PYGZsq{}}\PYG{p}{,}
+\PYG{l+s+s1}{\PYGZsq{}2,017\PYGZsq{}}\PYG{p}{:}\PYG{l+s+s1}{\PYGZsq{}2017\PYGZsq{}}\PYG{p}{,}
+\PYG{l+s+s1}{\PYGZsq{}2,018\PYGZsq{}}\PYG{p}{:}\PYG{l+s+s1}{\PYGZsq{}2018\PYGZsq{}}\PYG{p}{\PYGZcb{})}
+\PYG{c+c1}{\PYGZsh{} tt.groupby(\PYGZsq{}Year\PYGZsq{}).count()}
+\PYG{n}{tt} \PYG{o}{=} \PYG{n}{tt}\PYG{p}{[(}\PYG{n}{tt}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}Year\PYGZsq{}}\PYG{p}{]} \PYG{o}{!=} \PYG{l+s+s1}{\PYGZsq{}1937\PYGZsq{}}\PYG{p}{)]}
+\PYG{n}{ttt} \PYG{o}{=} \PYG{n}{tt}\PYG{o}{.}\PYG{n}{groupby}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}Year\PYGZsq{}}\PYG{p}{)}\PYG{o}{.}\PYG{n}{count}\PYG{p}{()}
+\PYG{c+c1}{\PYGZsh{}ttt.head(50)}
+\PYG{c+c1}{\PYGZsh{}tt.groupby(\PYGZsq{}Year\PYGZsq{}).count().tail(50)}
+\PYG{n}{meantt} \PYG{o}{=} \PYG{n}{tt}\PYG{o}{.}\PYG{n}{groupby}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}Year\PYGZsq{}}\PYG{p}{)}\PYG{o}{.}\PYG{n}{mean}\PYG{p}{()[}\PYG{l+s+s1}{\PYGZsq{}Mean Temp (C)\PYGZsq{}}\PYG{p}{]}
+\PYG{n}{meantt}
+\PYG{c+c1}{\PYGZsh{}meantt.index}
+\PYG{c+c1}{\PYGZsh{}meantt}
+\PYG{n}{meantt}\PYG{o}{.}\PYG{n}{sort\PYGZus{}index}\PYG{p}{(}\PYG{n}{inplace}\PYG{o}{=}\PYG{k+kc}{True}\PYG{p}{)}
+
+\PYG{n}{plt}\PYG{o}{.}\PYG{n}{xlabel}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}Years\PYGZsq{}}\PYG{p}{)}
+\PYG{n}{plt}\PYG{o}{.}\PYG{n}{ylabel}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}Temperature (C)\PYGZsq{}}\PYG{p}{)}
+\PYG{n}{plt}\PYG{o}{.}\PYG{n}{xticks}\PYG{p}{(}\PYG{n}{np}\PYG{o}{.}\PYG{n}{array}\PYG{p}{(}\PYG{n+nb}{range}\PYG{p}{(}\PYG{l+m+mi}{0}\PYG{p}{,}\PYG{n}{meantt}\PYG{o}{.}\PYG{n}{size}\PYG{p}{,}\PYG{l+m+mi}{10}\PYG{p}{)))}
+\PYG{n}{plt}\PYG{o}{.}\PYG{n}{scatter}\PYG{p}{(}\PYG{n}{meantt}\PYG{o}{.}\PYG{n}{index}\PYG{p}{,} \PYG{n}{meantt}\PYG{p}{)}
+
+\PYG{n+nb}{print}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}start : \PYGZsq{}} \PYG{o}{+} \PYG{n}{meantt}\PYG{o}{.}\PYG{n}{index}\PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{])}
+\PYG{n+nb}{print}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}end : \PYGZsq{}} \PYG{o}{+} \PYG{n}{meantt}\PYG{o}{.}\PYG{n}{index}\PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{])}
+
+\PYG{n}{new\PYGZus{}row} \PYG{o}{=} \PYG{n}{pd}\PYG{o}{.}\PYG{n}{Series}\PYG{p}{(\PYGZob{}}\PYG{l+s+s1}{\PYGZsq{}Mean Temp (C)\PYGZsq{}} \PYG{p}{:} \PYG{l+m+mf}{0.555556}\PYG{p}{,} \PYG{l+s+s1}{\PYGZsq{}Year\PYGZsq{}}\PYG{p}{:} \PYG{l+s+s1}{\PYGZsq{}2018\PYGZsq{}}\PYG{p}{,} \PYG{l+s+s1}{\PYGZsq{}Month\PYGZsq{}}\PYG{p}{:}\PYG{l+m+mi}{12}\PYG{p}{\PYGZcb{})}
+\PYG{n}{tt} \PYG{o}{=} \PYG{n}{tt}\PYG{o}{.}\PYG{n}{append}\PYG{p}{(}\PYG{n}{new\PYGZus{}row}\PYG{p}{,} \PYG{n}{ignore\PYGZus{}index}\PYG{o}{=}\PYG{k+kc}{True}\PYG{p}{)}
+\PYG{n}{tt}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}Year\PYGZsq{}}\PYG{p}{]} \PYG{o}{=} \PYG{n}{tt}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}Year\PYGZsq{}}\PYG{p}{]}\PYG{o}{.}\PYG{n}{astype}\PYG{p}{(}\PYG{n+nb}{int}\PYG{p}{)}
+\PYG{n}{mean\PYGZus{}temp\PYGZus{}monthly} \PYG{o}{=} \PYG{n}{tt}\PYG{p}{[[}\PYG{l+s+s1}{\PYGZsq{}Year\PYGZsq{}}\PYG{p}{,}\PYG{l+s+s1}{\PYGZsq{}Month\PYGZsq{}}\PYG{p}{,}\PYG{l+s+s1}{\PYGZsq{}Mean Temp (C)\PYGZsq{}}\PYG{p}{]]}\PYG{o}{.}\PYG{n}{set\PYGZus{}index}\PYG{p}{([}\PYG{l+s+s1}{\PYGZsq{}Year\PYGZsq{}}\PYG{p}{,}\PYG{l+s+s1}{\PYGZsq{}Month\PYGZsq{}}\PYG{p}{])}\PYG{o}{.}\PYG{n}{sort\PYGZus{}index}\PYG{p}{()}
+\PYG{c+c1}{\PYGZsh{} mean\PYGZus{}temp\PYGZus{}monthly}
+\PYG{n}{mean\PYGZus{}temp\PYGZus{}monthly} \PYG{o}{=} \PYG{n}{mean\PYGZus{}temp\PYGZus{}monthly}\PYG{p}{[}\PYG{n}{mean\PYGZus{}temp\PYGZus{}monthly}\PYG{o}{.}\PYG{n}{index}\PYG{o}{.}\PYG{n}{get\PYGZus{}level\PYGZus{}values}\PYG{p}{(}\PYG{l+m+mi}{0}\PYG{p}{)}\PYG{o}{.}\PYG{n}{astype}\PYG{p}{(}\PYG{n+nb}{int}\PYG{p}{)} \PYG{o}{\PYGZgt{}=} \PYG{l+m+mi}{1979} \PYG{p}{]}
+\PYG{n}{mean\PYGZus{}temp\PYGZus{}monthly}
+
+
+\PYG{c+c1}{\PYGZsh{} In[6]:}
+
+
+\PYG{n}{tt}
+
+
+\PYG{c+c1}{\PYGZsh{} \PYGZsh{}\PYGZsh{} Dataset \PYGZsh{}3: seaice2}
+
+\PYG{c+c1}{\PYGZsh{} Completer version of dataset \PYGZsh{}1}
+\PYG{c+c1}{\PYGZsh{}}
+\PYG{c+c1}{\PYGZsh{} source: https://nsidc.org/arcticseaicenews/sea\PYGZhy{}ice\PYGZhy{}tools/}
+
+\PYG{c+c1}{\PYGZsh{} In[13]:}
+
+
+\PYG{n}{ice2}\PYG{o}{.}\PYG{n}{mean}\PYG{p}{()[}\PYG{l+m+mi}{1}\PYG{p}{:}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{2}\PYG{p}{]}
+
+
+\PYG{c+c1}{\PYGZsh{} In[17]:}
+
+
+\PYG{n}{ice2\PYGZus{}mean}
+
+
+\PYG{c+c1}{\PYGZsh{} In[19]:}
+
+
+\PYG{n}{ice2}\PYG{o}{.}\PYG{n}{mean}\PYG{p}{()[}\PYG{l+m+mi}{1}\PYG{p}{:}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{2}\PYG{p}{]}
+
+
+\PYG{c+c1}{\PYGZsh{} In[24]:}
+
+
+\PYG{n}{ice2}\PYG{o}{.}\PYG{n}{mean}\PYG{p}{()}
+
+
+\PYG{c+c1}{\PYGZsh{} In[26]:}
+
+
+\PYG{n}{ice2}
+
+
+\PYG{c+c1}{\PYGZsh{} In[27]:}
+
+
+\PYG{n}{ice2} \PYG{o}{=} \PYG{n}{pd}\PYG{o}{.}\PYG{n}{read\PYGZus{}csv}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}./data/seaice2.csv\PYGZsq{}}\PYG{p}{)}
+\PYG{c+c1}{\PYGZsh{} ice2}
+\PYG{n}{ice2\PYGZus{}mean} \PYG{o}{=} \PYG{n}{ice2}\PYG{o}{.}\PYG{n}{mean}\PYG{p}{()[}\PYG{l+m+mi}{1}\PYG{p}{:}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{2}\PYG{p}{]}
+\PYG{n}{ice2\PYGZus{}mean}
+\PYG{n}{ice2\PYGZus{}mean}\PYG{o}{.}\PYG{n}{index} \PYG{o}{=} \PYG{n}{ice2\PYGZus{}mean}\PYG{o}{.}\PYG{n}{index}\PYG{o}{.}\PYG{n}{values}\PYG{o}{.}\PYG{n}{astype}\PYG{p}{(}\PYG{n+nb}{int}\PYG{p}{)}
+
+\PYG{n}{plt}\PYG{o}{.}\PYG{n}{title}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}Yearly ice extent\PYGZsq{}}\PYG{p}{)}
+\PYG{n}{plt}\PYG{o}{.}\PYG{n}{scatter}\PYG{p}{(}\PYG{n}{ice2\PYGZus{}mean}\PYG{o}{.}\PYG{n}{index}\PYG{p}{,}\PYG{n}{ice2\PYGZus{}mean}\PYG{p}{)}
+\PYG{n}{plt}\PYG{o}{.}\PYG{n}{xlabel}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}Years\PYGZsq{}}\PYG{p}{)}
+\PYG{n}{plt}\PYG{o}{.}\PYG{n}{ylabel}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}Extent\PYGZsq{}}\PYG{p}{)}
+\PYG{n}{plt}\PYG{o}{.}\PYG{n}{show}\PYG{p}{()}
+
+\PYG{c+c1}{\PYGZsh{} ice2[\PYGZsq{}2018\PYGZsq{}]}
+\PYG{c+c1}{\PYGZsh{} pd.concat([ice2[\PYGZsq{}2016\PYGZsq{}],ice2[\PYGZsq{}2017\PYGZsq{}],ice2[\PYGZsq{}2018\PYGZsq{}],ice2[\PYGZsq{}2019\PYGZsq{}]]).reset\PYGZus{}index()[0]}
+\PYG{c+c1}{\PYGZsh{} ice2[[\PYGZsq{}2018\PYGZsq{}]].append(ice2[[\PYGZsq{}2019\PYGZsq{}]])}
+\PYG{n}{ice2}\PYG{o}{.}\PYG{n}{rename}\PYG{p}{(}\PYG{n}{columns}\PYG{o}{=}\PYG{p}{\PYGZob{}}\PYG{l+s+s1}{\PYGZsq{}Unnamed: 0\PYGZsq{}} \PYG{p}{:} \PYG{l+s+s1}{\PYGZsq{}Month\PYGZsq{}}\PYG{p}{,} \PYG{l+s+s1}{\PYGZsq{}Unnamed: 1\PYGZsq{}} \PYG{p}{:} \PYG{l+s+s1}{\PYGZsq{}Day\PYGZsq{}}\PYG{p}{\PYGZcb{},} \PYG{n}{inplace} \PYG{o}{=} \PYG{k+kc}{True}\PYG{p}{)}
+\PYG{n}{ice2}\PYG{o}{.}\PYG{n}{drop}\PYG{p}{([}\PYG{l+s+s1}{\PYGZsq{} \PYGZsq{}}\PYG{p}{,}\PYG{l+s+s1}{\PYGZsq{}1981\PYGZhy{}2010\PYGZsq{}}\PYG{p}{,}\PYG{l+s+s1}{\PYGZsq{}Day\PYGZsq{}}\PYG{p}{,}\PYG{l+s+s1}{\PYGZsq{}1978\PYGZsq{}}\PYG{p}{,}\PYG{l+s+s1}{\PYGZsq{}2020\PYGZsq{}}\PYG{p}{],}\PYG{n}{axis}\PYG{o}{=}\PYG{l+m+mi}{1}\PYG{p}{,}\PYG{n}{inplace}\PYG{o}{=}\PYG{k+kc}{True}\PYG{p}{)}
+\PYG{n}{values} \PYG{o}{=} \PYG{n}{ice2}\PYG{o}{.}\PYG{n}{values}
+\PYG{n}{i} \PYG{o}{=} \PYG{l+m+mi}{0}
+\PYG{k}{for} \PYG{n}{row} \PYG{o+ow}{in} \PYG{n}{values} \PYG{p}{:}
+\PYG{k}{if} \PYG{n+nb}{type}\PYG{p}{(}\PYG{n}{row}\PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{])} \PYG{o}{!=} \PYG{n+nb}{str} \PYG{p}{:}
+\PYG{n}{values}\PYG{p}{[}\PYG{n}{i}\PYG{p}{][}\PYG{l+m+mi}{0}\PYG{p}{]} \PYG{o}{=} \PYG{n}{month}
+\PYG{k}{else}\PYG{p}{:}
+\PYG{n}{month} \PYG{o}{=} \PYG{n}{row}\PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{]}
+\PYG{n}{i} \PYG{o}{=} \PYG{n}{i} \PYG{o}{+}\PYG{l+m+mi}{1}
+\PYG{c+c1}{\PYGZsh{} ice2.columns.values}
+\PYG{n}{ice2\PYGZus{}clean} \PYG{o}{=} \PYG{n}{pd}\PYG{o}{.}\PYG{n}{DataFrame}\PYG{p}{(}\PYG{n}{values}\PYG{p}{)}
+\PYG{n}{ice2\PYGZus{}clean}\PYG{o}{.}\PYG{n}{columns} \PYG{o}{=} \PYG{n}{ice2}\PYG{o}{.}\PYG{n}{columns}\PYG{o}{.}\PYG{n}{values}
+\PYG{c+c1}{\PYGZsh{} ice2\PYGZus{}clean.head(5)}
+\PYG{n}{ice2\PYGZus{}monthly\PYGZus{}mean} \PYG{o}{=} \PYG{n}{ice2\PYGZus{}clean}\PYG{o}{.}\PYG{n}{set\PYGZus{}index}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}Month\PYGZsq{}}\PYG{p}{)}\PYG{o}{.}\PYG{n}{astype}\PYG{p}{(}\PYG{n+nb}{float}\PYG{p}{)}\PYG{o}{.}\PYG{n}{groupby}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}Month\PYGZsq{}}\PYG{p}{,}\PYG{n}{sort}\PYG{o}{=}\PYG{k+kc}{False}\PYG{p}{)}\PYG{o}{.}\PYG{n}{mean}\PYG{p}{()}
+\PYG{c+c1}{\PYGZsh{} ice2\PYGZus{}monthly\PYGZus{}mean}
+\PYG{c+c1}{\PYGZsh{} ice2\PYGZus{}monthly\PYGZus{}mean.T.stack().index.get\PYGZus{}level\PYGZus{}values(0)}
+\PYG{c+c1}{\PYGZsh{} ice2\PYGZus{}monthly\PYGZus{}mean.T.stack().reset\PYGZus{}index(level=[\PYGZsq{}Month\PYGZsq{}]).drop(columns=[\PYGZsq{}Month\PYGZsq{}])}
+\PYG{n}{ice2\PYGZus{}monthly\PYGZus{}mean\PYGZus{}chron} \PYG{o}{=} \PYG{n}{ice2\PYGZus{}monthly\PYGZus{}mean}\PYG{o}{.}\PYG{n}{T}\PYG{o}{.}\PYG{n}{stack}\PYG{p}{()}\PYG{o}{.}\PYG{n}{reset\PYGZus{}index}\PYG{p}{(}\PYG{n}{level}\PYG{o}{=}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}Month\PYGZsq{}}\PYG{p}{])}\PYG{o}{.}\PYG{n}{drop}\PYG{p}{(}\PYG{n}{columns}\PYG{o}{=}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}Month\PYGZsq{}}\PYG{p}{])}
+\PYG{c+c1}{\PYGZsh{} ice2.columns.size}
+\PYG{n}{plt}\PYG{o}{.}\PYG{n}{title}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}Monthly ice extent\PYGZsq{}}\PYG{p}{)}
+\PYG{n}{plt}\PYG{o}{.}\PYG{n}{plot}\PYG{p}{(}\PYG{n}{ice2\PYGZus{}monthly\PYGZus{}mean\PYGZus{}chron}\PYG{o}{.}\PYG{n}{values}\PYG{p}{)}
+\PYG{n}{plt}\PYG{o}{.}\PYG{n}{xticks}\PYG{p}{(}\PYG{n}{np}\PYG{o}{.}\PYG{n}{array}\PYG{p}{(}\PYG{n+nb}{range}\PYG{p}{(}\PYG{l+m+mi}{0}\PYG{p}{,}\PYG{l+m+mi}{500}\PYG{p}{,}\PYG{l+m+mi}{75}\PYG{p}{)))}
+\PYG{n}{plt}\PYG{o}{.}\PYG{n}{xlabel}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}Cumulative month\PYGZsq{}}\PYG{p}{)}
+\PYG{n}{plt}\PYG{o}{.}\PYG{n}{ylabel}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}Extent\PYGZsq{}}\PYG{p}{)}
+\PYG{n}{plt}\PYG{o}{.}\PYG{n}{show}\PYG{p}{()}
+
+\PYG{c+c1}{\PYGZsh{} np.unique(ice2\PYGZus{}monthly\PYGZus{}mean\PYGZus{}chron.index.values).size*12}
+\PYG{n+nb}{print}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}from \PYGZsq{}} \PYG{o}{+} \PYG{n}{ice2\PYGZus{}monthly\PYGZus{}mean\PYGZus{}chron}\PYG{o}{.}\PYG{n}{index}\PYG{o}{.}\PYG{n}{values}\PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{]} \PYG{o}{+} \PYG{l+s+s1}{\PYGZsq{} until \PYGZsq{}} \PYG{o}{+} \PYG{n}{ice2\PYGZus{}monthly\PYGZus{}mean\PYGZus{}chron}\PYG{o}{.}\PYG{n}{index}\PYG{o}{.}\PYG{n}{values}\PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{])}
+\PYG{n}{ice2\PYGZus{}monthly\PYGZus{}mean\PYGZus{}chron} \PYG{o}{=} \PYG{n}{ice2\PYGZus{}monthly\PYGZus{}mean}\PYG{o}{.}\PYG{n}{T}\PYG{o}{.}\PYG{n}{stack}\PYG{p}{()}\PYG{o}{.}\PYG{n}{reset\PYGZus{}index}\PYG{p}{(}\PYG{n}{level}\PYG{o}{=}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}Month\PYGZsq{}}\PYG{p}{])}\PYG{o}{.}\PYG{n}{drop}\PYG{p}{(}\PYG{n}{columns}\PYG{o}{=}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}Month\PYGZsq{}}\PYG{p}{])}
+\PYG{n}{ice2\PYGZus{}monthly\PYGZus{}mean\PYGZus{}chron}\PYG{o}{.}\PYG{n}{columns} \PYG{o}{=} \PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}ice\PYGZus{}extent\PYGZsq{}}\PYG{p}{]}
+\PYG{n}{ice2\PYGZus{}monthly\PYGZus{}mean\PYGZus{}chron}
+
+
+\PYG{c+c1}{\PYGZsh{} \PYGZsh{} Dataset Combination}
+
+\PYG{c+c1}{\PYGZsh{} In[54]:}
+
+
+\PYG{n}{ice2\PYGZus{}monthly\PYGZus{}mean\PYGZus{}chron\PYGZus{}cut} \PYG{o}{=} \PYG{n}{ice2\PYGZus{}monthly\PYGZus{}mean\PYGZus{}chron}\PYG{p}{[:}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{12}\PYG{p}{]}
+\PYG{c+c1}{\PYGZsh{} ice2\PYGZus{}monthly\PYGZus{}mean\PYGZus{}chron}
+\PYG{c+c1}{\PYGZsh{} ice2\PYGZus{}monthly\PYGZus{}mean\PYGZus{}chron\PYGZus{}cut}
+\PYG{c+c1}{\PYGZsh{} mean\PYGZus{}temp\PYGZus{}monthly}
+\PYG{c+c1}{\PYGZsh{} ice2\PYGZus{}monthly\PYGZus{}mean\PYGZus{}chron\PYGZus{}cut}
+\PYG{n}{combined} \PYG{o}{=} \PYG{n}{mean\PYGZus{}temp\PYGZus{}monthly}\PYG{p}{[}\PYG{n}{mean\PYGZus{}temp\PYGZus{}monthly}\PYG{o}{.}\PYG{n}{index}\PYG{o}{.}\PYG{n}{get\PYGZus{}level\PYGZus{}values}\PYG{p}{(}\PYG{l+m+mi}{0}\PYG{p}{)} \PYG{o}{\PYGZgt{}=} \PYG{l+m+mi}{1979}\PYG{p}{]}
+\PYG{n}{combined}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}ice\PYGZus{}extent\PYGZsq{}}\PYG{p}{]} \PYG{o}{=} \PYG{n}{ice2\PYGZus{}monthly\PYGZus{}mean\PYGZus{}chron\PYGZus{}cut}\PYG{o}{.}\PYG{n}{values}
+\PYG{c+c1}{\PYGZsh{} combined}
+\PYG{n}{combined}\PYG{o}{.}\PYG{n}{rename}\PYG{p}{(}\PYG{n}{columns}\PYG{o}{=}\PYG{p}{\PYGZob{}}\PYG{l+s+s1}{\PYGZsq{}Mean Temp (C)\PYGZsq{}}\PYG{p}{:} \PYG{l+s+s1}{\PYGZsq{}mean\PYGZus{}temp\PYGZsq{}}\PYG{p}{\PYGZcb{},} \PYG{n}{inplace}\PYG{o}{=}\PYG{k+kc}{True}\PYG{p}{)}
+\PYG{n}{dataframe\PYGZus{}monthly} \PYG{o}{=} \PYG{n}{combined}
+\PYG{c+c1}{\PYGZsh{} dataframe\PYGZus{}monthly}
+\PYG{c+c1}{\PYGZsh{} dataframe\PYGZus{}monthly[[\PYGZsq{}mean\PYGZus{}temp\PYGZsq{}]]}
+\PYG{n}{plt}\PYG{o}{.}\PYG{n}{plot}\PYG{p}{(}\PYG{n}{dataframe\PYGZus{}monthly}\PYG{p}{[[}\PYG{l+s+s1}{\PYGZsq{}mean\PYGZus{}temp\PYGZsq{}}\PYG{p}{]]}\PYG{o}{.}\PYG{n}{values}\PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{24}\PYG{p}{:],}\PYG{n}{label}\PYG{o}{=}\PYG{l+s+s1}{\PYGZsq{}temperature\PYGZsq{}}\PYG{p}{)}
+\PYG{n}{plt}\PYG{o}{.}\PYG{n}{plot}\PYG{p}{(}\PYG{n}{dataframe\PYGZus{}monthly}\PYG{p}{[[}\PYG{l+s+s1}{\PYGZsq{}ice\PYGZus{}extent\PYGZsq{}}\PYG{p}{]]}\PYG{o}{.}\PYG{n}{values}\PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{24}\PYG{p}{:],}\PYG{n}{label}\PYG{o}{=}\PYG{l+s+s1}{\PYGZsq{}ice extent\PYGZsq{}}\PYG{p}{)}
+\PYG{n}{plt}\PYG{o}{.}\PYG{n}{legend}\PYG{p}{()}
+\PYG{n}{plt}\PYG{o}{.}\PYG{n}{show}\PYG{p}{()}
+\PYG{n}{dataframe\PYGZus{}yearly} \PYG{o}{=} \PYG{n}{combined}\PYG{o}{.}\PYG{n}{groupby}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}Year\PYGZsq{}}\PYG{p}{)}\PYG{o}{.}\PYG{n}{mean}\PYG{p}{()}
+\PYG{c+c1}{\PYGZsh{} dataframe\PYGZus{}yearly}
+\PYG{c+c1}{\PYGZsh{} dataframe\PYGZus{}monthly[[\PYGZsq{}mean\PYGZus{}temp\PYGZsq{}]].values}
+\PYG{n}{plt}\PYG{o}{.}\PYG{n}{plot}\PYG{p}{(}\PYG{n}{dataframe\PYGZus{}monthly}\PYG{p}{[[}\PYG{l+s+s1}{\PYGZsq{}mean\PYGZus{}temp\PYGZsq{}}\PYG{p}{]]}\PYG{o}{.}\PYG{n}{values}\PYG{p}{,}\PYG{n}{label}\PYG{o}{=}\PYG{l+s+s1}{\PYGZsq{}temperature\PYGZsq{}}\PYG{p}{)}
+\PYG{n}{plt}\PYG{o}{.}\PYG{n}{plot}\PYG{p}{(}\PYG{n}{dataframe\PYGZus{}monthly}\PYG{p}{[[}\PYG{l+s+s1}{\PYGZsq{}ice\PYGZus{}extent\PYGZsq{}}\PYG{p}{]]}\PYG{o}{.}\PYG{n}{values}\PYG{p}{,}\PYG{n}{label}\PYG{o}{=}\PYG{l+s+s1}{\PYGZsq{}ice extent\PYGZsq{}}\PYG{p}{)}
+\PYG{n}{plt}\PYG{o}{.}\PYG{n}{legend}\PYG{p}{()}
+\PYG{n}{dataframe\PYGZus{}monthly}\PYG{o}{.}\PYG{n}{to\PYGZus{}csv}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}./data/dataframe\PYGZus{}monthly.csv\PYGZsq{}}\PYG{p}{)}
+\PYG{n}{dataframe\PYGZus{}yearly}\PYG{o}{.}\PYG{n}{to\PYGZus{}csv}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}./data/dataframe\PYGZus{}yearly.csv\PYGZsq{}}\PYG{p}{)}
+\end{Verbatim}

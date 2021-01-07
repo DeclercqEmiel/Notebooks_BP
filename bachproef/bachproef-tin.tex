@@ -19,6 +19,8 @@
 \usepackage{graphicx}
 \usepackage{wrapfig}
 \usepackage{titlesec}
+\usepackage{hyperref}
+
 
 
 \titleformat*{\section}{\LARGE\bfseries}
@@ -38,7 +40,7 @@
 % TODO: Vul dit aan met je eigen info:
 
 % De titel van het rapport/bachelorproef
-\title{Vergelijkende studie van voorspellingsmodellen voor tijdreeksen}
+\title{Vergelijkende studie van ARIMA-, LSTM- en Prophet-voorspellingsmodellen van univariate en multivariate, seizoensgebonden en niet-seizoensgebonden tijdreeksen}
 
 % Je eigen naam
 \author{Emiel Declercq}
@@ -53,7 +55,7 @@
 % Indien je bachelorproef in opdracht van/in samenwerking met een bedrijf of
 % externe organisatie geschreven is, geef je hier de naam. Zoniet laat je dit
 % zoals het is.
-\instelling{}
+\instelling{Hogeschool Gent}
 
 % Academiejaar
 \academiejaar{2020-2021}
@@ -117,8 +119,8 @@
 % om bijvoorbeeld de inleiding en/of stand van zaken over meerdere hoofdstukken
 % te verspreiden!
 
-%%%\input{inleiding}
-%%%\input{standvanzaken}
+\input{inleiding}
+\input{standvanzaken}
 \input{methodologie}
 
 
@@ -130,14 +132,14 @@
 %\input{...}
 %...
 
-%\input{conclusie}
+\input{conclusie}
 
 %%=============================================================================
 %% Bijlagen
 %%=============================================================================
 
-%%%\appendix
-%%%\renewcommand{\chaptername}{Appendix}
+\appendix
+\renewcommand{\chaptername}{Appendix}
 
 %%---------- Onderzoeksvoorstel -----------------------------------------------
 
@@ -148,18 +150,15 @@
 % Verwijzing naar het bestand met de inhoud van het onderzoeksvoorstel
 
 
-%%%\input{../voorstel_v2/voorstel-inhoud}
+\input{voorstel_v2/voorstel-inhoud}
 
 
 
 %%---------- Andere bijlagen --------------------------------------------------
 % TODO: Voeg hier eventuele andere bijlagen toe
-%%%\input{/broncode}
+\input{broncode}
 
 %%---------- Referentielijst --------------------------------------------------
-
-
-
-%%%\printbibliography[heading=bibintoc]
+\printbibliography[heading=bibintoc]
 
 \end{document}

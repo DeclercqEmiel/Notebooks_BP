@@ -1,0 +1,17 @@
+[0] Config.pm:304> INFO - This is Biber 2.12
+[0] Config.pm:307> INFO - Logfile is 'naam_voornaam_voorstel.blg'
+[24] biber-MSWIN64:315> INFO - === 
+[45] Biber.pm:371> INFO - Reading 'naam_voornaam_voorstel.bcf'
+[128] Biber.pm:889> INFO - Found 2 citekeys in bib section 0
+[142] Biber.pm:4093> INFO - Processing section 0
+[156] Biber.pm:4254> INFO - Looking for bibtex format file 'voorstel.bib' for section 0
+[158] bibtex.pm:1523> INFO - LaTeX decoding ...
+[173] bibtex.pm:1340> INFO - Found BibTeX data source 'voorstel.bib'
+[174] Utils.pm:193> WARN - Duplicate entry key: 'Kaggle' in file 'voorstel.bib', skipping ...
+[196] UCollate.pm:68> INFO - Overriding locale 'nl-NL' defaults 'variable = shifted' with 'variable = non-ignorable'
+[196] UCollate.pm:68> INFO - Overriding locale 'nl-NL' defaults 'normalization = NFD' with 'normalization = prenormalized'
+[196] Biber.pm:3921> INFO - Sorting list 'apa/global//global/global' of type 'entry' with template 'apa' and locale 'nl-NL'
+[196] Biber.pm:3927> INFO - No sort tailoring available for locale 'nl-NL'
+[205] bbl.pm:636> INFO - Writing 'naam_voornaam_voorstel.bbl' with encoding 'UTF-8'
+[207] bbl.pm:739> INFO - Output to naam_voornaam_voorstel.bbl
+[207] Biber.pm:110> INFO - WARNINGS: 1

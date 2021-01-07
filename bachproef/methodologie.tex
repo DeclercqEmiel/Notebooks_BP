@@ -583,7 +583,7 @@ De bovenstaande code zal leiden tot de uitvoer die zichtbaar is op figuur\ref{fi
     \centering
     \caption{Resultaat finale iteratie ARIMA}
     \label{fig:uvnsarima}
-    \includegraphics[width=0.7\linewidth]{uv_ns_ARIMA}
+    \includegraphics[width=1\linewidth]{uv_ns_ARIMA}
 \end{figure}
 
 \clearpage
@@ -761,7 +761,7 @@ Dit blijkt ook wanneer deze code meerdere malen doorlopen wordt aangezien er ver
     \centering
     \caption{Grafische weergave verschil in MAE's bij verschillende hyperparameters met MAE op de y-as}
     \label{fig:uvnslstmbar}
-    \includegraphics[width=0.7\linewidth]{uv_ns_LSTM_bar}
+    \includegraphics[width=1\linewidth]{uv_ns_LSTM_bar}
 \end{figure}
 
 Om verder te gaan zullen de waarden 1 voor het aantal neuronen gebruikt worden, 0 voor de beste dropout rate en 8 voor de batch size. 
@@ -839,7 +839,7 @@ De bovenstaande code zal leiden tot de uitvoer die zichtbaar is op figuur\ref{fi
     \centering
     \caption{Resultaat finale iteratie LSTM}
     \label{fig:uvnslstm}
-    \includegraphics[width=0.7\linewidth]{uv_ns_LSTM}
+    \includegraphics[width=1\linewidth]{uv_ns_LSTM}
 \end{figure}
 
 \clearpage
@@ -940,7 +940,7 @@ Hieruit zal blijken dat de optimale waarde voor de hyperparameter 2 is. Waneer d
     \centering
     \caption{Resultaat finale iteratie Prophet}
     \label{fig:uvnsprophet}
-    \includegraphics[width=0.7\linewidth]{uv_ns_prophet}
+    \includegraphics[width=1\linewidth]{uv_ns_prophet}
 \end{figure}
 
 
@@ -1128,9 +1128,9 @@ Ook wanneer we hier de stationariteit van de data gaan testen krijgen we een lic
 
 \begin{figure}
     \centering
-    \caption{}
+    \caption{Stationariteit van de originele univariate seizoensgebonden data}
     \label{fig:uvsstationarity}
-    \includegraphics[width=0.7\linewidth]{uvsstationarity}
+    \includegraphics[width=1\linewidth]{uvsstationarity}
 \end{figure}
 
 Aangezien hier met seizoensgebonden data gewerkt wordt is het hier naast random walk differentiatie een optie om seizoensdifferentiatie te gebruiken. Dit zal dan ook getest worden. 
@@ -1151,18 +1151,18 @@ Wanneer seizoensdifferentiatie toegepast wordt zal de stationariteit voorgesteld
 
 \begin{figure}
     \centering
-    \caption{}
+    \caption{Stationariteit van de data na seizoensdifferentiatie}
     \label{fig:uvsstationarityseasonal}
-    \includegraphics[width=0.7\linewidth]{uvsstationarityseasonal}
+    \includegraphics[width=1\linewidth]{uvsstationarityseasonal}
 \end{figure}
 
 Daarnaast kan ook nog gewone random walk differentiatie toegepast worden op de data. De stationariteit van deze gedifferentieerde data wordt afgebeeld op figuur\ref{fig:uvsstationarityrw}. Hier wordt vastgesteld dat het gemiddelde een horizontale lijn is. Dit houdt in dat de data zeer stationair is.
 
 \begin{figure}
     \centering
-    \caption{}
+    \caption{Stationariteit van de data na random walk differentiatie}
     \label{fig:uvsstationarityrw}
-    \includegraphics[width=0.7\linewidth]{uvsstationarityrw}
+    \includegraphics[width=1\linewidth]{uvsstationarityrw}
 \end{figure}
 
 
@@ -1256,13 +1256,53 @@ De opstelling zal identiek zijn als de bovenstaande hier zullen de optimale para
     \includegraphics[width=1\linewidth]{uv_s_lstm_s_diff}
 \end{figure}
 
-
+\clearpage
 \subsection{Prophet}
 
-Ook hier verloopt alles bijna analoog met de niet seizoensgebonden variatie worden er hier wel 2 hyperparameters getest
+Ook hier verloopt alles bijna analoog met de niet seizoensgebonden variatie behalve dat er hier wel 2 hyperparameters getest worden, aangezien er hier wel een seizoenseffect aanwezig is kan de de variabele seasonality\textunderscore prior\textunderscore scale ook onderzocht worden. Het laatste resultaat van de reeks wordt weergegeven op Figuur \ref{fig:uvsprophet}.
 
-\subsection{Evaluatie}
+\begin{figure}
+    \centering
+    \caption{Resultaten de voorspellingen voor univariate seizoensgebonden data met Prophet}
+    \label{fig:uvsprophet}
+    \includegraphics[width=1\linewidth]{uv_s_prophet}
+\end{figure}
+
 \clearpage
+\subsection{Evaluatie}
+
+Wanneer we de resultaten afgebeeld op Figuur \ref{fig:uv_s_results} beschouwen kunnen we concluderen dat SARIMA met random walk differentiatie de beste voorspellingen zal treffen wanneer we de gemiddelde MAE beschouwen namelijk 0.219 (x 1 000 000 km\textsuperscript{2}). Ook de laatste voorspelling is de meest accurate van alle modellen. Ook de uitvoeringstijd van SARIMA met random walk differencing is relatief laag enkel de ARIMA modellen zijn sneller maar die zijn een stuk minder accuraat.
+Het SARIMA-model dat werkt met seizoensgedifferentieerde data presteert een stuk slechter met een gemiddelde MAE van 0.360 (x 1 000 000 km\textsuperscript{2})
+\\
+
+Daarnaast presteert het Prophet-model ook goed met een gemiddelde MAE van 0.250 (x 1 000 000 km\textsuperscript{2}) al heeft het wel de op \'{e}\'{e}n na langste uitvoeringstijd. Het ARIMA-model met seizoensdifferentiatie heeft een gemiddelde MAE van 0.328 (x 1 000 000 km\textsuperscript{2}) maar heeft wel de kortste uitvoeringstijd.
+De LSTM modellen scoren beide vrij slecht met hoge uitvoeringstijden dus deze vallen niet aan te raden met deze implementatie om seizoensgebonden tijdreeksen te voorspellen.
+\\
+
+Bij seizoensgebonden data presteren de LSTM- en ARIMA-modellen beter wanneer er aan seizoensdifferentiatie gedaan wordt, maar de implementatie met random walk differentiatie behaalt de beste score bij SARIMAX dus er kan niet gesteld worden dat de ene soort differentiatie altijd effectiever zal zijn dan de andere. De laatste voorspellingen van alle modeltypes worden weergegeven op Figuren \ref{fig:uvsgraph1} en \ref{fig:uvsgraph2}.
+
+
+\begin{figure}
+    \centering
+    \caption{Resultaten van de univariate seizoensgebonden voorspellingen}
+    \label{fig:uv_s_results}
+    \includegraphics[width=0.9\linewidth]{uv_s_results}
+\end{figure}
+
+\begin{figure}
+    \centering
+    \caption{Grafische weergaven van de laatste voorspellingen van univariate seizoensgebonden data (deel 1)}
+    \label{fig:uvsgraph1}
+    \includegraphics[width=1\linewidth]{uv_s_graph1}
+\end{figure}
+
+\begin{figure}
+    \centering
+    \caption{Grafische weergaven van de laatste voorspellingen van univariate seizoensgebonden data (deel 2)}
+    \label{fig:uvsgraph2}
+    \includegraphics[width=1\linewidth]{uv_s_graph2}
+\end{figure}
+
 
 \section{Multivariate niet-seizoensgebonden}
 In dit onderdeel van deze bachelorproef zal onderzocht worden welk van de 3 modellen de beste voorspelling maken voor meervoudige tijdreeksen. Dit houdt in dat het model een tijdreeks krijgt die meerdere features bevat per tijdstap en deze features in verband brengt om tot accuratere voorspellingen te komen. De testset zal dan ook altijd enkel blijven bestaan uit de tijdsstappen die voorspeld moeten worden.
@@ -1368,10 +1408,11 @@ def predict_LSTM(train, test, n_neurons, n_epochs):
     \label{fig:mvnslstm}
     \includegraphics[width=1\linewidth]{mv_ns_LSTM}
 \end{figure}
+\clearpage
 
 \subsection{Evaluation}
 
-Wanneer we de resultaten van de multivariate niet-seizoensgebonden voorspellingen weergegeven op Figuur \ref{fig:mvnsresult} vergelijken kunnen we stellen dat VARMAX het best presteert volgens cross validation maar wel een hogere uitvoeringstijd heeft. Daarnaast zal de laatste voorspelling van het ijsoppervlak door het VARMAX model ook accurater zijn dan dat van het LSTM model. Deze laatste voorspelling wordt grafisch weergegeven op Figuur \ref{fig:mvnsresultgraph}
+Wanneer we de resultaten van de multivariate niet-seizoensgebonden voorspellingen weergegeven op Figuur \ref{fig:mvnsresult} vergelijken kunnen we stellen dat VARMAX het best presteert volgens cross validation maar wel een hogere uitvoeringstijd heeft. Daarnaast zal de laatste voorspelling van het ijsoppervlak door het VARMAX model ook accurater zijn dan dat van het LSTM model. Deze laatste voorspelling wordt grafisch weergegeven op Figuur \ref{fig:mvnsresultgraph}.
 
 \begin{figure}
     \centering
@@ -1391,19 +1432,76 @@ Wanneer we de resultaten van de multivariate niet-seizoensgebonden voorspellinge
 
 \section{Multivariate seizoensgebonden}
 
-De laatste combinatie die getest zal worden is de dataset waar een seizoensverband en een extra variabele aanwezig is. Hier zullen ook, net als bij de niet seizoensgebonden data, enkel VARMAX en LSTM getest worden. Hier zal ook weer cross validation gebruikt worden. Er zal ook weer random walk en seasonal differentiatie gebuikt worden.
+De laatste combinatie die getest zal worden is de dataset waar een seizoensverband en een extra variabele aanwezig is. Deze extra variabele zal andermaal de temperatuur zijn in een dataset die de maandelijkse temperatuur en ijsdikte zal bevatten. Hier zullen ook, net als bij de niet seizoensgebonden data, enkel VARMAX en LSTM getest worden. Hier zal ook weer cross validation gebruikt worden. Er zal ook weer random walk en seasonal differentiatie gebuikt worden.
 
 \subsection{VARMAX}
 \subsubsection{Random walk differentiatie}
 
-Waneer we de hyperparameters bepalen bij dit VARMAX model blijken de parameters (4,1) de optimale waarden te zijn bij een range van 0 tot 5. Wanneer we deze invoeren om een uitgebreider resultaat te krijgen bekomen we de uitvoer die te beschouwen valt op Figuur \ref{}
+Waneer we de hyperparameters bepalen bij dit VARMAX model blijken de parameters (4,1) de optimale waarden te zijn bij een range van 0 tot 5. Wanneer we deze invoeren om een uitgebreider resultaat te krijgen bekomen we de uitvoer die te beschouwen valt op Figuur \ref{fig:mvsvarmaxdiff}.
+
+\begin{figure}
+    \centering
+    \caption{Resultaat VARMAX bij random walk differentiatie}
+    \label{fig:mvsvarmaxdiff}
+    \includegraphics[width=1\linewidth]{mv_s_varmax_diff}
+\end{figure}
+
 
 \subsubsection{Seizoensdifferentiatie}
+De optimale hyperparameters bij het VARMAX model dat opgebouwd wordt op basis van seizoensgedifferentieerde data zijn (0,1) wanneer de range van 0 tot 5 loopt. Het resultaat van dit model wordt afgebeeld op Figuur \ref{fig:mvsvarmaxsdiff}.
+
+
+\begin{figure}
+    \centering
+    \caption{Resultaat VARMAX bij seizoensdifferentiatie}
+    \label{fig:mvsvarmaxsdiff}
+    \includegraphics[width=1\linewidth]{mv_s_varmax_s_diff}
+\end{figure}
+
 
 \subsection{LSTM}
 \subsubsection{Random walk differentiatie}
+De optimale parameters bij Random walk differentiatie en bleken 30 neuronen te zijn en 300 epochs. Een hoger aantal neuronen en epochs zouden leiden tot een beter resultaat aangezien de MAE verlaagde naargelang deze parameters verhoogden maar er moest een grens getrokken worden om de uitvoeringstijd beperkt te houden. Wanneer we het model met de aangegeven parameters analyseren zullen we het resultaat bekomen dat op Figuur \ref{fig:mvslstmdiff}.
+
+\begin{figure}
+    \centering
+    \caption{Resultaat LSTM bij random walk differentiatie}
+    \label{fig:mvslstmdiff}
+    \includegraphics[width=1\linewidth]{mv_s_lstm_diff}
+\end{figure}
+
+
 \subsubsection{Seizoensdifferentiatie}
+De parameters die voor het beste resultaat zorgen bij het LSTM-model en seizoensgedifferentieerde data zijn 1 voor het aantal neuronen en 200 voor het aantal epochs en in tegenstelling tot de random walk differentiatie blijkt het verhogen van deze parameters niet te zorgen voor betere resultaten. Het resultaat van dit model wordt afgebeeld op Figuur \ref{fig:mvslstmsdiff}.
+
+
+\begin{figure}
+    \centering
+    \caption{Resultaat LSTM seizoensdifferentiatie}
+    \label{fig:mvslstmsdiff}
+    \includegraphics[width=1\linewidth]{mv_s_lstm_s_diff}
+\end{figure}
+
+\clearpage
 
 \subsection{Evaluation}
+Wanneer we de resultaten op figuur \ref{fig:mvsresults} beschouwen kunnen we duidelijk aflezen dat LSTM met random walk differencing de laagste gemiddelde fout zal hebben en dus het best zal scoren wanneer we ons baseren op cross validation. Het scoort een stuk beter dan de andere modellen die allemaal een zeer gelijkaardige MAE hebben. Dit model zal echter wel de hoogste uitvoeringstijd hebben. \\
 
+Het VARMAX model met seizoensdifferentiatie zal de beste score behalen wanneer we naar de laatste voorspelling kijken en zal ook de laagste uitvoeringstijd hebben dus dit zou op vlak van uitvoeringssnelheid een goed alternatief zijn. De grafische weergaven van de laatste voorspellingen zijn zichtbaar op Figuur \ref{fig:mvsresultsgraphs}. De waarden tussen de modellen die random walk differentiatie gebruiken zullen ietwat verschillen van degene die gebruik maken van seizoensdifferentiatie aangezien de data met 5 tijdstappen getransformeerd moest worden om tot evenwaardige testsetgroottes te komen. Dit was noodzakelijk om alle modellen met elkaar te vergelijken.
+
+
+\begin{figure}
+    \centering
+    \caption{Resultaten multivariate seizoensgebonden voorspellingsmodellen}
+    \label{fig:mvsresults}
+    \includegraphics[width=0.8\linewidth]{mv_s_results}
+\end{figure}
+
+
+\begin{figure}
+    \centering
+    \caption{Grafische weergaven van de laatste voorspellingen van multivariate seizoensgebonden voorspellingsmodellen}
+    \label{fig:mvsresultsgraphs}
+    \includegraphics[width=1\linewidth]{mv_s_results_graphs}
+\end{figure}
 

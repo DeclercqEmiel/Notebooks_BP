@@ -3,63 +3,127 @@
 \defcounter {refsection}{0}\relax 
 \addvspace {10\p@ }
 \defcounter {refsection}{0}\relax 
-\contentsline {figure}{\numberline {1.1}{\ignorespaces Ruwe invoerdata\relax }}{13}{figure.caption.5}% 
+\addvspace {10\p@ }
 \defcounter {refsection}{0}\relax 
-\contentsline {figure}{\numberline {1.2}{\ignorespaces Grafische weergave jaarlijkse temperatuur\relax }}{13}{figure.caption.6}% 
+\contentsline {figure}{\numberline {2.1}{\ignorespaces Grafische weergave sum of least squares~\autocite {Brown2020}\relax }}{21}{figure.caption.5}% 
 \defcounter {refsection}{0}\relax 
-\contentsline {figure}{\numberline {1.3}{\ignorespaces Resultaat van data formatting\relax }}{14}{figure.caption.7}% 
+\contentsline {figure}{\numberline {2.2}{\ignorespaces Grafische weergaven voorbeelddata voor lineaire regressie~\autocite {Pant2019}\relax }}{22}{figure.caption.7}% 
 \defcounter {refsection}{0}\relax 
-\contentsline {figure}{\numberline {1.4}{\ignorespaces Ruwe data van de jaarlijkse ijsdiktes\relax }}{16}{figure.caption.8}% 
+\contentsline {figure}{\numberline {2.3}{\ignorespaces Voorbeeldtijdreeksen~\autocite {Hyndman2018}\relax }}{24}{figure.caption.8}% 
 \defcounter {refsection}{0}\relax 
-\contentsline {figure}{\numberline {1.5}{\ignorespaces Grafische weergave van de maandelijkse ijsdiktes\relax }}{17}{figure.caption.9}% 
+\contentsline {figure}{\numberline {2.4}{\ignorespaces Voorstelling van een neuron die invoer ontvangt van 3 andere neuronen ~\autocite {Lievens2018a}\relax }}{32}{figure.caption.9}% 
 \defcounter {refsection}{0}\relax 
-\contentsline {figure}{\numberline {1.6}{\ignorespaces Data van de maandelijks ijsdiktes\relax }}{17}{figure.caption.10}% 
+\contentsline {figure}{\numberline {2.5}{\ignorespaces Cel in een neuraal netwerk dat gegevens van een andere cel gebruikt om een nieuw signaal uit te sturen~\autocite {Olah2015}\relax }}{34}{figure.caption.10}% 
 \defcounter {refsection}{0}\relax 
-\contentsline {figure}{\numberline {1.7}{\ignorespaces Grafische weergave van de ijsdikte en de temperatuur van de laatste 2 jaar\relax }}{19}{figure.caption.11}% 
+\contentsline {figure}{\numberline {2.6}{\ignorespaces Gedetaileerdere figuur van een cel uit een neuraal netwerk dat informatie interpreteert uit een andere cel van het neurale netwerk~\autocite {Olah2015}\relax }}{34}{figure.caption.11}% 
 \defcounter {refsection}{0}\relax 
-\contentsline {figure}{\numberline {1.8}{\ignorespaces Grafische weergave van de ijsdikte en de temperatuur\relax }}{19}{figure.caption.12}% 
+\contentsline {figure}{\numberline {2.7}{\ignorespaces Grafische weergave van de forget layer binnen het neuron~\autocite {Olah2015}\relax }}{35}{figure.caption.12}% 
 \defcounter {refsection}{0}\relax 
-\contentsline {figure}{\numberline {1.9}{\ignorespaces Resultaat test stationarity\relax }}{22}{figure.caption.13}% 
+\contentsline {figure}{\numberline {2.8}{\ignorespaces Grafische weergave van de input gate layer binnen het neuron~\autocite {Olah2015}\relax }}{35}{figure.caption.13}% 
 \defcounter {refsection}{0}\relax 
-\contentsline {figure}{\numberline {1.10}{\ignorespaces Resultaat test stationarity na random walk differencing\relax }}{22}{figure.caption.14}% 
+\contentsline {figure}{\numberline {2.9}{\ignorespaces Grafische weergave van het $2^{de}$ deel van de input gateway~\autocite {Olah2015}\relax }}{35}{figure.caption.14}% 
 \defcounter {refsection}{0}\relax 
-\contentsline {figure}{\numberline {1.11}{\ignorespaces Resultaat finale iteratie ARIMA\relax }}{26}{figure.caption.15}% 
+\contentsline {figure}{\numberline {2.10}{\ignorespaces Grafische weergave van het onderdeel van de cel waarin de input vermenigvuldigd wordt met de tanh van de celtoestand om de outputwaarde te bekomen~\autocite {Olah2015}\relax }}{36}{figure.caption.15}% 
 \defcounter {refsection}{0}\relax 
-\contentsline {figure}{\numberline {1.12}{\ignorespaces Grafische weergave verschil in MAE's bij verschillende hyperparameters met MAE op de y-as\relax }}{30}{figure.caption.16}% 
+\contentsline {figure}{\numberline {2.11}{\ignorespaces Parabolische functie\relax }}{38}{figure.caption.16}% 
 \defcounter {refsection}{0}\relax 
-\contentsline {figure}{\numberline {1.13}{\ignorespaces Resultaat finale iteratie LSTM\relax }}{32}{figure.caption.17}% 
+\contentsline {figure}{\numberline {2.12}{\ignorespaces Een stacked LSTM~\autocite {Brownlee2017b}\relax }}{40}{figure.caption.17}% 
 \defcounter {refsection}{0}\relax 
-\contentsline {figure}{\numberline {1.14}{\ignorespaces Resultaat finale iteratie Prophet\relax }}{35}{figure.caption.18}% 
+\contentsline {figure}{\numberline {2.13}{\ignorespaces Weergave van een bidirectioneel LSTM model~\autocite {Colah2015}\relax }}{41}{figure.caption.18}% 
 \defcounter {refsection}{0}\relax 
-\contentsline {figure}{\numberline {1.15}{\ignorespaces Resultaat van de univariate non-seasonal analyse\relax }}{36}{figure.caption.19}% 
+\contentsline {figure}{\numberline {2.14}{\ignorespaces \textbf {(a)} Gewone LSTM cell, \textbf {(b)} Weergave van een ConvLSTM~\autocite {Rahman2019}\relax }}{41}{figure.caption.19}% 
 \defcounter {refsection}{0}\relax 
-\contentsline {figure}{\numberline {1.16}{\ignorespaces Grafische weergave van de laatste voorspellingen van de univariate non-seasonal analyse\relax }}{37}{figure.caption.20}% 
+\contentsline {figure}{\numberline {2.15}{\ignorespaces Encoder-Decoder Model~\autocite {Brownlee2017a}\relax }}{43}{figure.caption.20}% 
 \defcounter {refsection}{0}\relax 
-\contentsline {figure}{\numberline {1.17}{\ignorespaces \relax }}{39}{figure.caption.21}% 
+\contentsline {figure}{\numberline {2.16}{\ignorespaces Grafische weergave van underfitting en overfitting ~\autocite {Decorte2019}\relax }}{44}{figure.caption.21}% 
 \defcounter {refsection}{0}\relax 
-\contentsline {figure}{\numberline {1.18}{\ignorespaces \relax }}{40}{figure.caption.22}% 
+\contentsline {figure}{\numberline {2.17}{\ignorespaces Grafische weergave van de structuur van een cross-validation tijdreeks~\autocite {Hyndman2018} waarbij 1 tijdreeks zal opgedeeld worden in 20 train- en testreeksen\relax }}{46}{figure.caption.22}% 
 \defcounter {refsection}{0}\relax 
-\contentsline {figure}{\numberline {1.19}{\ignorespaces \relax }}{40}{figure.caption.23}% 
+\addvspace {10\p@ }
 \defcounter {refsection}{0}\relax 
-\contentsline {figure}{\numberline {1.20}{\ignorespaces Resultaat van ARIMA bij random walk differentiatie\relax }}{41}{figure.caption.24}% 
+\contentsline {figure}{\numberline {3.1}{\ignorespaces Ruwe invoerdata\relax }}{49}{figure.caption.23}% 
 \defcounter {refsection}{0}\relax 
-\contentsline {figure}{\numberline {1.21}{\ignorespaces Resultaat van ARIMA bij seizoensdifferentiatie\relax }}{41}{figure.caption.25}% 
+\contentsline {figure}{\numberline {3.2}{\ignorespaces Grafische weergave jaarlijkse temperatuur\relax }}{49}{figure.caption.24}% 
 \defcounter {refsection}{0}\relax 
-\contentsline {figure}{\numberline {1.22}{\ignorespaces Resultaat SARIMAX bij random walk differentiatie\relax }}{42}{figure.caption.26}% 
+\contentsline {figure}{\numberline {3.3}{\ignorespaces Resultaat van data formatting\relax }}{50}{figure.caption.25}% 
 \defcounter {refsection}{0}\relax 
-\contentsline {figure}{\numberline {1.23}{\ignorespaces Resultaat SARIMAX bij seizoensdifferentiatie\relax }}{43}{figure.caption.27}% 
+\contentsline {figure}{\numberline {3.4}{\ignorespaces Ruwe data van de jaarlijkse ijsdiktes\relax }}{52}{figure.caption.26}% 
 \defcounter {refsection}{0}\relax 
-\contentsline {figure}{\numberline {1.24}{\ignorespaces Resultaat LSTM bij seizoensdifferentiatie\relax }}{43}{figure.caption.28}% 
+\contentsline {figure}{\numberline {3.5}{\ignorespaces Grafische weergave van de maandelijkse ijsdiktes\relax }}{53}{figure.caption.27}% 
 \defcounter {refsection}{0}\relax 
-\contentsline {figure}{\numberline {1.25}{\ignorespaces Grafische weergave multivariate tijdreeks zonder seizoenseffect\relax }}{45}{figure.caption.29}% 
+\contentsline {figure}{\numberline {3.6}{\ignorespaces Data van de maandelijks ijsdiktes\relax }}{53}{figure.caption.28}% 
 \defcounter {refsection}{0}\relax 
-\contentsline {figure}{\numberline {1.26}{\ignorespaces Grafische weergave gedifferentieerde multivariate tijdreeks zonder seizoenseffect\relax }}{46}{figure.caption.30}% 
+\contentsline {figure}{\numberline {3.7}{\ignorespaces Grafische weergave van de ijsdikte en de temperatuur van de laatste 2 jaar\relax }}{55}{figure.caption.29}% 
 \defcounter {refsection}{0}\relax 
-\contentsline {figure}{\numberline {1.27}{\ignorespaces Resultaat multivariate voorspelling VARMAX\relax }}{47}{figure.caption.31}% 
+\contentsline {figure}{\numberline {3.8}{\ignorespaces Grafische weergave van de ijsdikte en de temperatuur\relax }}{55}{figure.caption.30}% 
 \defcounter {refsection}{0}\relax 
-\contentsline {figure}{\numberline {1.28}{\ignorespaces Resultaat multivariate voorspelling LSTM\relax }}{49}{figure.caption.32}% 
+\contentsline {figure}{\numberline {3.9}{\ignorespaces Resultaat test stationarity\relax }}{58}{figure.caption.31}% 
 \defcounter {refsection}{0}\relax 
-\contentsline {figure}{\numberline {1.29}{\ignorespaces Resultaten multivariate voorspelling\relax }}{49}{figure.caption.33}% 
+\contentsline {figure}{\numberline {3.10}{\ignorespaces Resultaat test stationarity na random walk differencing\relax }}{58}{figure.caption.32}% 
 \defcounter {refsection}{0}\relax 
-\contentsline {figure}{\numberline {1.30}{\ignorespaces Grafische weergaven van de laatste voorspellingen van de VARMAX en LSTM modellen\relax }}{50}{figure.caption.34}% 
+\contentsline {figure}{\numberline {3.11}{\ignorespaces Resultaat finale iteratie ARIMA\relax }}{62}{figure.caption.33}% 
+\defcounter {refsection}{0}\relax 
+\contentsline {figure}{\numberline {3.12}{\ignorespaces Grafische weergave verschil in MAE's bij verschillende hyperparameters met MAE op de y-as\relax }}{66}{figure.caption.34}% 
+\defcounter {refsection}{0}\relax 
+\contentsline {figure}{\numberline {3.13}{\ignorespaces Resultaat finale iteratie LSTM\relax }}{68}{figure.caption.35}% 
+\defcounter {refsection}{0}\relax 
+\contentsline {figure}{\numberline {3.14}{\ignorespaces Resultaat finale iteratie Prophet\relax }}{71}{figure.caption.36}% 
+\defcounter {refsection}{0}\relax 
+\contentsline {figure}{\numberline {3.15}{\ignorespaces Resultaat van de univariate non-seasonal analyse\relax }}{73}{figure.caption.37}% 
+\defcounter {refsection}{0}\relax 
+\contentsline {figure}{\numberline {3.16}{\ignorespaces Grafische weergave van de laatste voorspellingen van de univariate non-seasonal analyse\relax }}{74}{figure.caption.38}% 
+\defcounter {refsection}{0}\relax 
+\contentsline {figure}{\numberline {3.17}{\ignorespaces Stationariteit van de originele univariate seizoensgebonden data\relax }}{76}{figure.caption.39}% 
+\defcounter {refsection}{0}\relax 
+\contentsline {figure}{\numberline {3.18}{\ignorespaces Stationariteit van de data na seizoensdifferentiatie\relax }}{77}{figure.caption.40}% 
+\defcounter {refsection}{0}\relax 
+\contentsline {figure}{\numberline {3.19}{\ignorespaces Stationariteit van de data na random walk differentiatie\relax }}{77}{figure.caption.41}% 
+\defcounter {refsection}{0}\relax 
+\contentsline {figure}{\numberline {3.20}{\ignorespaces Resultaat van ARIMA bij random walk differentiatie\relax }}{78}{figure.caption.42}% 
+\defcounter {refsection}{0}\relax 
+\contentsline {figure}{\numberline {3.21}{\ignorespaces Resultaat van ARIMA bij seizoensdifferentiatie\relax }}{79}{figure.caption.43}% 
+\defcounter {refsection}{0}\relax 
+\contentsline {figure}{\numberline {3.22}{\ignorespaces Resultaat SARIMAX bij random walk differentiatie\relax }}{79}{figure.caption.44}% 
+\defcounter {refsection}{0}\relax 
+\contentsline {figure}{\numberline {3.23}{\ignorespaces Resultaat SARIMAX bij seizoensdifferentiatie\relax }}{80}{figure.caption.45}% 
+\defcounter {refsection}{0}\relax 
+\contentsline {figure}{\numberline {3.24}{\ignorespaces Resultaat LSTM bij seizoensdifferentiatie\relax }}{80}{figure.caption.46}% 
+\defcounter {refsection}{0}\relax 
+\contentsline {figure}{\numberline {3.25}{\ignorespaces Resultaten de voorspellingen voor univariate seizoensgebonden data met Prophet\relax }}{81}{figure.caption.47}% 
+\defcounter {refsection}{0}\relax 
+\contentsline {figure}{\numberline {3.26}{\ignorespaces Resultaten van de univariate seizoensgebonden voorspellingen\relax }}{82}{figure.caption.48}% 
+\defcounter {refsection}{0}\relax 
+\contentsline {figure}{\numberline {3.27}{\ignorespaces Grafische weergaven van de laatste voorspellingen van univariate seizoensgebonden data (deel 1)\relax }}{83}{figure.caption.49}% 
+\defcounter {refsection}{0}\relax 
+\contentsline {figure}{\numberline {3.28}{\ignorespaces Grafische weergaven van de laatste voorspellingen van univariate seizoensgebonden data (deel 2)\relax }}{84}{figure.caption.50}% 
+\defcounter {refsection}{0}\relax 
+\contentsline {figure}{\numberline {3.29}{\ignorespaces Grafische weergave multivariate tijdreeks zonder seizoenseffect\relax }}{85}{figure.caption.51}% 
+\defcounter {refsection}{0}\relax 
+\contentsline {figure}{\numberline {3.30}{\ignorespaces Grafische weergave gedifferentieerde multivariate tijdreeks zonder seizoenseffect\relax }}{86}{figure.caption.52}% 
+\defcounter {refsection}{0}\relax 
+\contentsline {figure}{\numberline {3.31}{\ignorespaces Resultaat multivariate voorspelling VARMAX\relax }}{86}{figure.caption.53}% 
+\defcounter {refsection}{0}\relax 
+\contentsline {figure}{\numberline {3.32}{\ignorespaces Resultaat multivariate voorspelling LSTM\relax }}{88}{figure.caption.54}% 
+\defcounter {refsection}{0}\relax 
+\contentsline {figure}{\numberline {3.33}{\ignorespaces Resultaten multivariate voorspelling\relax }}{89}{figure.caption.55}% 
+\defcounter {refsection}{0}\relax 
+\contentsline {figure}{\numberline {3.34}{\ignorespaces Grafische weergaven van de laatste voorspellingen van de VARMAX en LSTM modellen\relax }}{89}{figure.caption.56}% 
+\defcounter {refsection}{0}\relax 
+\contentsline {figure}{\numberline {3.35}{\ignorespaces Resultaat VARMAX bij random walk differentiatie\relax }}{90}{figure.caption.57}% 
+\defcounter {refsection}{0}\relax 
+\contentsline {figure}{\numberline {3.36}{\ignorespaces Resultaat VARMAX bij seizoensdifferentiatie\relax }}{91}{figure.caption.58}% 
+\defcounter {refsection}{0}\relax 
+\contentsline {figure}{\numberline {3.37}{\ignorespaces Resultaat LSTM bij random walk differentiatie\relax }}{91}{figure.caption.59}% 
+\defcounter {refsection}{0}\relax 
+\contentsline {figure}{\numberline {3.38}{\ignorespaces Resultaat LSTM seizoensdifferentiatie\relax }}{92}{figure.caption.60}% 
+\defcounter {refsection}{0}\relax 
+\contentsline {figure}{\numberline {3.39}{\ignorespaces Resultaten multivariate seizoensgebonden voorspellingsmodellen\relax }}{93}{figure.caption.61}% 
+\defcounter {refsection}{0}\relax 
+\contentsline {figure}{\numberline {3.40}{\ignorespaces Grafische weergaven van de laatste voorspellingen van multivariate seizoensgebonden voorspellingsmodellen\relax }}{94}{figure.caption.62}% 
+\defcounter {refsection}{0}\relax 
+\addvspace {10\p@ }
+\defcounter {refsection}{0}\relax 
+\addvspace {10\p@ }
+\defcounter {refsection}{0}\relax 
+\addvspace {10\p@ }
 \contentsfinish 

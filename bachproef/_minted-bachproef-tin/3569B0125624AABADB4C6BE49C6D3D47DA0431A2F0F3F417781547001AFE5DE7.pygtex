@@ -1,0 +1,444 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{c+ch}{\PYGZsh{}!/usr/bin/env python}
+\PYG{c+c1}{\PYGZsh{} coding: utf\PYGZhy{}8}
+
+\PYG{c+c1}{\PYGZsh{} \PYGZsh{} Imports}
+
+\PYG{c+c1}{\PYGZsh{} In[1]:}
+
+
+\PYG{k+kn}{import} \PYG{n+nn}{pandas} \PYG{k}{as} \PYG{n+nn}{pd}
+\PYG{k+kn}{import} \PYG{n+nn}{numpy} \PYG{k}{as} \PYG{n+nn}{np}
+\PYG{k+kn}{import} \PYG{n+nn}{matplotlib.pylab} \PYG{k}{as} \PYG{n+nn}{plt}
+\PYG{n}{get\PYGZus{}ipython}\PYG{p}{()}\PYG{o}{.}\PYG{n}{run\PYGZus{}line\PYGZus{}magic}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}matplotlib\PYGZsq{}}\PYG{p}{,} \PYG{l+s+s1}{\PYGZsq{}inline\PYGZsq{}}\PYG{p}{)}
+\PYG{k+kn}{from} \PYG{n+nn}{matplotlib.pylab} \PYG{k+kn}{import} \PYG{n}{rcParams}
+\PYG{n}{rcParams}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}figure.figsize\PYGZsq{}}\PYG{p}{]} \PYG{o}{=} \PYG{l+m+mi}{15}\PYG{p}{,}\PYG{l+m+mi}{5}
+\PYG{k+kn}{from} \PYG{n+nn}{sklearn.model\PYGZus{}selection} \PYG{k+kn}{import} \PYG{n}{TimeSeriesSplit}
+\PYG{k+kn}{from} \PYG{n+nn}{sklearn.metrics} \PYG{k+kn}{import} \PYG{n}{mean\PYGZus{}absolute\PYGZus{}error}
+\PYG{k+kn}{import} \PYG{n+nn}{warnings}
+\PYG{k+kn}{from} \PYG{n+nn}{statsmodels.tsa.arima\PYGZus{}model} \PYG{k+kn}{import} \PYG{n}{ARIMA}
+\PYG{k+kn}{import} \PYG{n+nn}{timeit}
+\PYG{k+kn}{from} \PYG{n+nn}{numpy} \PYG{k+kn}{import} \PYG{n}{array}
+\PYG{k+kn}{from} \PYG{n+nn}{keras.models} \PYG{k+kn}{import} \PYG{n}{Sequential}
+\PYG{k+kn}{from} \PYG{n+nn}{keras.layers} \PYG{k+kn}{import} \PYG{n}{LSTM}
+\PYG{k+kn}{from} \PYG{n+nn}{keras.layers} \PYG{k+kn}{import} \PYG{n}{Dense}
+\PYG{k+kn}{import} \PYG{n+nn}{tensorflow} \PYG{k}{as} \PYG{n+nn}{tf}
+\PYG{k+kn}{from} \PYG{n+nn}{fbprophet} \PYG{k+kn}{import} \PYG{n}{Prophet}
+
+
+\PYG{c+c1}{\PYGZsh{} \PYGZsh{} Dataprep}
+
+\PYG{c+c1}{\PYGZsh{} In[2]:}
+
+
+\PYG{c+c1}{\PYGZsh{} read time series}
+\PYG{n}{ts} \PYG{o}{=} \PYG{n}{pd}\PYG{o}{.}\PYG{n}{read\PYGZus{}csv}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}./data/dataframe\PYGZus{}yearly.csv\PYGZsq{}}\PYG{p}{,} \PYG{n}{index\PYGZus{}col}\PYG{o}{=}\PYG{l+m+mi}{0}\PYG{p}{,} \PYG{n}{usecols}\PYG{o}{=}\PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{,}\PYG{l+m+mi}{2}\PYG{p}{])}
+
+\PYG{c+c1}{\PYGZsh{} print out first values}
+\PYG{n}{ts}\PYG{o}{.}\PYG{n}{head}\PYG{p}{()}
+
+
+\PYG{c+c1}{\PYGZsh{} In[3]:}
+
+
+\PYG{c+c1}{\PYGZsh{} plot time series}
+\PYG{n}{plt}\PYG{o}{.}\PYG{n}{plot}\PYG{p}{(}\PYG{n}{ts}\PYG{p}{)}
+
+
+\PYG{c+c1}{\PYGZsh{} \PYGZsh{}\PYGZsh{} Differentiatie}
+
+\PYG{c+c1}{\PYGZsh{} In[4]:}
+
+
+\PYG{c+c1}{\PYGZsh{} define method to visualise the stationarity of a time series}
+\PYG{k}{def} \PYG{n+nf}{test\PYGZus{}stationarity}\PYG{p}{(}\PYG{n}{timeseries}\PYG{p}{):}
+
+\PYG{c+c1}{\PYGZsh{}Determing rolling statistics}
+\PYG{n}{rolmean} \PYG{o}{=} \PYG{n}{timeseries}\PYG{o}{.}\PYG{n}{rolling}\PYG{p}{(}\PYG{l+m+mi}{12}\PYG{p}{)}\PYG{o}{.}\PYG{n}{mean}\PYG{p}{()}
+\PYG{n}{rolstd} \PYG{o}{=} \PYG{n}{timeseries}\PYG{o}{.}\PYG{n}{rolling}\PYG{p}{(}\PYG{l+m+mi}{12}\PYG{p}{)}\PYG{o}{.}\PYG{n}{std}\PYG{p}{()}
+
+\PYG{c+c1}{\PYGZsh{}Plot rolling statistics:}
+\PYG{n}{orig} \PYG{o}{=} \PYG{n}{plt}\PYG{o}{.}\PYG{n}{plot}\PYG{p}{(}\PYG{n}{timeseries}\PYG{p}{,} \PYG{n}{color}\PYG{o}{=}\PYG{l+s+s1}{\PYGZsq{}blue\PYGZsq{}}\PYG{p}{,}\PYG{n}{label}\PYG{o}{=}\PYG{l+s+s1}{\PYGZsq{}Original\PYGZsq{}}\PYG{p}{)}
+\PYG{n}{mean} \PYG{o}{=} \PYG{n}{plt}\PYG{o}{.}\PYG{n}{plot}\PYG{p}{(}\PYG{n}{rolmean}\PYG{p}{,} \PYG{n}{color}\PYG{o}{=}\PYG{l+s+s1}{\PYGZsq{}red\PYGZsq{}}\PYG{p}{,} \PYG{n}{label}\PYG{o}{=}\PYG{l+s+s1}{\PYGZsq{}Rolling Mean\PYGZsq{}}\PYG{p}{)}
+\PYG{n}{std} \PYG{o}{=} \PYG{n}{plt}\PYG{o}{.}\PYG{n}{plot}\PYG{p}{(}\PYG{n}{rolstd}\PYG{p}{,} \PYG{n}{color}\PYG{o}{=}\PYG{l+s+s1}{\PYGZsq{}black\PYGZsq{}}\PYG{p}{,} \PYG{n}{label} \PYG{o}{=} \PYG{l+s+s1}{\PYGZsq{}Rolling Std\PYGZsq{}}\PYG{p}{)}
+\PYG{n}{plt}\PYG{o}{.}\PYG{n}{legend}\PYG{p}{(}\PYG{n}{loc}\PYG{o}{=}\PYG{l+s+s1}{\PYGZsq{}best\PYGZsq{}}\PYG{p}{)}
+\PYG{n}{plt}\PYG{o}{.}\PYG{n}{title}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}Rolling Mean \PYGZam{} Standard Deviation\PYGZsq{}}\PYG{p}{)}
+\PYG{n}{plt}\PYG{o}{.}\PYG{n}{show}\PYG{p}{(}\PYG{n}{block}\PYG{o}{=}\PYG{k+kc}{False}\PYG{p}{)}
+
+\PYG{c+c1}{\PYGZsh{} check stationarity of time serie}
+\PYG{n}{test\PYGZus{}stationarity}\PYG{p}{(}\PYG{n}{ts}\PYG{p}{)}
+
+
+\PYG{c+c1}{\PYGZsh{} In[5]:}
+
+
+\PYG{c+c1}{\PYGZsh{} take the random walk difference of the time serie}
+\PYG{n}{ts\PYGZus{}diff} \PYG{o}{=} \PYG{n}{ts} \PYG{o}{\PYGZhy{}} \PYG{n}{ts}\PYG{o}{.}\PYG{n}{shift}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{p}{)}
+\PYG{n}{ts\PYGZus{}diff} \PYG{o}{=} \PYG{n}{ts\PYGZus{}diff}\PYG{o}{.}\PYG{n}{dropna}\PYG{p}{()}
+
+\PYG{c+c1}{\PYGZsh{} display stationarity of the newly differenced time serie}
+\PYG{n}{test\PYGZus{}stationarity}\PYG{p}{(}\PYG{n}{ts\PYGZus{}diff}\PYG{p}{)}
+
+
+\PYG{c+c1}{\PYGZsh{} \PYGZsh{}\PYGZsh{} Cross validation setup}
+
+\PYG{c+c1}{\PYGZsh{} In[6]:}
+
+
+\PYG{c+c1}{\PYGZsh{} initialize TimeSeriesSplit object}
+\PYG{n}{tscv} \PYG{o}{=} \PYG{n}{TimeSeriesSplit}\PYG{p}{(}\PYG{n}{n\PYGZus{}splits} \PYG{o}{=} \PYG{l+m+mi}{8}\PYG{p}{)}
+
+\PYG{c+c1}{\PYGZsh{} loop trough all split time series that have a trainingsset with more than 20 values}
+\PYG{k}{for} \PYG{n}{train\PYGZus{}index}\PYG{p}{,} \PYG{n}{test\PYGZus{}index} \PYG{o+ow}{in} \PYG{n}{tscv}\PYG{o}{.}\PYG{n}{split}\PYG{p}{(}\PYG{n}{ts\PYGZus{}diff}\PYG{p}{):}
+\PYG{k}{if} \PYG{n}{train\PYGZus{}index}\PYG{o}{.}\PYG{n}{size} \PYG{o}{\PYGZgt{}} \PYG{l+m+mi}{20}\PYG{p}{:}
+
+\PYG{c+c1}{\PYGZsh{} initialize cross validation train and test sets}
+\PYG{n}{cv\PYGZus{}train}\PYG{p}{,} \PYG{n}{cv\PYGZus{}test} \PYG{o}{=} \PYG{n}{ts\PYGZus{}diff}\PYG{o}{.}\PYG{n}{iloc}\PYG{p}{[}\PYG{n}{train\PYGZus{}index}\PYG{p}{],} \PYG{n}{ts\PYGZus{}diff}\PYG{o}{.}\PYG{n}{iloc}\PYG{p}{[}\PYG{n}{test\PYGZus{}index}\PYG{p}{]}
+
+\PYG{c+c1}{\PYGZsh{} visiualize cross\PYGZus{}validation structure for reference}
+\PYG{n+nb}{print}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}TRAIN:\PYGZdq{}}\PYG{p}{,} \PYG{n}{train\PYGZus{}index}\PYG{o}{.}\PYG{n}{size}\PYG{p}{)}
+\PYG{n+nb}{print}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}TEST:\PYGZdq{}}\PYG{p}{,} \PYG{n}{test\PYGZus{}index}\PYG{o}{.}\PYG{n}{size}\PYG{p}{)}
+\PYG{n+nb}{print}\PYG{p}{()}
+
+
+\PYG{c+c1}{\PYGZsh{} \PYGZsh{}\PYGZsh{} General methods}
+
+\PYG{c+c1}{\PYGZsh{} In[7]:}
+
+
+\PYG{c+c1}{\PYGZsh{} plot}
+\PYG{n}{plt}\PYG{o}{.}\PYG{n}{plot}\PYG{p}{(}\PYG{n}{ts}\PYG{p}{,} \PYG{n}{marker}\PYG{o}{=}\PYG{l+s+s1}{\PYGZsq{}o\PYGZsq{}}\PYG{p}{,} \PYG{n}{color}\PYG{o}{=}\PYG{l+s+s1}{\PYGZsq{}blue\PYGZsq{}}\PYG{p}{,}\PYG{n}{label}\PYG{o}{=}\PYG{l+s+s1}{\PYGZsq{}Actual values\PYGZsq{}}\PYG{p}{)}
+\PYG{n}{plt}\PYG{o}{.}\PYG{n}{ylim}\PYG{p}{([}\PYG{l+m+mi}{0}\PYG{p}{,}\PYG{l+m+mi}{15}\PYG{p}{])}
+\PYG{n}{plt}\PYG{o}{.}\PYG{n}{legend}\PYG{p}{()}
+
+\PYG{n}{plt}\PYG{o}{.}\PYG{n}{show}\PYG{p}{()}
+
+
+\PYG{c+c1}{\PYGZsh{} In[8]:}
+
+
+\PYG{c+c1}{\PYGZsh{} define functions used troughout the notebook}
+
+\PYG{c+c1}{\PYGZsh{} define function for plotting last prediction and the actual data}
+\PYG{k}{def} \PYG{n+nf}{full\PYGZus{}graph}\PYG{p}{(}\PYG{n}{predicted\PYGZus{}diff}\PYG{p}{,} \PYG{n}{title}\PYG{p}{):}
+
+\PYG{c+c1}{\PYGZsh{} format predictions by adding NaN values in front}
+\PYG{n}{predictionsArray} \PYG{o}{=} \PYG{n}{np}\PYG{o}{.}\PYG{n}{asarray}\PYG{p}{(}\PYG{n}{revert\PYGZus{}diff}\PYG{p}{(}\PYG{n}{predicted\PYGZus{}diff}\PYG{p}{,} \PYG{n}{ts}\PYG{p}{))}
+\PYG{n}{zerosArray} \PYG{o}{=} \PYG{n}{np}\PYG{o}{.}\PYG{n}{zeros}\PYG{p}{(}\PYG{n}{ts}\PYG{o}{.}\PYG{n}{values}\PYG{o}{.}\PYG{n}{size}\PYG{o}{\PYGZhy{}}\PYG{n+nb}{len}\PYG{p}{(}\PYG{n}{predictionsArray}\PYG{o}{.}\PYG{n}{flatten}\PYG{p}{()))}
+\PYG{n}{cleanPrediction} \PYG{o}{=} \PYG{n}{pd}\PYG{o}{.}\PYG{n}{Series}\PYG{p}{(}\PYG{n}{np}\PYG{o}{.}\PYG{n}{concatenate}\PYG{p}{((}\PYG{n}{zerosArray}\PYG{p}{,}\PYG{n}{predictionsArray}\PYG{p}{)))}\PYG{o}{.}\PYG{n}{replace}\PYG{p}{(}\PYG{l+m+mi}{0}\PYG{p}{,}\PYG{n}{np}\PYG{o}{.}\PYG{n}{NaN}\PYG{p}{)}
+\PYG{n}{cleanPrediction}\PYG{o}{.}\PYG{n}{index} \PYG{o}{=} \PYG{n}{ts}\PYG{o}{.}\PYG{n}{index}\PYG{o}{.}\PYG{n}{values}
+
+\PYG{c+c1}{\PYGZsh{} plot}
+\PYG{n}{plt}\PYG{o}{.}\PYG{n}{title}\PYG{p}{(}\PYG{n}{title}\PYG{p}{)}
+\PYG{n}{plt}\PYG{o}{.}\PYG{n}{plot}\PYG{p}{(}\PYG{n}{ts}\PYG{p}{,} \PYG{n}{marker}\PYG{o}{=}\PYG{l+s+s1}{\PYGZsq{}o\PYGZsq{}}\PYG{p}{,} \PYG{n}{color}\PYG{o}{=}\PYG{l+s+s1}{\PYGZsq{}blue\PYGZsq{}}\PYG{p}{,}\PYG{n}{label}\PYG{o}{=}\PYG{l+s+s1}{\PYGZsq{}Actual values\PYGZsq{}}\PYG{p}{)}
+\PYG{n}{plt}\PYG{o}{.}\PYG{n}{plot}\PYG{p}{(}\PYG{n}{cleanPrediction}\PYG{p}{,} \PYG{n}{marker}\PYG{o}{=}\PYG{l+s+s1}{\PYGZsq{}o\PYGZsq{}}\PYG{p}{,} \PYG{n}{color}\PYG{o}{=}\PYG{l+s+s1}{\PYGZsq{}red\PYGZsq{}}\PYG{p}{,}\PYG{n}{label}\PYG{o}{=}\PYG{l+s+s1}{\PYGZsq{}Last 4 year prediction\PYGZsq{}}\PYG{p}{)}
+\PYG{n}{plt}\PYG{o}{.}\PYG{n}{ylim}\PYG{p}{([}\PYG{l+m+mi}{0}\PYG{p}{,}\PYG{l+m+mi}{15}\PYG{p}{])}
+\PYG{n}{plt}\PYG{o}{.}\PYG{n}{legend}\PYG{p}{()}
+
+\PYG{n}{plt}\PYG{o}{.}\PYG{n}{show}\PYG{p}{()}
+
+\PYG{c+c1}{\PYGZsh{} define function for reverting a differenced dataset}
+\PYG{k}{def} \PYG{n+nf}{revert\PYGZus{}diff}\PYG{p}{(}\PYG{n}{predicted\PYGZus{}diff}\PYG{p}{,} \PYG{n}{og\PYGZus{}data}\PYG{p}{):}
+
+\PYG{c+c1}{\PYGZsh{} retrieve last value}
+\PYG{n}{last\PYGZus{}value} \PYG{o}{=} \PYG{n}{og\PYGZus{}data}\PYG{o}{.}\PYG{n}{iloc}\PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{n}{predicted\PYGZus{}diff}\PYG{o}{.}\PYG{n}{size}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{][}\PYG{l+m+mi}{0}\PYG{p}{]}
+
+\PYG{c+c1}{\PYGZsh{} initialize reverted array}
+\PYG{n}{predicted\PYGZus{}actual} \PYG{o}{=} \PYG{n}{np}\PYG{o}{.}\PYG{n}{array}\PYG{p}{([])}
+
+\PYG{c+c1}{\PYGZsh{} add each value in the differenced array with the last actual value}
+\PYG{k}{for} \PYG{n}{value\PYGZus{}diff} \PYG{o+ow}{in} \PYG{n}{predicted\PYGZus{}diff}\PYG{p}{:}
+\PYG{n}{actual\PYGZus{}value} \PYG{o}{=} \PYG{n}{last\PYGZus{}value} \PYG{o}{+} \PYG{n}{value\PYGZus{}diff}
+\PYG{n}{predicted\PYGZus{}actual} \PYG{o}{=} \PYG{n}{np}\PYG{o}{.}\PYG{n}{append}\PYG{p}{(}\PYG{n}{predicted\PYGZus{}actual}\PYG{p}{,} \PYG{n}{actual\PYGZus{}value}\PYG{p}{)}
+\PYG{n}{last\PYGZus{}value} \PYG{o}{=} \PYG{n}{actual\PYGZus{}value}
+
+\PYG{k}{return} \PYG{n}{predicted\PYGZus{}actual}
+
+
+\PYG{c+c1}{\PYGZsh{} \PYGZsh{} ARIMA}
+
+\PYG{c+c1}{\PYGZsh{} In[9]:}
+
+
+\PYG{n}{get\PYGZus{}ipython}\PYG{p}{()}\PYG{o}{.}\PYG{n}{run\PYGZus{}cell\PYGZus{}magic}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}time\PYGZsq{}}\PYG{p}{,} \PYG{l+s+s1}{\PYGZsq{}\PYGZsq{}}\PYG{p}{,} \PYG{l+s+s1}{\PYGZsq{}\PYGZsh{} ARIMA}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s+s1}{from statsmodels.tsa.arima\PYGZus{}model import ARIMA}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s+s1}{import itertools}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s+s1}{import warnings}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s+s1}{import sys}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s+s1}{from sklearn.metrics import mean\PYGZus{}absolute\PYGZus{}error}\PYG{l+s+se}{\PYGZbs{}n\PYGZbs{}n\PYGZbs{}n\PYGZbs{}n}\PYG{l+s+s1}{\PYGZsh{} Define the p, d and q parameters to take any value between 0 and 2}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s+s1}{p = q = range(0, 5)}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s+s1}{d = range(0,3)}\PYG{l+s+se}{\PYGZbs{}n\PYGZbs{}n}\PYG{l+s+s1}{\PYGZsh{} Generate all different combinations of p, q and q triplets}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s+s1}{pdq = list(itertools.product(p, d, q))}\PYG{l+s+se}{\PYGZbs{}n\PYGZbs{}n}\PYG{l+s+s1}{\PYGZsh{} initialize variables}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s+s1}{best\PYGZus{}pdq = pdq}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s+s1}{best\PYGZus{}mean\PYGZus{}mae = np.inf}\PYG{l+s+se}{\PYGZbs{}n\PYGZbs{}n}\PYG{l+s+s1}{\PYGZsh{} specify to ignore warning messages to reduce visual clutter}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s+s1}{warnings.filterwarnings(\PYGZdq{}ignore\PYGZdq{}) }\PYG{l+s+se}{\PYGZbs{}n\PYGZbs{}n}\PYG{l+s+s1}{\PYGZsh{} loop trough all possible parameter combinations of pdq}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s+s1}{for param in pdq:}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s+s1}{    print(param)}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s+s1}{    }\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s+s1}{    \PYGZsh{} some parametercombinations might lead to crash, so catch exceptions and continue}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s+s1}{    try:  }\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s+s1}{        }\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s+s1}{        \PYGZsh{} initialize the array which will contain the mean average errors}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s+s1}{        maes = []}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s+s1}{        }\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s+s1}{        \PYGZsh{} loop trough all split time series that have a trainingsset with more than 20 values}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s+s1}{        for train\PYGZus{}index, test\PYGZus{}index in tscv.split(ts\PYGZus{}diff):}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s+s1}{            if train\PYGZus{}index.size \PYGZgt{} 20:}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s+s1}{                }\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s+s1}{                \PYGZsh{} initialize cross validation train and test sets}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s+s1}{                cv\PYGZus{}train, cv\PYGZus{}test = ts\PYGZus{}diff.iloc[train\PYGZus{}index], ts\PYGZus{}diff.iloc[test\PYGZus{}index]}\PYG{l+s+se}{\PYGZbs{}n\PYGZbs{}n}\PYG{l+s+s1}{                \PYGZsh{} build model}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s+s1}{                model = ARIMA(cv\PYGZus{}train, order=(param))}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s+s1}{                }\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s+s1}{                \PYGZsh{} fit model}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s+s1}{                model\PYGZus{}fit = model.fit()}\PYG{l+s+se}{\PYGZbs{}n\PYGZbs{}n}\PYG{l+s+s1}{                \PYGZsh{} make predictions}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s+s1}{                predictions =  model\PYGZus{}fit.predict(start=len(cv\PYGZus{}train), end=len(cv\PYGZus{}train)+cv\PYGZus{}test.size\PYGZhy{}1, dynamic=False)}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s+s1}{                }\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s+s1}{                \PYGZsh{} renaming for clarity}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s+s1}{                prediction\PYGZus{}values = predictions.values}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s+s1}{                true\PYGZus{}values = cv\PYGZus{}test.values}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s+s1}{                }\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s+s1}{                \PYGZsh{} error calculation this part of the cross validation}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s+s1}{                maes.append(mean\PYGZus{}absolute\PYGZus{}error(true\PYGZus{}values, prediction\PYGZus{}values))}\PYG{l+s+se}{\PYGZbs{}n\PYGZbs{}n}\PYG{l+s+s1}{        }\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s+s1}{        \PYGZsh{} error calculation for this parameter combination}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s+s1}{        mean\PYGZus{}mae = np.mean(maes)}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s+s1}{        print(}\PYG{l+s+se}{\PYGZbs{}\PYGZsq{}}\PYG{l+s+s1}{MAE: }\PYG{l+s+se}{\PYGZbs{}\PYGZsq{}}\PYG{l+s+s1}{ + str(mean\PYGZus{}mae))    }\PYG{l+s+se}{\PYGZbs{}n\PYGZbs{}n}\PYG{l+s+s1}{        \PYGZsh{} store parameters resulting in the lowest mean MAE}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s+s1}{        if mean\PYGZus{}mae \PYGZlt{} best\PYGZus{}mean\PYGZus{}mae:}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s+s1}{            best\PYGZus{}mean\PYGZus{}mae = mean\PYGZus{}mae}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s+s1}{            best\PYGZus{}maes = maes}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s+s1}{            best\PYGZus{}pdq = param}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s+s1}{            best\PYGZus{}predictions = prediction\PYGZus{}values}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s+s1}{            }\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s+s1}{    except Exception as e:}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s+s1}{        print(e)}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s+s1}{        continue}\PYG{l+s+se}{\PYGZbs{}n\PYGZbs{}n}\PYG{l+s+s1}{\PYGZsh{} logging}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s+s1}{print()}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s+s1}{print(}\PYG{l+s+se}{\PYGZbs{}\PYGZsq{}}\PYG{l+s+s1}{Best MAE = }\PYG{l+s+se}{\PYGZbs{}\PYGZsq{}}\PYG{l+s+s1}{ + str(best\PYGZus{}mean\PYGZus{}mae))}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s+s1}{print(best\PYGZus{}pdq)}\PYG{l+s+se}{\PYGZbs{}n\PYGZbs{}n}\PYG{l+s+s1}{\PYGZsh{} best range(0,10): \PYGZsq{}}\PYG{p}{)}
+
+
+\PYG{c+c1}{\PYGZsh{} In[10]:}
+
+
+\PYG{c+c1}{\PYGZsh{} \PYGZsh{} result}
+\PYG{c+c1}{\PYGZsh{} best\PYGZus{}pdq = (3, 0, 0)}
+
+
+\PYG{c+c1}{\PYGZsh{} In[11]:}
+
+
+\PYG{n}{start\PYGZus{}time} \PYG{o}{=} \PYG{n}{timeit}\PYG{o}{.}\PYG{n}{default\PYGZus{}timer}\PYG{p}{()}
+
+\PYG{c+c1}{\PYGZsh{} specify to ignore warning messages}
+\PYG{n}{warnings}\PYG{o}{.}\PYG{n}{filterwarnings}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}ignore\PYGZdq{}}\PYG{p}{)}
+
+\PYG{n+nb}{print}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZdq{}}\PYG{p}{)}
+
+\PYG{c+c1}{\PYGZsh{} initialize the array which will contain the mean average errors}
+\PYG{n}{maes} \PYG{o}{=} \PYG{p}{[]}
+
+\PYG{c+c1}{\PYGZsh{} loop trough all split time series that have a trainingsset with more than 20 values}
+\PYG{k}{for} \PYG{n}{train\PYGZus{}index}\PYG{p}{,} \PYG{n}{test\PYGZus{}index} \PYG{o+ow}{in} \PYG{n}{tscv}\PYG{o}{.}\PYG{n}{split}\PYG{p}{(}\PYG{n}{ts\PYGZus{}diff}\PYG{p}{):}
+\PYG{k}{if} \PYG{n}{train\PYGZus{}index}\PYG{o}{.}\PYG{n}{size} \PYG{o}{\PYGZgt{}} \PYG{l+m+mi}{20}\PYG{p}{:}
+
+\PYG{c+c1}{\PYGZsh{} initialize cross validation train and test sets}
+\PYG{n}{cv\PYGZus{}train}\PYG{p}{,} \PYG{n}{cv\PYGZus{}test} \PYG{o}{=} \PYG{n}{ts\PYGZus{}diff}\PYG{o}{.}\PYG{n}{iloc}\PYG{p}{[}\PYG{n}{train\PYGZus{}index}\PYG{p}{],} \PYG{n}{ts\PYGZus{}diff}\PYG{o}{.}\PYG{n}{iloc}\PYG{p}{[}\PYG{n}{test\PYGZus{}index}\PYG{p}{]}
+
+\PYG{c+c1}{\PYGZsh{} build model}
+\PYG{n}{arima} \PYG{o}{=} \PYG{n}{ARIMA}\PYG{p}{(}\PYG{n}{cv\PYGZus{}train}\PYG{p}{,} \PYG{n}{best\PYGZus{}pdq}\PYG{p}{)}\PYG{o}{.}\PYG{n}{fit}\PYG{p}{(}\PYG{n}{start\PYGZus{}ar\PYGZus{}lags}\PYG{o}{=}\PYG{l+m+mi}{1}\PYG{p}{,}\PYG{n}{disp}\PYG{o}{=}\PYG{k+kc}{False}\PYG{p}{)}
+
+\PYG{c+c1}{\PYGZsh{} make predictions}
+\PYG{n}{predictions} \PYG{o}{=} \PYG{n}{arima}\PYG{o}{.}\PYG{n}{forecast}\PYG{p}{(}\PYG{n}{steps}\PYG{o}{=}\PYG{l+m+mi}{4}\PYG{p}{)}
+\PYG{n}{prediction\PYGZus{}values} \PYG{o}{=} \PYG{n}{predictions}\PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{]}
+\PYG{n}{true\PYGZus{}values} \PYG{o}{=} \PYG{n}{cv\PYGZus{}test}\PYG{o}{.}\PYG{n}{values}
+
+\PYG{c+c1}{\PYGZsh{} error calc}
+\PYG{n}{maes}\PYG{o}{.}\PYG{n}{append}\PYG{p}{(}\PYG{n}{mean\PYGZus{}absolute\PYGZus{}error}\PYG{p}{(}\PYG{n}{true\PYGZus{}values}\PYG{p}{,} \PYG{n}{prediction\PYGZus{}values}\PYG{p}{))}
+
+\PYG{c+c1}{\PYGZsh{} last actual prediction}
+\PYG{n}{last\PYGZus{}prediction\PYGZus{}ARIMA} \PYG{o}{=} \PYG{n}{prediction\PYGZus{}values}
+
+\PYG{n+nb}{print}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}I\PYGZdq{}}\PYG{p}{,}\PYG{n}{end}\PYG{o}{=}\PYG{l+s+s2}{\PYGZdq{}\PYGZdq{}}\PYG{p}{)}
+
+\PYG{c+c1}{\PYGZsh{} store results to variables}
+\PYG{n}{time\PYGZus{}ARIMA} \PYG{o}{=} \PYG{n}{timeit}\PYG{o}{.}\PYG{n}{default\PYGZus{}timer}\PYG{p}{()} \PYG{o}{\PYGZhy{}} \PYG{n}{start\PYGZus{}time}
+\PYG{n}{mae\PYGZus{}mean} \PYG{o}{=} \PYG{n}{np}\PYG{o}{.}\PYG{n}{mean}\PYG{p}{(}\PYG{n}{maes}\PYG{p}{)}
+\PYG{n}{MAE\PYGZus{}ARIMA} \PYG{o}{=} \PYG{n}{mae\PYGZus{}mean}
+\PYG{n}{last\PYGZus{}MAE\PYGZus{}ARIMA} \PYG{o}{=} \PYG{n}{maes}\PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{]}
+
+\PYG{c+c1}{\PYGZsh{} logging}
+\PYG{n+nb}{print}\PYG{p}{()}
+\PYG{n+nb}{print}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}Mean MAE: }\PYG{l+s+si}{\PYGZpc{}.3f}\PYG{l+s+s1}{ x 1 000 000 km}\PYG{l+s+se}{\PYGZbs{}u00b2}\PYG{l+s+s1}{\PYGZsq{}} \PYG{o}{\PYGZpc{}} \PYG{n}{MAE\PYGZus{}ARIMA}\PYG{p}{)}
+\PYG{n+nb}{print}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}MAE of last prediction: }\PYG{l+s+si}{\PYGZpc{}.3f}\PYG{l+s+s1}{ x 1 000 000 km}\PYG{l+s+se}{\PYGZbs{}u00b2}\PYG{l+s+s1}{\PYGZsq{}} \PYG{o}{\PYGZpc{}} \PYG{n}{last\PYGZus{}MAE\PYGZus{}ARIMA}\PYG{p}{)}
+\PYG{n+nb}{print}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}Execution time: }\PYG{l+s+si}{\PYGZpc{}.3f}\PYG{l+s+s1}{ seconds\PYGZsq{}} \PYG{o}{\PYGZpc{}} \PYG{n}{time\PYGZus{}ARIMA}\PYG{p}{)}
+\PYG{n}{full\PYGZus{}graph}\PYG{p}{(}\PYG{n}{last\PYGZus{}prediction\PYGZus{}ARIMA}\PYG{p}{,} \PYG{l+s+s1}{\PYGZsq{}Last prediction ARIMA\PYGZsq{}}\PYG{p}{)}
+\PYG{n+nb}{print}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}Mean average errors:\PYGZsq{}}\PYG{p}{)}
+\PYG{n+nb}{print}\PYG{p}{(}\PYG{n}{maes}\PYG{p}{)}
+
+
+\PYG{c+c1}{\PYGZsh{} \PYGZsh{} LSTM}
+
+\PYG{c+c1}{\PYGZsh{} https://machinelearningmastery.com/tune\PYGZhy{}lstm\PYGZhy{}hyperparameters\PYGZhy{}keras\PYGZhy{}time\PYGZhy{}series\PYGZhy{}forecasting/}
+
+\PYG{c+c1}{\PYGZsh{} \PYGZsh{}\PYGZsh{} Functions}
+
+\PYG{c+c1}{\PYGZsh{} In[12]:}
+
+
+\PYG{k+kn}{from} \PYG{n+nn}{keras.layers} \PYG{k+kn}{import} \PYG{n}{Dropout}
+\PYG{c+c1}{\PYGZsh{} split a univariate sequence into samples}
+\PYG{k}{def} \PYG{n+nf}{split\PYGZus{}sequence}\PYG{p}{(}\PYG{n}{sequence}\PYG{p}{,} \PYG{n}{n\PYGZus{}steps\PYGZus{}in}\PYG{p}{,} \PYG{n}{n\PYGZus{}steps\PYGZus{}out}\PYG{p}{):}
+\PYG{n}{X}\PYG{p}{,} \PYG{n}{y} \PYG{o}{=} \PYG{n+nb}{list}\PYG{p}{(),} \PYG{n+nb}{list}\PYG{p}{()}
+\PYG{k}{for} \PYG{n}{i} \PYG{o+ow}{in} \PYG{n+nb}{range}\PYG{p}{(}\PYG{n+nb}{len}\PYG{p}{(}\PYG{n}{sequence}\PYG{p}{)):}
+\PYG{c+c1}{\PYGZsh{} find the end of this pattern}
+\PYG{n}{end\PYGZus{}ix} \PYG{o}{=} \PYG{n}{i} \PYG{o}{+} \PYG{n}{n\PYGZus{}steps\PYGZus{}in}
+\PYG{n}{out\PYGZus{}end\PYGZus{}ix} \PYG{o}{=} \PYG{n}{end\PYGZus{}ix} \PYG{o}{+} \PYG{n}{n\PYGZus{}steps\PYGZus{}out}
+
+\PYG{c+c1}{\PYGZsh{} check if we are beyond the sequence}
+\PYG{k}{if} \PYG{n}{out\PYGZus{}end\PYGZus{}ix} \PYG{o}{\PYGZgt{}} \PYG{n+nb}{len}\PYG{p}{(}\PYG{n}{sequence}\PYG{p}{):}
+\PYG{k}{break}
+
+\PYG{c+c1}{\PYGZsh{} gather input and output parts of the pattern}
+\PYG{n}{seq\PYGZus{}x}\PYG{p}{,} \PYG{n}{seq\PYGZus{}y} \PYG{o}{=} \PYG{n}{sequence}\PYG{p}{[}\PYG{n}{i}\PYG{p}{:}\PYG{n}{end\PYGZus{}ix}\PYG{p}{],} \PYG{n}{sequence}\PYG{p}{[}\PYG{n}{end\PYGZus{}ix}\PYG{p}{:}\PYG{n}{out\PYGZus{}end\PYGZus{}ix}\PYG{p}{]}
+\PYG{n}{X}\PYG{o}{.}\PYG{n}{append}\PYG{p}{(}\PYG{n}{seq\PYGZus{}x}\PYG{p}{)}
+\PYG{n}{y}\PYG{o}{.}\PYG{n}{append}\PYG{p}{(}\PYG{n}{seq\PYGZus{}y}\PYG{p}{)}
+\PYG{k}{return} \PYG{n}{array}\PYG{p}{(}\PYG{n}{X}\PYG{p}{),} \PYG{n}{array}\PYG{p}{(}\PYG{n}{y}\PYG{p}{)}
+
+\PYG{k}{def} \PYG{n+nf}{build\PYGZus{}model}\PYG{p}{(}\PYG{n}{raw\PYGZus{}seq}\PYG{p}{,} \PYG{n}{n\PYGZus{}steps\PYGZus{}in}\PYG{p}{,} \PYG{n}{n\PYGZus{}steps\PYGZus{}out}\PYG{p}{,} \PYG{n}{n\PYGZus{}features}\PYG{p}{,} \PYG{n}{n\PYGZus{}neurons}\PYG{p}{,} \PYG{n}{dropout}\PYG{p}{,} \PYG{n}{batch\PYGZus{}s}\PYG{p}{):}
+
+\PYG{c+c1}{\PYGZsh{} split into samples}
+\PYG{n}{X}\PYG{p}{,} \PYG{n}{y} \PYG{o}{=} \PYG{n}{split\PYGZus{}sequence}\PYG{p}{(}\PYG{n}{raw\PYGZus{}seq}\PYG{o}{.}\PYG{n}{values}\PYG{o}{.}\PYG{n}{flatten}\PYG{p}{(),} \PYG{n}{n\PYGZus{}steps\PYGZus{}in}\PYG{p}{,} \PYG{n}{n\PYGZus{}steps\PYGZus{}out}\PYG{p}{)}
+
+\PYG{c+c1}{\PYGZsh{} reshape from [samples, timesteps] into [samples, timesteps, features]}
+\PYG{n}{X} \PYG{o}{=} \PYG{n}{X}\PYG{o}{.}\PYG{n}{reshape}\PYG{p}{((}\PYG{n}{X}\PYG{o}{.}\PYG{n}{shape}\PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{],} \PYG{n}{X}\PYG{o}{.}\PYG{n}{shape}\PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{],} \PYG{n}{n\PYGZus{}features}\PYG{p}{))}
+
+\PYG{c+c1}{\PYGZsh{} define model}
+\PYG{n}{model} \PYG{o}{=} \PYG{n}{Sequential}\PYG{p}{()}
+\PYG{n}{model}\PYG{o}{.}\PYG{n}{add}\PYG{p}{(}\PYG{n}{LSTM}\PYG{p}{(}\PYG{n}{n\PYGZus{}neurons}\PYG{p}{,} \PYG{n}{activation}\PYG{o}{=}\PYG{l+s+s1}{\PYGZsq{}relu\PYGZsq{}}\PYG{p}{))}
+\PYG{n}{model}\PYG{o}{.}\PYG{n}{add}\PYG{p}{(}\PYG{n}{Dropout}\PYG{p}{(}\PYG{n}{dropout}\PYG{p}{))}
+\PYG{n}{model}\PYG{o}{.}\PYG{n}{add}\PYG{p}{(}\PYG{n}{Dense}\PYG{p}{(}\PYG{n}{n\PYGZus{}steps\PYGZus{}out}\PYG{p}{))}
+\PYG{n}{model}\PYG{o}{.}\PYG{n}{compile}\PYG{p}{(}\PYG{n}{optimizer}\PYG{o}{=}\PYG{l+s+s1}{\PYGZsq{}adam\PYGZsq{}}\PYG{p}{,} \PYG{n}{loss}\PYG{o}{=}\PYG{l+s+s1}{\PYGZsq{}mae\PYGZsq{}}\PYG{p}{)}
+
+\PYG{c+c1}{\PYGZsh{} fit model}
+\PYG{n}{model}\PYG{o}{.}\PYG{n}{fit}\PYG{p}{(}\PYG{n}{X}\PYG{p}{,} \PYG{n}{y}\PYG{p}{,} \PYG{n}{batch\PYGZus{}size}\PYG{o}{=}\PYG{n}{batch\PYGZus{}s}\PYG{p}{,} \PYG{n}{epochs}\PYG{o}{=}\PYG{l+m+mi}{100}\PYG{p}{,} \PYG{n}{verbose}\PYG{o}{=}\PYG{l+m+mi}{0}\PYG{p}{)}
+
+\PYG{k}{return} \PYG{n}{model}
+
+
+\PYG{k}{def} \PYG{n+nf}{predict}\PYG{p}{(}\PYG{n}{x\PYGZus{}input}\PYG{p}{,} \PYG{n}{model}\PYG{p}{,} \PYG{n}{n\PYGZus{}features}\PYG{p}{):}
+\PYG{n}{n\PYGZus{}features} \PYG{o}{=} \PYG{l+m+mi}{1}
+
+\PYG{c+c1}{\PYGZsh{} reshape data}
+\PYG{n}{x\PYGZus{}input} \PYG{o}{=} \PYG{n}{x\PYGZus{}input}\PYG{o}{.}\PYG{n}{reshape}\PYG{p}{((}\PYG{l+m+mi}{1}\PYG{p}{,} \PYG{n}{n\PYGZus{}steps\PYGZus{}in}\PYG{p}{,} \PYG{n}{n\PYGZus{}features}\PYG{p}{))}
+
+\PYG{c+c1}{\PYGZsh{} predict}
+\PYG{n}{yhat} \PYG{o}{=} \PYG{n}{model}\PYG{o}{.}\PYG{n}{predict}\PYG{p}{(}\PYG{n}{x\PYGZus{}input}\PYG{p}{,} \PYG{n}{verbose}\PYG{o}{=}\PYG{l+m+mi}{0}\PYG{p}{)}
+
+\PYG{k}{return} \PYG{n}{yhat}
+
+
+\PYG{c+c1}{\PYGZsh{} \PYGZsh{}\PYGZsh{} Determine hyperparameters}
+
+\PYG{c+c1}{\PYGZsh{} In[24]:}
+
+
+\PYG{n}{get\PYGZus{}ipython}\PYG{p}{()}\PYG{o}{.}\PYG{n}{run\PYGZus{}cell\PYGZus{}magic}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}time\PYGZsq{}}\PYG{p}{,} \PYG{l+s+s1}{\PYGZsq{}\PYGZsq{}}\PYG{p}{,} \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s+s1}{\PYGZsh{} Disabled tf warning because of visual clutter}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s+s1}{tf.compat.v1.logging.set\PYGZus{}verbosity(tf.compat.v1.logging.ERROR)}\PYG{l+s+se}{\PYGZbs{}n\PYGZbs{}n\PYGZbs{}n}\PYG{l+s+s1}{\PYGZsh{} constant variables}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s+s1}{n\PYGZus{}steps\PYGZus{}in = 4}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s+s1}{n\PYGZus{}steps\PYGZus{}out = 4}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s+s1}{n\PYGZus{}features  = 1}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s+s1}{maes = []}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s+s1}{global\PYGZus{}maes = []}\PYG{l+s+se}{\PYGZbs{}n\PYGZbs{}n}\PYG{l+s+s1}{\PYGZsh{} optimizable variables}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s+s1}{n\PYGZus{}neurons\PYGZus{}array = [1,10,20]}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s+s1}{dropout\PYGZus{}array = [0,0.5,0.99]}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s+s1}{batch\PYGZus{}size\PYGZus{}array = [1,8]}\PYG{l+s+se}{\PYGZbs{}n\PYGZbs{}n\PYGZbs{}n}\PYG{l+s+s1}{\PYGZsh{} initialize values}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s+s1}{best\PYGZus{}MAE = 100}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s+s1}{best\PYGZus{}n\PYGZus{}neurons = 0}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s+s1}{best\PYGZus{}activation = }\PYG{l+s+se}{\PYGZbs{}\PYGZsq{}}\PYG{l+s+s1}{none}\PYG{l+s+se}{\PYGZbs{}\PYGZsq{}\PYGZbs{}n}\PYG{l+s+s1}{best\PYGZus{}dropout = 0}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s+s1}{best\PYGZus{}batch\PYGZus{}size = 0}\PYG{l+s+se}{\PYGZbs{}n\PYGZbs{}n}\PYG{l+s+s1}{\PYGZsh{} loop over all possible parameter combinations}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s+s1}{for n\PYGZus{}neurons in n\PYGZus{}neurons\PYGZus{}array:}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s+s1}{    for dropout in dropout\PYGZus{}array:}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s+s1}{        for batch\PYGZus{}size in batch\PYGZus{}size\PYGZus{}array:}\PYG{l+s+se}{\PYGZbs{}n\PYGZbs{}n}\PYG{l+s+s1}{            print(\PYGZdq{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZdq{})}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s+s1}{            }\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s+s1}{            \PYGZsh{} loop trough all split time series that have a trainingsset with more than 20 values}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s+s1}{            for train\PYGZus{}index, test\PYGZus{}index in tscv.split(ts\PYGZus{}diff): }\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s+s1}{                if train\PYGZus{}index.size \PYGZgt{} 20:  }\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s+s1}{                    }\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s+s1}{                    \PYGZsh{} initialize cross validation train and test sets}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s+s1}{                    y\PYGZus{}train, y\PYGZus{}test = ts\PYGZus{}diff.iloc[train\PYGZus{}index], ts\PYGZus{}diff.iloc[test\PYGZus{}index]}\PYG{l+s+se}{\PYGZbs{}n\PYGZbs{}n}\PYG{l+s+s1}{                    \PYGZsh{} build model}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s+s1}{                    lstm\PYGZus{}model = build\PYGZus{}model(y\PYGZus{}train, n\PYGZus{}steps\PYGZus{}in, n\PYGZus{}steps\PYGZus{}out, n\PYGZus{}features, n\PYGZus{}neurons, dropout, batch\PYGZus{}size)}\PYG{l+s+se}{\PYGZbs{}n\PYGZbs{}n}\PYG{l+s+s1}{                    \PYGZsh{} make predictions}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s+s1}{                    x\PYGZus{}input = array(y\PYGZus{}test)}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s+s1}{                    y\PYGZus{}predicted = predict(x\PYGZus{}input, lstm\PYGZus{}model, n\PYGZus{}features).flatten()}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s+s1}{                    y\PYGZus{}actual = y\PYGZus{}test.values}\PYG{l+s+se}{\PYGZbs{}n\PYGZbs{}n}\PYG{l+s+s1}{                    \PYGZsh{} error calculation this part of the cross validation}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s+s1}{                    maes.append(mean\PYGZus{}absolute\PYGZus{}error(y\PYGZus{}actual, y\PYGZus{}predicted))}\PYG{l+s+se}{\PYGZbs{}n\PYGZbs{}n}\PYG{l+s+s1}{                    print(\PYGZdq{}I\PYGZdq{},end=\PYGZdq{}\PYGZdq{})}\PYG{l+s+se}{\PYGZbs{}n\PYGZbs{}n}\PYG{l+s+s1}{                    \PYGZsh{} last actual prediction }\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s+s1}{                    last\PYGZus{}prediction\PYGZus{}LSTM = y\PYGZus{}predicted}\PYG{l+s+se}{\PYGZbs{}n\PYGZbs{}n}\PYG{l+s+s1}{            \PYGZsh{} error calculation for this parameter combination}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s+s1}{            MAE\PYGZus{}LSTM = np.mean(maes)}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s+s1}{            last\PYGZus{}MAE\PYGZus{}LSTM = maes[\PYGZhy{}1]}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s+s1}{            global\PYGZus{}maes.append(MAE\PYGZus{}LSTM)}\PYG{l+s+se}{\PYGZbs{}n\PYGZbs{}n}\PYG{l+s+s1}{            \PYGZsh{} store parameters resulting in the lowest mean MAE}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s+s1}{            if best\PYGZus{}MAE \PYGZgt{} MAE\PYGZus{}LSTM:}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s+s1}{                best\PYGZus{}n\PYGZus{}neurons = n\PYGZus{}neurons}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s+s1}{                best\PYGZus{}dropout = dropout}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s+s1}{                best\PYGZus{}batch\PYGZus{}size = batch\PYGZus{}size}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s+s1}{                best\PYGZus{}MAE = MAE\PYGZus{}LSTM}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s+s1}{                }\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s+s1}{            \PYGZsh{} log values for parameter combination}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s+s1}{            print()}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s+s1}{            print(n\PYGZus{}neurons)}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s+s1}{            print(dropout)}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s+s1}{            print(batch\PYGZus{}size)}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s+s1}{            print(MAE\PYGZus{}LSTM)}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s+s1}{            print()    }\PYG{l+s+se}{\PYGZbs{}n\PYGZbs{}n}\PYG{l+s+s1}{\PYGZsh{} log parameter combination with best result}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s+s1}{print(}\PYG{l+s+se}{\PYGZbs{}\PYGZsq{}}\PYG{l+s+s1}{Best:}\PYG{l+s+se}{\PYGZbs{}\PYGZsq{}}\PYG{l+s+s1}{)}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s+s1}{print(}\PYG{l+s+se}{\PYGZbs{}\PYGZsq{}}\PYG{l+s+s1}{N neurons}\PYG{l+s+se}{\PYGZbs{}\PYGZsq{}}\PYG{l+s+s1}{)}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s+s1}{print(best\PYGZus{}n\PYGZus{}neurons)}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s+s1}{print(}\PYG{l+s+se}{\PYGZbs{}\PYGZsq{}}\PYG{l+s+s1}{Dropout rate}\PYG{l+s+se}{\PYGZbs{}\PYGZsq{}}\PYG{l+s+s1}{)}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s+s1}{print(best\PYGZus{}dropout)}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s+s1}{print(}\PYG{l+s+se}{\PYGZbs{}\PYGZsq{}}\PYG{l+s+s1}{Batch size}\PYG{l+s+se}{\PYGZbs{}\PYGZsq{}}\PYG{l+s+s1}{)}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s+s1}{print(best\PYGZus{}batch\PYGZus{}size)}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s+s1}{print(}\PYG{l+s+se}{\PYGZbs{}\PYGZsq{}}\PYG{l+s+s1}{MAE}\PYG{l+s+se}{\PYGZbs{}\PYGZsq{}}\PYG{l+s+s1}{)}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s+s1}{print(best\PYGZus{}MAE)}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s+s1}{plt.bar(range(0,len(global\PYGZus{}maes)), global\PYGZus{}maes)\PYGZsq{}}\PYG{p}{)}
+
+
+\PYG{c+c1}{\PYGZsh{} In[25]:}
+
+
+\PYG{c+c1}{\PYGZsh{} Run \PYGZsh{}1 Best:}
+\PYG{c+c1}{\PYGZsh{} 1}
+\PYG{c+c1}{\PYGZsh{} 0}
+\PYG{c+c1}{\PYGZsh{} 1}
+\PYG{c+c1}{\PYGZsh{} 0.1919512481592649}
+\PYG{c+c1}{\PYGZsh{} Wall time: 8min 36s}
+
+\PYG{c+c1}{\PYGZsh{} Run \PYGZsh{}2 Best:}
+\PYG{c+c1}{\PYGZsh{} 1}
+\PYG{c+c1}{\PYGZsh{} 0.5}
+\PYG{c+c1}{\PYGZsh{} 1}
+\PYG{c+c1}{\PYGZsh{} 0.19969739902546374}
+\PYG{c+c1}{\PYGZsh{} Wall time: 7min 16s}
+
+\PYG{c+c1}{\PYGZsh{} Run \PYGZsh{}3 Best:}
+\PYG{c+c1}{\PYGZsh{} 5}
+\PYG{c+c1}{\PYGZsh{} 0.99}
+\PYG{c+c1}{\PYGZsh{} 8}
+\PYG{c+c1}{\PYGZsh{} 0.20111841616444215}
+\PYG{c+c1}{\PYGZsh{} Wall time: 6min 47s}
+
+
+\PYG{c+c1}{\PYGZsh{} In[26]:}
+
+
+\PYG{n}{best\PYGZus{}n\PYGZus{}neurons} \PYG{o}{=} \PYG{l+m+mi}{1}
+\PYG{n}{best\PYGZus{}dropout} \PYG{o}{=} \PYG{l+m+mi}{0}
+\PYG{n}{best\PYGZus{}batch\PYGZus{}s} \PYG{o}{=} \PYG{l+m+mi}{8}
+
+
+\PYG{c+c1}{\PYGZsh{} \PYGZsh{}\PYGZsh{} Final result LSTM}
+
+\PYG{c+c1}{\PYGZsh{} In[27]:}
+
+
+\PYG{n}{get\PYGZus{}ipython}\PYG{p}{()}\PYG{o}{.}\PYG{n}{run\PYGZus{}cell\PYGZus{}magic}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}time\PYGZsq{}}\PYG{p}{,} \PYG{l+s+s1}{\PYGZsq{}\PYGZsq{}}\PYG{p}{,} \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s+s1}{start\PYGZus{}time = timeit.default\PYGZus{}timer()}\PYG{l+s+se}{\PYGZbs{}n\PYGZbs{}n}\PYG{l+s+s1}{\PYGZsh{} Disabled tf warning because of visual clutter}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s+s1}{tf.compat.v1.logging.set\PYGZus{}verbosity(tf.compat.v1.logging.ERROR)}\PYG{l+s+se}{\PYGZbs{}n\PYGZbs{}n\PYGZbs{}n}\PYG{l+s+s1}{\PYGZsh{} constant variables}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s+s1}{n\PYGZus{}steps\PYGZus{}in = 4}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s+s1}{n\PYGZus{}steps\PYGZus{}out = 4}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s+s1}{n\PYGZus{}features  = 1}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s+s1}{maes = []}\PYG{l+s+se}{\PYGZbs{}n\PYGZbs{}n\PYGZbs{}n}\PYG{l+s+s1}{\PYGZsh{} optimizable variables}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s+s1}{n\PYGZus{}neurons = best\PYGZus{}n\PYGZus{}neurons}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s+s1}{dropout = best\PYGZus{}dropout}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s+s1}{batch\PYGZus{}s = best\PYGZus{}batch\PYGZus{}s}\PYG{l+s+se}{\PYGZbs{}n\PYGZbs{}n}\PYG{l+s+s1}{print(\PYGZdq{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZdq{})}\PYG{l+s+se}{\PYGZbs{}n\PYGZbs{}n}\PYG{l+s+s1}{\PYGZsh{} loop trough all split time series that have a trainingsset with more than 20 values}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s+s1}{for train\PYGZus{}index, test\PYGZus{}index in tscv.split(ts\PYGZus{}diff):}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s+s1}{    if train\PYGZus{}index.size \PYGZgt{} 20:  }\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s+s1}{        \PYGZsh{} initialize cross validation train and test sets}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s+s1}{        y\PYGZus{}train, y\PYGZus{}test = ts\PYGZus{}diff.iloc[train\PYGZus{}index], ts\PYGZus{}diff.iloc[test\PYGZus{}index]}\PYG{l+s+se}{\PYGZbs{}n\PYGZbs{}n}\PYG{l+s+s1}{        \PYGZsh{} build model}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s+s1}{        lstm\PYGZus{}model = build\PYGZus{}model(y\PYGZus{}train, n\PYGZus{}steps\PYGZus{}in, n\PYGZus{}steps\PYGZus{}out, n\PYGZus{}features, n\PYGZus{}neurons, dropout, batch\PYGZus{}s)}\PYG{l+s+se}{\PYGZbs{}n\PYGZbs{}n}\PYG{l+s+s1}{        \PYGZsh{} make predictions}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s+s1}{        x\PYGZus{}input = array(y\PYGZus{}test)}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s+s1}{        y\PYGZus{}predicted = predict(x\PYGZus{}input, lstm\PYGZus{}model, n\PYGZus{}features).flatten()}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s+s1}{        y\PYGZus{}actual = y\PYGZus{}test.values}\PYG{l+s+se}{\PYGZbs{}n\PYGZbs{}n}\PYG{l+s+s1}{        \PYGZsh{} error calc}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s+s1}{        maes.append(mean\PYGZus{}absolute\PYGZus{}error(y\PYGZus{}actual, y\PYGZus{}predicted))}\PYG{l+s+se}{\PYGZbs{}n\PYGZbs{}n}\PYG{l+s+s1}{        print(\PYGZdq{}I\PYGZdq{},end=\PYGZdq{}\PYGZdq{})}\PYG{l+s+se}{\PYGZbs{}n\PYGZbs{}n}\PYG{l+s+s1}{\PYGZsh{} last actual prediction }\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s+s1}{last\PYGZus{}prediction\PYGZus{}LSTM = y\PYGZus{}predicted}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s+s1}{ }\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s+s1}{\PYGZsh{} store variables}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s+s1}{time\PYGZus{}LSTM = timeit.default\PYGZus{}timer() \PYGZhy{} start\PYGZus{}time}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s+s1}{MAE\PYGZus{}LSTM = np.mean(maes)}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s+s1}{last\PYGZus{}MAE\PYGZus{}LSTM = maes[\PYGZhy{}1]}\PYG{l+s+se}{\PYGZbs{}n\PYGZbs{}n}\PYG{l+s+s1}{\PYGZsh{} visualisation}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s+s1}{print()}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s+s1}{print(}\PYG{l+s+se}{\PYGZbs{}\PYGZsq{}}\PYG{l+s+s1}{Mean MAE: }\PYG{l+s+si}{\PYGZpc{}.3f}\PYG{l+s+s1}{ x 1 000 000 km}\PYG{l+s+se}{\PYGZbs{}\PYGZbs{}}\PYG{l+s+s1}{u00b2}\PYG{l+s+se}{\PYGZbs{}\PYGZsq{}}\PYG{l+s+s1}{ \PYGZpc{} MAE\PYGZus{}LSTM)}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s+s1}{print(}\PYG{l+s+se}{\PYGZbs{}\PYGZsq{}}\PYG{l+s+s1}{MAE of last prediction: }\PYG{l+s+si}{\PYGZpc{}.3f}\PYG{l+s+s1}{ x 1 000 000 km}\PYG{l+s+se}{\PYGZbs{}\PYGZbs{}}\PYG{l+s+s1}{u00b2}\PYG{l+s+se}{\PYGZbs{}\PYGZsq{}}\PYG{l+s+s1}{ }\PYG{l+s+si}{\PYGZpc{} la}\PYG{l+s+s1}{st\PYGZus{}MAE\PYGZus{}LSTM)}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s+s1}{print(}\PYG{l+s+se}{\PYGZbs{}\PYGZsq{}}\PYG{l+s+s1}{Execution time: }\PYG{l+s+si}{\PYGZpc{}.3f}\PYG{l+s+s1}{ seconds}\PYG{l+s+se}{\PYGZbs{}\PYGZsq{}}\PYG{l+s+s1}{ \PYGZpc{} time\PYGZus{}LSTM)}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s+s1}{full\PYGZus{}graph(last\PYGZus{}prediction\PYGZus{}LSTM, }\PYG{l+s+se}{\PYGZbs{}\PYGZsq{}}\PYG{l+s+s1}{Last prediction LSTM}\PYG{l+s+se}{\PYGZbs{}\PYGZsq{}}\PYG{l+s+s1}{)}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s+s1}{print(}\PYG{l+s+se}{\PYGZbs{}\PYGZsq{}}\PYG{l+s+s1}{Mean average errors}\PYG{l+s+se}{\PYGZbs{}\PYGZsq{}}\PYG{l+s+s1}{)}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s+s1}{print(maes)\PYGZsq{}}\PYG{p}{)}
+
+
+\PYG{c+c1}{\PYGZsh{} \PYGZsh{} Prophet}
+
+\PYG{c+c1}{\PYGZsh{} In[28]:}
+
+
+\PYG{c+c1}{\PYGZsh{} formatting dataframe}
+\PYG{n}{ts\PYGZus{}formated\PYGZus{}prophet} \PYG{o}{=} \PYG{n}{ts\PYGZus{}diff}\PYG{o}{.}\PYG{n}{reset\PYGZus{}index}\PYG{p}{()}\PYG{o}{.}\PYG{n}{rename}\PYG{p}{(}\PYG{n}{columns} \PYG{o}{=} \PYG{p}{\PYGZob{}}\PYG{l+s+s1}{\PYGZsq{}Year\PYGZsq{}} \PYG{p}{:} \PYG{l+s+s1}{\PYGZsq{}ds\PYGZsq{}}\PYG{p}{,} \PYG{l+s+s1}{\PYGZsq{}ice\PYGZus{}extent\PYGZsq{}} \PYG{p}{:} \PYG{l+s+s1}{\PYGZsq{}y\PYGZsq{}}\PYG{p}{\PYGZcb{})}
+\PYG{n}{ts\PYGZus{}formated\PYGZus{}prophet}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}ds\PYGZsq{}}\PYG{p}{]} \PYG{o}{=} \PYG{n}{pd}\PYG{o}{.}\PYG{n}{DataFrame}\PYG{p}{(}\PYG{n}{pd}\PYG{o}{.}\PYG{n}{to\PYGZus{}datetime}\PYG{p}{(}\PYG{n}{ts\PYGZus{}formated\PYGZus{}prophet}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}ds\PYGZsq{}}\PYG{p}{]}\PYG{o}{.}\PYG{n}{astype}\PYG{p}{(}\PYG{n+nb}{str}\PYG{p}{),} \PYG{n+nb}{format}\PYG{o}{=}\PYG{l+s+s1}{\PYGZsq{}\PYGZpc{}Y\PYGZsq{}}\PYG{p}{))}
+
+
+\PYG{c+c1}{\PYGZsh{} In[38]:}
+
+
+\PYG{c+c1}{\PYGZsh{} Python}
+\PYG{k+kn}{import} \PYG{n+nn}{itertools}
+\PYG{k+kn}{import} \PYG{n+nn}{numpy} \PYG{k}{as} \PYG{n+nn}{np}
+\PYG{k+kn}{import} \PYG{n+nn}{pandas} \PYG{k}{as} \PYG{n+nn}{pd}
+
+\PYG{c+c1}{\PYGZsh{} define dataframe}
+\PYG{n}{df} \PYG{o}{=} \PYG{n}{ts\PYGZus{}formated\PYGZus{}prophet}
+
+\PYG{n}{param\PYGZus{}grid} \PYG{o}{=} \PYG{p}{\PYGZob{}}
+\PYG{l+s+s1}{\PYGZsq{}changepoint\PYGZus{}prior\PYGZus{}scale\PYGZsq{}}\PYG{p}{:} \PYG{p}{[}\PYG{l+m+mf}{0.001}\PYG{p}{,} \PYG{l+m+mf}{0.01}\PYG{p}{,} \PYG{l+m+mf}{0.1}\PYG{p}{,} \PYG{l+m+mi}{1}\PYG{p}{,} \PYG{l+m+mi}{2}\PYG{p}{,} \PYG{l+m+mi}{5}\PYG{p}{,} \PYG{l+m+mi}{10}\PYG{p}{,} \PYG{l+m+mi}{15}\PYG{p}{,} \PYG{l+m+mi}{20}\PYG{p}{,} \PYG{l+m+mi}{25}\PYG{p}{],}
+\PYG{p}{\PYGZcb{}}
+
+\PYG{c+c1}{\PYGZsh{} Generate all combinations of parameters}
+\PYG{n}{all\PYGZus{}params} \PYG{o}{=} \PYG{p}{[}\PYG{n+nb}{dict}\PYG{p}{(}\PYG{n+nb}{zip}\PYG{p}{(}\PYG{n}{param\PYGZus{}grid}\PYG{o}{.}\PYG{n}{keys}\PYG{p}{(),} \PYG{n}{v}\PYG{p}{))} \PYG{k}{for} \PYG{n}{v} \PYG{o+ow}{in} \PYG{n}{itertools}\PYG{o}{.}\PYG{n}{product}\PYG{p}{(}\PYG{o}{*}\PYG{n}{param\PYGZus{}grid}\PYG{o}{.}\PYG{n}{values}\PYG{p}{())]}
+
+\PYG{c+c1}{\PYGZsh{} initialize variables}
+\PYG{n}{maes} \PYG{o}{=} \PYG{p}{[]}
+\PYG{n}{global\PYGZus{}maes} \PYG{o}{=} \PYG{p}{[]}
+\PYG{n}{best\PYGZus{}MAE\PYGZus{}prophet} \PYG{o}{=} \PYG{n}{np}\PYG{o}{.}\PYG{n}{inf}
+
+\PYG{c+c1}{\PYGZsh{} Use cross validation to evaluate all parameters}
+\PYG{k}{for} \PYG{n}{params} \PYG{o+ow}{in} \PYG{n}{all\PYGZus{}params}\PYG{p}{:}
+
+\PYG{c+c1}{\PYGZsh{} loop trough all split time series that have a trainingsset with more than 20 values}
+\PYG{k}{for} \PYG{n}{train\PYGZus{}index}\PYG{p}{,} \PYG{n}{test\PYGZus{}index} \PYG{o+ow}{in} \PYG{n}{tscv}\PYG{o}{.}\PYG{n}{split}\PYG{p}{(}\PYG{n}{ts\PYGZus{}formated\PYGZus{}prophet}\PYG{p}{):}
+\PYG{k}{if} \PYG{n}{train\PYGZus{}index}\PYG{o}{.}\PYG{n}{size} \PYG{o}{\PYGZgt{}} \PYG{l+m+mi}{20}\PYG{p}{:}
+
+\PYG{c+c1}{\PYGZsh{} initialize cross validation train and test sets}
+\PYG{n}{train}  \PYG{o}{=} \PYG{n}{ts\PYGZus{}formated\PYGZus{}prophet}\PYG{o}{.}\PYG{n}{iloc}\PYG{p}{[}\PYG{n}{train\PYGZus{}index}\PYG{p}{]}
+\PYG{n}{y\PYGZus{}test} \PYG{o}{=} \PYG{n}{ts\PYGZus{}formated\PYGZus{}prophet}\PYG{o}{.}\PYG{n}{iloc}\PYG{p}{[}\PYG{n}{test\PYGZus{}index}\PYG{p}{][[}\PYG{l+s+s1}{\PYGZsq{}y\PYGZsq{}}\PYG{p}{]]}\PYG{o}{.}\PYG{n}{values}\PYG{o}{.}\PYG{n}{flatten}\PYG{p}{()}
+\PYG{n}{X\PYGZus{}test} \PYG{o}{=} \PYG{n}{ts\PYGZus{}formated\PYGZus{}prophet}\PYG{o}{.}\PYG{n}{iloc}\PYG{p}{[}\PYG{n}{test\PYGZus{}index}\PYG{p}{][[}\PYG{l+s+s1}{\PYGZsq{}ds\PYGZsq{}}\PYG{p}{]]}
+
+\PYG{c+c1}{\PYGZsh{} Fit model with given params}
+\PYG{n}{model} \PYG{o}{=} \PYG{n}{Prophet}\PYG{p}{(}\PYG{o}{**}\PYG{n}{params}\PYG{p}{,} \PYG{n}{weekly\PYGZus{}seasonality}\PYG{o}{=}\PYG{k+kc}{False}\PYG{p}{,} \PYG{n}{daily\PYGZus{}seasonality}\PYG{o}{=}\PYG{k+kc}{False}\PYG{p}{)}
+\PYG{n}{model} \PYG{o}{=} \PYG{n}{model}\PYG{o}{.}\PYG{n}{fit}\PYG{p}{(}\PYG{n}{train}\PYG{p}{)}
+
+\PYG{c+c1}{\PYGZsh{} make predictions}
+\PYG{n}{forecast} \PYG{o}{=} \PYG{n}{model}\PYG{o}{.}\PYG{n}{predict}\PYG{p}{(}\PYG{n}{X\PYGZus{}test}\PYG{p}{)}
+\PYG{n}{y\PYGZus{}pred} \PYG{o}{=} \PYG{n}{forecast}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}yhat\PYGZsq{}}\PYG{p}{]}\PYG{o}{.}\PYG{n}{values}
+
+\PYG{c+c1}{\PYGZsh{} last actual prediction}
+\PYG{n}{last\PYGZus{}prediction\PYGZus{}prophet} \PYG{o}{=} \PYG{n}{y\PYGZus{}pred}
+
+\PYG{c+c1}{\PYGZsh{} error calculation this part of the cross validation}
+\PYG{n}{maes}\PYG{o}{.}\PYG{n}{append}\PYG{p}{(}\PYG{n}{mean\PYGZus{}absolute\PYGZus{}error}\PYG{p}{(}\PYG{n}{y\PYGZus{}test}\PYG{p}{,} \PYG{n}{y\PYGZus{}pred}\PYG{p}{))}
+
+\PYG{c+c1}{\PYGZsh{} error calculation for this parameter combination}
+\PYG{n}{MAE\PYGZus{}prophet} \PYG{o}{=} \PYG{n}{np}\PYG{o}{.}\PYG{n}{mean}\PYG{p}{(}\PYG{n}{maes}\PYG{p}{)}
+\PYG{n}{last\PYGZus{}MAE\PYGZus{}prophet} \PYG{o}{=} \PYG{n}{maes}\PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{]}
+\PYG{n}{global\PYGZus{}maes}\PYG{o}{.}\PYG{n}{append}\PYG{p}{(}\PYG{n}{MAE\PYGZus{}prophet}\PYG{p}{)}
+
+\PYG{c+c1}{\PYGZsh{} logging}
+\PYG{n+nb}{print}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}changepoint\PYGZus{}prior\PYGZus{}scale: \PYGZsq{}} \PYG{o}{+} \PYG{n+nb}{str}\PYG{p}{(}\PYG{n}{params}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}changepoint\PYGZus{}prior\PYGZus{}scale\PYGZsq{}}\PYG{p}{]))}
+
+\PYG{c+c1}{\PYGZsh{} store parameters resulting in the lowest mean MAE}
+\PYG{k}{if} \PYG{n}{best\PYGZus{}MAE\PYGZus{}prophet} \PYG{o}{\PYGZgt{}} \PYG{n}{MAE\PYGZus{}prophet}\PYG{p}{:}
+\PYG{n}{best\PYGZus{}params} \PYG{o}{=} \PYG{n}{params}
+\PYG{n}{best\PYGZus{}MAE\PYGZus{}prophet} \PYG{o}{=} \PYG{n}{MAE\PYGZus{}prophet}
+
+\PYG{c+c1}{\PYGZsh{} log optimal result}
+\PYG{n+nb}{print}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}changepoint\PYGZus{}prior\PYGZus{}scale: \PYGZsq{}} \PYG{o}{+} \PYG{n+nb}{str}\PYG{p}{(}\PYG{n}{best\PYGZus{}params}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}changepoint\PYGZus{}prior\PYGZus{}scale\PYGZsq{}}\PYG{p}{]))}
+\PYG{n+nb}{print}\PYG{p}{(}\PYG{n}{best\PYGZus{}MAE\PYGZus{}prophet}\PYG{p}{)}
+
+
+
+\PYG{c+c1}{\PYGZsh{} In[39]:}
+
+
+\PYG{c+c1}{\PYGZsh{} best\PYGZus{}params = \PYGZob{}\PYGZsq{}changepoint\PYGZus{}prior\PYGZus{}scale\PYGZsq{}: 2\PYGZcb{}}
+
+
+\PYG{c+c1}{\PYGZsh{} In[40]:}
+
+
+\PYG{n}{get\PYGZus{}ipython}\PYG{p}{()}\PYG{o}{.}\PYG{n}{run\PYGZus{}cell\PYGZus{}magic}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}time\PYGZsq{}}\PYG{p}{,} \PYG{l+s+s1}{\PYGZsq{}\PYGZsq{}}\PYG{p}{,} \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s+s1}{\PYGZsh{} Disabled tf warning because of clutter}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s+s1}{warnings.filterwarnings(\PYGZdq{}ignore\PYGZdq{}) \PYGZsh{} specify to ignore warning messages}\PYG{l+s+se}{\PYGZbs{}n\PYGZbs{}n}\PYG{l+s+s1}{start\PYGZus{}time = timeit.default\PYGZus{}timer()}\PYG{l+s+se}{\PYGZbs{}n\PYGZbs{}n}\PYG{l+s+s1}{\PYGZsh{} initialize variables}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s+s1}{maes = []}\PYG{l+s+se}{\PYGZbs{}n\PYGZbs{}n}\PYG{l+s+s1}{for train\PYGZus{}index, test\PYGZus{}index in tscv.split(ts\PYGZus{}formated\PYGZus{}prophet):}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s+s1}{    if train\PYGZus{}index.size \PYGZgt{} 20:  }\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s+s1}{        }\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s+s1}{        \PYGZsh{} initialize cross validation train and test sets}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s+s1}{        train  = ts\PYGZus{}formated\PYGZus{}prophet.iloc[train\PYGZus{}index]}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s+s1}{        y\PYGZus{}test = ts\PYGZus{}formated\PYGZus{}prophet.iloc[test\PYGZus{}index][[}\PYG{l+s+se}{\PYGZbs{}\PYGZsq{}}\PYG{l+s+s1}{y}\PYG{l+s+se}{\PYGZbs{}\PYGZsq{}}\PYG{l+s+s1}{]].values.flatten()}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s+s1}{        X\PYGZus{}test = ts\PYGZus{}formated\PYGZus{}prophet.iloc[test\PYGZus{}index][[}\PYG{l+s+se}{\PYGZbs{}\PYGZsq{}}\PYG{l+s+s1}{ds}\PYG{l+s+se}{\PYGZbs{}\PYGZsq{}}\PYG{l+s+s1}{]]}\PYG{l+s+se}{\PYGZbs{}n\PYGZbs{}n}\PYG{l+s+s1}{        \PYGZsh{} build model}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s+s1}{        model = Prophet(**best\PYGZus{}params, weekly\PYGZus{}seasonality=False, daily\PYGZus{}seasonality=False)}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s+s1}{        model.fit(train)}\PYG{l+s+se}{\PYGZbs{}n\PYGZbs{}n}\PYG{l+s+s1}{        \PYGZsh{} make predictions}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s+s1}{        forecast = model.predict(X\PYGZus{}test)}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s+s1}{        y\PYGZus{}pred = forecast[}\PYG{l+s+se}{\PYGZbs{}\PYGZsq{}}\PYG{l+s+s1}{yhat}\PYG{l+s+se}{\PYGZbs{}\PYGZsq{}}\PYG{l+s+s1}{].values}\PYG{l+s+se}{\PYGZbs{}n\PYGZbs{}n}\PYG{l+s+s1}{        \PYGZsh{} error calc}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s+s1}{        maes.append(mean\PYGZus{}absolute\PYGZus{}error(y\PYGZus{}test, y\PYGZus{}pred))}\PYG{l+s+se}{\PYGZbs{}n\PYGZbs{}n}\PYG{l+s+s1}{        \PYGZsh{} last actual prediction }\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s+s1}{        last\PYGZus{}prediction\PYGZus{}prophet = y\PYGZus{}pred}\PYG{l+s+se}{\PYGZbs{}n\PYGZbs{}n\PYGZbs{}n}\PYG{l+s+s1}{\PYGZsh{} store results}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s+s1}{time\PYGZus{}Prophet = timeit.default\PYGZus{}timer() \PYGZhy{} start\PYGZus{}time}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s+s1}{MAE\PYGZus{}Prophet = np.mean(maes)}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s+s1}{last\PYGZus{}MAE\PYGZus{}Prophet = maes[\PYGZhy{}1]}\PYG{l+s+se}{\PYGZbs{}n\PYGZbs{}n}\PYG{l+s+s1}{\PYGZsh{} visualize results}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s+s1}{print()}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s+s1}{print(}\PYG{l+s+se}{\PYGZbs{}\PYGZsq{}}\PYG{l+s+s1}{Mean MAE: }\PYG{l+s+si}{\PYGZpc{}.3f}\PYG{l+s+s1}{ x 1 000 000 km}\PYG{l+s+se}{\PYGZbs{}\PYGZbs{}}\PYG{l+s+s1}{u00b2}\PYG{l+s+se}{\PYGZbs{}\PYGZsq{}}\PYG{l+s+s1}{ \PYGZpc{} MAE\PYGZus{}Prophet)}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s+s1}{print(}\PYG{l+s+se}{\PYGZbs{}\PYGZsq{}}\PYG{l+s+s1}{MAE of last prediction: }\PYG{l+s+si}{\PYGZpc{}.3f}\PYG{l+s+s1}{ x 1 000 000 km}\PYG{l+s+se}{\PYGZbs{}\PYGZbs{}}\PYG{l+s+s1}{u00b2}\PYG{l+s+se}{\PYGZbs{}\PYGZsq{}}\PYG{l+s+s1}{ }\PYG{l+s+si}{\PYGZpc{} la}\PYG{l+s+s1}{st\PYGZus{}MAE\PYGZus{}Prophet)}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s+s1}{print(}\PYG{l+s+se}{\PYGZbs{}\PYGZsq{}}\PYG{l+s+s1}{Execution time: }\PYG{l+s+si}{\PYGZpc{}.3f}\PYG{l+s+s1}{ seconds}\PYG{l+s+se}{\PYGZbs{}\PYGZsq{}}\PYG{l+s+s1}{ \PYGZpc{} time\PYGZus{}Prophet)}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s+s1}{full\PYGZus{}graph(last\PYGZus{}prediction\PYGZus{}prophet, \PYGZdq{}Last 4 year prediction prophet\PYGZdq{})}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s+s1}{print(}\PYG{l+s+se}{\PYGZbs{}\PYGZsq{}}\PYG{l+s+s1}{Mean average errors}\PYG{l+s+se}{\PYGZbs{}\PYGZsq{}}\PYG{l+s+s1}{)}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s+s1}{print(maes)\PYGZsq{}}\PYG{p}{)}
+
+
+\PYG{c+c1}{\PYGZsh{} \PYGZsh{} Evaluation}
+
+\PYG{c+c1}{\PYGZsh{} In[33]:}
+
+
+\PYG{c+c1}{\PYGZsh{} formatting}
+\PYG{n}{results} \PYG{o}{=} \PYG{p}{[[}\PYG{n}{MAE\PYGZus{}ARIMA}\PYG{p}{,}\PYG{n}{time\PYGZus{}ARIMA}\PYG{p}{,}\PYG{n}{last\PYGZus{}MAE\PYGZus{}ARIMA}\PYG{p}{],[}\PYG{n}{MAE\PYGZus{}LSTM}\PYG{p}{,}\PYG{n}{time\PYGZus{}LSTM}\PYG{p}{,}\PYG{n}{last\PYGZus{}MAE\PYGZus{}LSTM}\PYG{p}{],[}\PYG{n}{MAE\PYGZus{}Prophet}\PYG{p}{,}\PYG{n}{time\PYGZus{}Prophet}\PYG{p}{,}\PYG{n}{last\PYGZus{}MAE\PYGZus{}Prophet}\PYG{p}{]]}
+
+\PYG{c+c1}{\PYGZsh{} display results}
+\PYG{n}{pd}\PYG{o}{.}\PYG{n}{DataFrame}\PYG{p}{(}\PYG{n}{results}\PYG{p}{,} \PYG{n}{columns}\PYG{o}{=}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}Mean MAE (x 1 000 000 km}\PYG{l+s+se}{\PYGZbs{}u00b2}\PYG{l+s+s1}{)\PYGZsq{}}\PYG{p}{,}\PYG{l+s+s1}{\PYGZsq{}Execution time (s)\PYGZsq{}}\PYG{p}{,}\PYG{l+s+s1}{\PYGZsq{}Last MAE (x 1 000 000 km}\PYG{l+s+se}{\PYGZbs{}u00b2}\PYG{l+s+s1}{)\PYGZsq{}}\PYG{p}{],}\PYG{n}{index}\PYG{o}{=}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}ARIMA\PYGZsq{}}\PYG{p}{,}\PYG{l+s+s1}{\PYGZsq{}LSTM\PYGZsq{}}\PYG{p}{,}\PYG{l+s+s1}{\PYGZsq{}Prophet\PYGZsq{}}\PYG{p}{])}\PYG{o}{.}\PYG{n}{round}\PYG{p}{(}\PYG{n}{decimals}\PYG{o}{=}\PYG{l+m+mi}{3}\PYG{p}{)}
+
+
+\PYG{c+c1}{\PYGZsh{} In[34]:}
+
+
+\PYG{c+c1}{\PYGZsh{} visualize results of last prediction}
+\PYG{n}{full\PYGZus{}graph}\PYG{p}{(}\PYG{n}{last\PYGZus{}prediction\PYGZus{}ARIMA}\PYG{p}{,} \PYG{l+s+s2}{\PYGZdq{}Last prediction ARIMA\PYGZdq{}}\PYG{p}{)}
+\PYG{n}{full\PYGZus{}graph}\PYG{p}{(}\PYG{n}{last\PYGZus{}prediction\PYGZus{}LSTM}\PYG{p}{,} \PYG{l+s+s2}{\PYGZdq{}Last prediction LSTM\PYGZdq{}}\PYG{p}{)}
+\PYG{n}{full\PYGZus{}graph}\PYG{p}{(}\PYG{n}{last\PYGZus{}prediction\PYGZus{}prophet}\PYG{p}{,} \PYG{l+s+s2}{\PYGZdq{}Last prediction Prophet\PYGZdq{}}\PYG{p}{)}
+\end{Verbatim}

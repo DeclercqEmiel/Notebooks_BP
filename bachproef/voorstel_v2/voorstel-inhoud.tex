@@ -1,0 +1,73 @@
+%---------- Inleiding ---------------------------------------------------------
+\chapter{Onderzoeksvoorstel}
+\label{ch:Onderzoeksvoorstel}
+
+
+\section{Introductie} % The \section*{} command stops section numbering
+\label{sec:introductie}
+
+%Hier introduceer je werk. Je hoeft hier nog niet te technisch te gaan.
+
+%Je beschrijft zeker:
+
+%\begin{itemize}
+ % \item de probleemstelling en context
+  %\item de motivatie en relevantie voor het onderzoek
+  %\item de doelstelling en onderzoeksvraag/-vragen
+%\end{itemize}
+
+Artificiele intelligentie wordt steeds meer toegepast dus de optimale methodes bepalen om voorspellingen te maken is van vitaal belang. Verschillende datasets kunnen er volledig anders uitzien en deze kunnen dan ook op verschillende manieren ingedeeld worden. Voor dit onderzoek zal gefocust worden op data die tijdsgebonden is. Door het gebruik van dit type data zullen de modellen rekening moeten houden met de tijdsafhankelijkheid tussen de verschillende waarden.
+
+%---------- Stand van zaken ---------------------------------------------------
+
+\section{Stand van zaken}
+\label{sec:stand-van-zaken}
+
+%Hier beschrijf je de \emph{state-of-the-art} rondom je gekozen onderzoeksdomein. Dit kan bijvoorbeeld een literatuurstudie zijn. Je mag de titel van deze sectie ook aanpassen (literatuurstudie, stand van zaken, enz.). Zijn er al gelijkaardige onderzoeken gevoerd? Wat concluderen ze? Wat is het verschil met jouw onderzoek? Wat is de relevantie met jouw onderzoek?
+
+%Verwijs bij elke introductie van een term of bewering over het domein naar de vakliteratuur, bijvoorbeeld~\autocite{Doll1954}! Denk zeker goed na welke werken je refereert en waarom.
+
+% Voor literatuurverwijzingen zijn er twee belangrijke commando's:
+% \autocite{KEY} => (Auteur, jaartal) Gebruik dit als de naam van de auteur
+%   geen onderdeel is van de zin.
+% \textcite{KEY} => Auteur (jaartal)  Gebruik dit als de auteursnaam wel een
+%   functie heeft in de zin (bv. ``Uit onderzoek door Doll & Hill (1954) bleek
+%   ...'')
+
+%Je mag gerust gebruik maken van subsecties in dit onderdeel.
+
+%Support-Vector network is een nieuw model voor twee-groeps classificatieproblemen. De machine werkt als volgt, inputvectoren worden non-lineair gemapt naar een ruimte waarbij er heel veel dimensies zijn. In deze ruimte wordt een lineair beslissingsoppervlak geconstrueerd. Het idee achter support-vector network werd voordien geïmplementeerd louter wanneer de trainingsdata kon gescheiden worden zonder enige fouten. Bij dit model wordt dit uitgebreid naar trainingsdata die niet gescheiden kan worden. De hoge generalizeerbaarheid van supportvectoren die gebruik maken van polynomiale inputtransformaties worden gedemonstreerd. ~\autocite{Cortes95support-vectornetworks}
+
+%Gradient boosting construeert additieve regressiemodellen door een simpele geparameterizeerde functie op een sequentiële manier aan de pseudo-residuelen te fitten aan de hand van de minste-vierkanten bij elke iteratie. De pseudo-residuelen zijn de gradient van de verliesfunctie die geminimaliseerd moet worden. Dit met aandacht voor de modelwaarden in elk trainingsdatapunt, geëvalueerd bij de huidige stap. Zowel de betrouwbaarheid en uitvoeringssnelheid zullen verbeterd worden door het introduceren van willekeurigheid. Deze willekeurigeheid wordt geïmplementeerd door bij iedere iteratie lukraak een deelsample van de trainingsdata te halen, zonder dit sample te vervangen. Dit deelsample wordt gebruikt om de base-learner te fitten en het model te updaten voor de huidige iteratie. Dit verhoogt de robuustheid van het model. ~\autocite{Friedman1999}
+
+Er zijn heel wat methoden die kunnen toegepast worden om een voorspelling te maken van tijdsgebonden data. Voor deze paper zullen enkel polynomiale vergelijkingen, ARIMA en LSTM getest worden. \\
+De meest primitieve manier om een trend te voorspellen is het fitten van een polynomiale vergelijking op de trainingsdata en deze nadien toe te passen op de testdata. 
+Daarnaast kan ook de ARIMA-methode ~\autocite{Brownlee2018} gebruikt worden ofwel het Autoregressive Integrated Moving Average. Deze methode combineert autoregressie en voortschrijdend gemiddelde. Autoregressie modeleert de volgende stap in een sequentie als een lineaire functie van de waarden uit voorgaande tijdspannes. De methode van het voortschrijdend gemiddelde modeleert de volgende stap in de sequentie als een lineaire functie van de resterende fouten van een gemiddeld proces bij voorgaande tijdspannes. Er moet ook opgemerkt worden dat er een verschil is tussen een model met een voortschrijdend gemiddelde en het voortschrijdend gemiddelde van de dataset zelf. \\
+Ook neurale netwerken kunnen toegepast worden bij het maken van voorspellingen van tijdreeksen. LSTM (Long Short Term Memory) is een vaak gebruikt modeltype om tijdreeksen te voorspellen. Dit model zal het verloop van de volgende waarden voorspellen op basis van de ingevoerde waarden rekening houdend met de chronologie waarin ze voorkomen. Hierbij zal de invloed van oudere waarden minder relevant worden naargelang er meer waarden ingevoerd worden. \\
+Op zowel de ARIMA als de LSTM modellen bestaan er varianten om multivariate tijdreeksen te voorspellen, bij ARIMA worden deze benoemd als VARMAX modellen. Ook bij polynomiale regressie kunnen multivariate times series voorspeld worden.
+Ook voor tijdreeksdata waar een duidelijk seizoenseffect zichtbaar is bestaat er een variant op het ARIMA model genaamd SARIMA.
+%https://stackoverflow.com/questions/54891965/multivariate-polynomial-regression-with-python
+%---------- Methodologie ------------------------------------------------------
+\section{Methodologie}
+\label{sec:methodologie}
+
+%Hier beschrijf je hoe je van plan bent het onderzoek te voeren. Welke onderzoekstechniek ga je toepassen om elk van je onderzoeksvragen te beantwoorden? Gebruik je hiervoor experimenten, vragenlijsten, simulaties? Je beschrijft ook al welke tools je denkt hiervoor te gebruiken of te ontwikkelen.
+
+Om na te gaan welke methodes de beste resultaten behalen zullen zowel polynomiale regressie, ARIMA en LSTM toegepast worden op 2 datasets, 1 waarbij een duidelijk seizoenseffect zichtbaar is en 1 waar geen duidelijke seizoensgebonden invloed aanwezig is. Daarnaast zullen ook al deze methodes of gespecialiseerdere varianten van deze methodes toegepast worden op datasets met en zonder seizoenseffect waarbij meerdere invoerparameters gebruikt zullen worden. \\
+Om deze methodes te scoren zullen de laatste waarden weggelaten en voorspeld worden waardoor uit de foutmarge tussen de voorspellingen en de werkelijke waarden afgeleid zal kunnen worden welke methode de meest accurate voorspelling zal kunnen maken. Om deze methodes te quoteren zullen de \(r^2\)  en de RMPSE (Root Mean Square Percentage Error) scoringsmethodes benut worden.
+
+%---------- Verwachte resultaten ----------------------------------------------
+\section{Verwachte resultaten}
+\label{sec:verwachte_resultaten}
+
+%Hier beschrijf je welke resultaten je verwacht. Als je metingen en simulaties uitvoert, kan je hier al mock-ups maken van de grafieken samen met de verwachte conclusies. Benoem zeker al je assen en de stukken van de grafiek die je gaat gebruiken. Dit zorgt ervoor dat je concreet weet hoe je je data gaat moeten structureren.
+Er valt te verwachten dat polynomiale regressie het zwakste resultaat zal behalen aangezien polynomiale technieken, door de aard van een veelterm, doorgaans minder goed zijn voor extrapolatie waarvoor ze in deze context benut zullen worden. Ik verwacht dat LSTM best zal scoren aangezien dit type model specifiek voor tijdreeksen is opgesteld gevolgd door ARIMA.
+
+%---------- Verwachte conclusies ----------------------------------------------
+\section{Verwachte conclusies}
+\label{sec:verwachte_conclusies}
+
+%Hier beschrijf je wat je verwacht uit je onderzoek, met de motivatie waarom. Het is \textbf{niet} erg indien uit je onderzoek andere resultaten en conclusies vloeien dan dat je hier beschrijft: het is dan juist interessant om te onderzoeken waarom jouw hypothesen niet overeenkomen met de resultaten.
+
+% bIn eerste instantie zou men kunnen verwachten dat de nieuwere modellen beter zouden scoren dan hun klassiekere tegengangers. Maar er moet hier ook rekening gehouden worden met verschillende mogelijke toepassingen. Zo zal een bepaald algoritme waarschijnlijk pakken beter scoren bij de 1ste use case dan bij de 2de, terwijl zijn tegenganger juist veel beter kan scoren bij de 2de use case dan bij de 1ste.
+Er valt te verwachten dat de voorgestelde technieken goede resultaten zullen behalen. Vooral voor LSTM liggen mijn verwachtingen vrij hoog omdat ik reeds een artikel ~\autocite{Siami-Namini2018} heb gelezen waarbij de voorspellingen voor LSTM accurater zijn. Ik heb een pak minder vertrouwen in polynomiale regressie aangezien deze techniek minder goed presteert bij extrapolatie en maar beter tot zijn recht komt bij interpolatie. ARIMA zal waarschijnlijk ook goede resultaten behalen.

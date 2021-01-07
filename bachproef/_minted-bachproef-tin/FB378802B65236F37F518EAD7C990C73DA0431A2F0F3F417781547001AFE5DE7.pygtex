@@ -1,0 +1,1377 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{c+ch}{\PYGZsh{}!/usr/bin/env python}
+\PYG{c+c1}{\PYGZsh{} coding: utf\PYGZhy{}8}
+
+\PYG{c+c1}{\PYGZsh{} In[40]:}
+
+
+\PYG{c+c1}{\PYGZsh{} Voorspellen voor 1 jaar}
+\PYG{c+c1}{\PYGZsh{} Of voorspellen op 3 jaar apart omdat voorspellen van 1 jaar misschien de algemene trend minder volgt}
+\PYG{c+c1}{\PYGZsh{} SARIMA proberen anders gwn ARIMA}
+
+
+\PYG{c+c1}{\PYGZsh{} In[41]:}
+
+
+\PYG{k+kn}{import} \PYG{n+nn}{pandas} \PYG{k}{as} \PYG{n+nn}{pd}
+\PYG{k+kn}{import} \PYG{n+nn}{numpy} \PYG{k}{as} \PYG{n+nn}{np}
+\PYG{c+c1}{\PYGZsh{} matplotlib is the Python library for drawing diagrams}
+\PYG{k+kn}{import} \PYG{n+nn}{matplotlib.pylab} \PYG{k}{as} \PYG{n+nn}{plt}
+\PYG{n}{get\PYGZus{}ipython}\PYG{p}{()}\PYG{o}{.}\PYG{n}{run\PYGZus{}line\PYGZus{}magic}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}matplotlib\PYGZsq{}}\PYG{p}{,} \PYG{l+s+s1}{\PYGZsq{}inline\PYGZsq{}}\PYG{p}{)}
+\PYG{c+c1}{\PYGZsh{} set the size of the diagrams}
+\PYG{k+kn}{from} \PYG{n+nn}{matplotlib.pylab} \PYG{k+kn}{import} \PYG{n}{rcParams}
+\PYG{n}{rcParams}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}figure.figsize\PYGZsq{}}\PYG{p}{]} \PYG{o}{=} \PYG{l+m+mi}{15}\PYG{p}{,}\PYG{l+m+mi}{5}
+\PYG{k+kn}{import} \PYG{n+nn}{timeit}
+\PYG{k+kn}{import} \PYG{n+nn}{warnings}
+\PYG{k+kn}{from} \PYG{n+nn}{sklearn.model\PYGZus{}selection} \PYG{k+kn}{import} \PYG{n}{TimeSeriesSplit}
+
+
+\PYG{c+c1}{\PYGZsh{} \PYGZsh{} General functions}
+
+\PYG{c+c1}{\PYGZsh{} In[42]:}
+
+
+\PYG{k}{def} \PYG{n+nf}{test\PYGZus{}stationarity}\PYG{p}{(}\PYG{n}{timeseries}\PYG{p}{):}
+
+    \PYG{c+c1}{\PYGZsh{}Determing rolling statistics}
+    \PYG{n}{rolmean} \PYG{o}{=} \PYG{n}{timeseries}\PYG{o}{.}\PYG{n}{rolling}\PYG{p}{(}\PYG{l+m+mi}{36}\PYG{p}{)}\PYG{o}{.}\PYG{n}{mean}\PYG{p}{()}
+    \PYG{n}{rolstd} \PYG{o}{=} \PYG{n}{timeseries}\PYG{o}{.}\PYG{n}{rolling}\PYG{p}{(}\PYG{l+m+mi}{24}\PYG{p}{)}\PYG{o}{.}\PYG{n}{std}\PYG{p}{()}
+
+    \PYG{c+c1}{\PYGZsh{}Plot rolling statistics:}
+    \PYG{n}{orig} \PYG{o}{=} \PYG{n}{plt}\PYG{o}{.}\PYG{n}{plot}\PYG{p}{(}\PYG{n}{timeseries}\PYG{p}{,} \PYG{n}{color}\PYG{o}{=}\PYG{l+s+s1}{\PYGZsq{}blue\PYGZsq{}}\PYG{p}{,}\PYG{n}{label}\PYG{o}{=}\PYG{l+s+s1}{\PYGZsq{}Original\PYGZsq{}}\PYG{p}{)}
+    \PYG{n}{mean} \PYG{o}{=} \PYG{n}{plt}\PYG{o}{.}\PYG{n}{plot}\PYG{p}{(}\PYG{n}{rolmean}\PYG{p}{,} \PYG{n}{color}\PYG{o}{=}\PYG{l+s+s1}{\PYGZsq{}red\PYGZsq{}}\PYG{p}{,} \PYG{n}{label}\PYG{o}{=}\PYG{l+s+s1}{\PYGZsq{}Rolling Mean\PYGZsq{}}\PYG{p}{)}
+    \PYG{n}{std} \PYG{o}{=} \PYG{n}{plt}\PYG{o}{.}\PYG{n}{plot}\PYG{p}{(}\PYG{n}{rolstd}\PYG{p}{,} \PYG{n}{color}\PYG{o}{=}\PYG{l+s+s1}{\PYGZsq{}black\PYGZsq{}}\PYG{p}{,} \PYG{n}{label} \PYG{o}{=} \PYG{l+s+s1}{\PYGZsq{}Rolling Std\PYGZsq{}}\PYG{p}{)}
+    \PYG{n}{plt}\PYG{o}{.}\PYG{n}{legend}\PYG{p}{(}\PYG{n}{loc}\PYG{o}{=}\PYG{l+s+s1}{\PYGZsq{}best\PYGZsq{}}\PYG{p}{)}
+    \PYG{n}{plt}\PYG{o}{.}\PYG{n}{title}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}Rolling Mean \PYGZam{} Standard Deviation\PYGZsq{}}\PYG{p}{)}
+    \PYG{n}{plt}\PYG{o}{.}\PYG{n}{show}\PYG{p}{(}\PYG{n}{block}\PYG{o}{=}\PYG{k+kc}{False}\PYG{p}{)}
+
+\PYG{k}{def} \PYG{n+nf}{full\PYGZus{}graph}\PYG{p}{(}\PYG{n}{predicted}\PYG{p}{,} \PYG{n}{og\PYGZus{}dataset}\PYG{p}{,} \PYG{n}{title}\PYG{p}{):}
+    \PYG{n}{zerosArray} \PYG{o}{=} \PYG{n}{np}\PYG{o}{.}\PYG{n}{zeros}\PYG{p}{(}\PYG{n}{og\PYGZus{}dataset}\PYG{o}{.}\PYG{n}{values}\PYG{o}{.}\PYG{n}{size}\PYG{o}{\PYGZhy{}}\PYG{n+nb}{len}\PYG{p}{(}\PYG{n}{predicted}\PYG{o}{.}\PYG{n}{flatten}\PYG{p}{()))}
+    \PYG{n}{cleanPrediction} \PYG{o}{=} \PYG{n}{pd}\PYG{o}{.}\PYG{n}{Series}\PYG{p}{(}\PYG{n}{np}\PYG{o}{.}\PYG{n}{concatenate}\PYG{p}{((}\PYG{n}{zerosArray}\PYG{p}{,}\PYG{n}{predicted}\PYG{p}{)))}\PYG{o}{.}\PYG{n}{replace}\PYG{p}{(}\PYG{l+m+mi}{0}\PYG{p}{,}\PYG{n}{np}\PYG{o}{.}\PYG{n}{NaN}\PYG{p}{)}
+
+    \PYG{c+c1}{\PYGZsh{} plot}
+    \PYG{n}{plt}\PYG{o}{.}\PYG{n}{title}\PYG{p}{(}\PYG{n}{title}\PYG{p}{)}
+    \PYG{n}{plt}\PYG{o}{.}\PYG{n}{plot}\PYG{p}{(}\PYG{n}{og\PYGZus{}dataset}\PYG{o}{.}\PYG{n}{index}\PYG{p}{,} \PYG{n}{og\PYGZus{}dataset}\PYG{o}{.}\PYG{n}{values}\PYG{p}{,}\PYG{n}{marker}\PYG{o}{=}\PYG{l+s+s1}{\PYGZsq{}o\PYGZsq{}}\PYG{p}{,} \PYG{n}{color}\PYG{o}{=}\PYG{l+s+s1}{\PYGZsq{}blue\PYGZsq{}}\PYG{p}{,}\PYG{n}{label}\PYG{o}{=}\PYG{l+s+s1}{\PYGZsq{}Actual values\PYGZsq{}}\PYG{p}{)}
+    \PYG{n}{plt}\PYG{o}{.}\PYG{n}{plot}\PYG{p}{(}\PYG{n}{og\PYGZus{}dataset}\PYG{o}{.}\PYG{n}{index}\PYG{p}{,} \PYG{n}{cleanPrediction}\PYG{p}{,}\PYG{n}{marker}\PYG{o}{=}\PYG{l+s+s1}{\PYGZsq{}o\PYGZsq{}}\PYG{p}{,} \PYG{n}{color}\PYG{o}{=}\PYG{l+s+s1}{\PYGZsq{}red\PYGZsq{}}\PYG{p}{,}\PYG{n}{label}\PYG{o}{=}\PYG{l+s+s1}{\PYGZsq{}Last 2 year prediction\PYGZsq{}}\PYG{p}{)}
+    \PYG{n}{plt}\PYG{o}{.}\PYG{n}{ylim}\PYG{p}{([}\PYG{l+m+mi}{0}\PYG{p}{,}\PYG{l+m+mi}{20}\PYG{p}{])}
+    \PYG{n}{plt}\PYG{o}{.}\PYG{n}{legend}\PYG{p}{()}
+
+    \PYG{n}{plt}\PYG{o}{.}\PYG{n}{show}\PYG{p}{()}
+
+\PYG{k}{def} \PYG{n+nf}{revert\PYGZus{}diff}\PYG{p}{(}\PYG{n}{predicted\PYGZus{}diff}\PYG{p}{,} \PYG{n}{og\PYGZus{}data}\PYG{p}{):}
+    \PYG{n}{last\PYGZus{}value} \PYG{o}{=} \PYG{n}{og\PYGZus{}data}\PYG{o}{.}\PYG{n}{iloc}\PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{n}{predicted\PYGZus{}diff}\PYG{o}{.}\PYG{n}{size}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{][}\PYG{l+m+mi}{0}\PYG{p}{]}
+    \PYG{n}{predicted\PYGZus{}actual} \PYG{o}{=} \PYG{n}{np}\PYG{o}{.}\PYG{n}{array}\PYG{p}{([])}
+    \PYG{k}{for} \PYG{n}{value\PYGZus{}diff} \PYG{o+ow}{in} \PYG{n}{predicted\PYGZus{}diff}\PYG{p}{:}
+        \PYG{n}{actual\PYGZus{}value} \PYG{o}{=} \PYG{n}{last\PYGZus{}value} \PYG{o}{+} \PYG{n}{value\PYGZus{}diff}
+        \PYG{n}{predicted\PYGZus{}actual} \PYG{o}{=} \PYG{n}{np}\PYG{o}{.}\PYG{n}{append}\PYG{p}{(}\PYG{n}{predicted\PYGZus{}actual}\PYG{p}{,} \PYG{n}{actual\PYGZus{}value}\PYG{p}{)}
+        \PYG{n}{last\PYGZus{}value} \PYG{o}{=} \PYG{n}{actual\PYGZus{}value}
+    \PYG{k}{return} \PYG{n}{predicted\PYGZus{}actual}
+
+\PYG{k}{def} \PYG{n+nf}{revert\PYGZus{}seasonal\PYGZus{}diff\PYGZus{}recursion}\PYG{p}{(}\PYG{n}{last\PYGZus{}seasons\PYGZus{}value}\PYG{p}{,} \PYG{n}{diff\PYGZus{}value}\PYG{p}{):}
+    \PYG{k}{return} \PYG{n}{last\PYGZus{}seasons\PYGZus{}value} \PYG{o}{+} \PYG{n}{diff\PYGZus{}value}
+
+\PYG{k}{def} \PYG{n+nf}{revert\PYGZus{}diff\PYGZus{}seasonal}\PYG{p}{(}\PYG{n}{predicted\PYGZus{}diff}\PYG{p}{,} \PYG{n}{og\PYGZus{}data}\PYG{p}{):}
+    \PYG{n}{prediction\PYGZus{}size} \PYG{o}{=} \PYG{n}{predicted\PYGZus{}diff}\PYG{o}{.}\PYG{n}{size}
+
+    \PYG{n}{history} \PYG{o}{=} \PYG{n}{ts}\PYG{p}{[:}\PYG{o}{\PYGZhy{}}\PYG{n}{prediction\PYGZus{}size}\PYG{p}{]}\PYG{o}{.}\PYG{n}{values}\PYG{o}{.}\PYG{n}{flatten}\PYG{p}{()}
+    \PYG{k}{for} \PYG{n}{value\PYGZus{}diff} \PYG{o+ow}{in} \PYG{n}{predicted\PYGZus{}diff}\PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{n}{prediction\PYGZus{}size}\PYG{p}{:]:}
+        \PYG{n}{new\PYGZus{}value} \PYG{o}{=} \PYG{n}{revert\PYGZus{}seasonal\PYGZus{}diff\PYGZus{}recursion}\PYG{p}{(}\PYG{n}{history}\PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{12}\PYG{p}{],} \PYG{n}{value\PYGZus{}diff}\PYG{p}{)}
+        \PYG{n}{history} \PYG{o}{=} \PYG{n}{np}\PYG{o}{.}\PYG{n}{append}\PYG{p}{(}\PYG{n}{history}\PYG{p}{,}\PYG{n}{new\PYGZus{}value}\PYG{p}{)}
+    \PYG{k}{return} \PYG{n}{history}\PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{n}{prediction\PYGZus{}size}\PYG{p}{:]}
+
+
+\PYG{c+c1}{\PYGZsh{} \PYGZsh{}\PYGZsh{} Dataprep}
+
+\PYG{c+c1}{\PYGZsh{} In[43]:}
+
+
+\PYG{n}{ts} \PYG{o}{=} \PYG{n}{pd}\PYG{o}{.}\PYG{n}{read\PYGZus{}csv}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}./data/dataframe\PYGZus{}monthly.csv\PYGZsq{}}\PYG{p}{,} \PYG{n}{index\PYGZus{}col}\PYG{o}{=}\PYG{l+m+mi}{0}\PYG{p}{,} \PYG{n}{usecols}\PYG{o}{=}\PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{,}\PYG{l+m+mi}{1}\PYG{p}{,}\PYG{l+m+mi}{3}\PYG{p}{])}\PYG{o}{.}\PYG{n}{reset\PYGZus{}index}\PYG{p}{()}
+
+
+\PYG{c+c1}{\PYGZsh{} In[44]:}
+
+
+\PYG{n}{ts}
+
+
+\PYG{c+c1}{\PYGZsh{} In[45]:}
+
+
+\PYG{n}{ts}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}date\PYGZsq{}}\PYG{p}{]} \PYG{o}{=} \PYG{n}{pd}\PYG{o}{.}\PYG{n}{to\PYGZus{}datetime}\PYG{p}{(}\PYG{n}{ts}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}Month\PYGZsq{}}\PYG{p}{]}\PYG{o}{.}\PYG{n}{astype}\PYG{p}{(}\PYG{n+nb}{str}\PYG{p}{)} \PYG{o}{+} \PYG{n}{ts}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}Year\PYGZsq{}}\PYG{p}{]}\PYG{o}{.}\PYG{n}{astype}\PYG{p}{(}\PYG{n+nb}{str}\PYG{p}{),} \PYG{n+nb}{format}\PYG{o}{=}\PYG{l+s+s1}{\PYGZsq{}\PYGZpc{}m\PYGZpc{}Y\PYGZsq{}}\PYG{p}{,} \PYG{n}{errors}\PYG{o}{=}\PYG{l+s+s1}{\PYGZsq{}ignore\PYGZsq{}}\PYG{p}{)}
+
+
+\PYG{c+c1}{\PYGZsh{} In[46]:}
+
+
+\PYG{n}{ts}
+
+
+\PYG{c+c1}{\PYGZsh{} In[47]:}
+
+
+\PYG{n}{ts} \PYG{o}{=} \PYG{n}{ts}\PYG{p}{[[}\PYG{l+s+s1}{\PYGZsq{}date\PYGZsq{}}\PYG{p}{,}\PYG{l+s+s1}{\PYGZsq{}ice\PYGZus{}extent\PYGZsq{}}\PYG{p}{]]}
+\PYG{n}{ts}\PYG{o}{.}\PYG{n}{set\PYGZus{}index}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}date\PYGZsq{}}\PYG{p}{,} \PYG{n}{inplace}\PYG{o}{=}\PYG{k+kc}{True}\PYG{p}{)}
+\PYG{n}{plt}\PYG{o}{.}\PYG{n}{plot}\PYG{p}{(}\PYG{n}{ts}\PYG{p}{[[}\PYG{l+s+s1}{\PYGZsq{}ice\PYGZus{}extent\PYGZsq{}}\PYG{p}{]])}
+
+
+\PYG{c+c1}{\PYGZsh{} In[48]:}
+
+
+\PYG{n}{test\PYGZus{}stationarity}\PYG{p}{(}\PYG{n}{ts}\PYG{p}{)}
+
+
+\PYG{c+c1}{\PYGZsh{} \PYGZsh{}\PYGZsh{}\PYGZsh{} Differencing}
+
+\PYG{c+c1}{\PYGZsh{} In[49]:}
+
+
+\PYG{n}{ts\PYGZus{}diff\PYGZus{}seasonal} \PYG{o}{=} \PYG{n}{ts} \PYG{o}{\PYGZhy{}} \PYG{n}{ts}\PYG{o}{.}\PYG{n}{shift}\PYG{p}{(}\PYG{l+m+mi}{12}\PYG{p}{)}
+\PYG{n}{ts\PYGZus{}diff\PYGZus{}seasonal} \PYG{o}{=} \PYG{n}{ts\PYGZus{}diff\PYGZus{}seasonal}\PYG{o}{.}\PYG{n}{dropna}\PYG{p}{()}
+\PYG{n}{test\PYGZus{}stationarity}\PYG{p}{(}\PYG{n}{ts\PYGZus{}diff\PYGZus{}seasonal}\PYG{p}{)}
+
+
+\PYG{c+c1}{\PYGZsh{} In[50]:}
+
+
+\PYG{n}{ts\PYGZus{}diff} \PYG{o}{=} \PYG{n}{ts} \PYG{o}{\PYGZhy{}} \PYG{n}{ts}\PYG{o}{.}\PYG{n}{shift}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{p}{)}
+\PYG{n}{ts\PYGZus{}diff} \PYG{o}{=} \PYG{n}{ts\PYGZus{}diff}\PYG{o}{.}\PYG{n}{dropna}\PYG{p}{()}
+\PYG{n}{test\PYGZus{}stationarity}\PYG{p}{(}\PYG{n}{ts\PYGZus{}diff}\PYG{p}{)}
+
+
+\PYG{c+c1}{\PYGZsh{} \PYGZsh{}\PYGZsh{}\PYGZsh{} Cross validation setup}
+
+\PYG{c+c1}{\PYGZsh{} In[51]:}
+
+
+\PYG{k}{def} \PYG{n+nf}{display\PYGZus{}cross\PYGZus{}validation}\PYG{p}{(}\PYG{n}{dataset}\PYG{p}{,} \PYG{n}{n\PYGZus{}splits}\PYG{p}{):}
+    \PYG{n}{tscv} \PYG{o}{=} \PYG{n}{TimeSeriesSplit}\PYG{p}{(}\PYG{n}{n\PYGZus{}splits} \PYG{o}{=} \PYG{n}{n\PYGZus{}splits}\PYG{p}{)}
+
+    \PYG{k}{for} \PYG{n}{train\PYGZus{}index}\PYG{p}{,} \PYG{n}{test\PYGZus{}index} \PYG{o+ow}{in} \PYG{n}{tscv}\PYG{o}{.}\PYG{n}{split}\PYG{p}{(}\PYG{n}{dataset}\PYG{p}{):}
+        \PYG{k}{if} \PYG{n}{train\PYGZus{}index}\PYG{o}{.}\PYG{n}{size} \PYG{o}{\PYGZgt{}} \PYG{l+m+mi}{300}\PYG{p}{:}
+            \PYG{c+c1}{\PYGZsh{} initialize cross validation train and test sets}
+            \PYG{n}{cv\PYGZus{}train}\PYG{p}{,} \PYG{n}{cv\PYGZus{}test} \PYG{o}{=} \PYG{n}{dataset}\PYG{o}{.}\PYG{n}{iloc}\PYG{p}{[}\PYG{n}{train\PYGZus{}index}\PYG{p}{],} \PYG{n}{dataset}\PYG{o}{.}\PYG{n}{iloc}\PYG{p}{[}\PYG{n}{test\PYGZus{}index}\PYG{p}{]}
+
+            \PYG{n+nb}{print}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}TRAIN:\PYGZdq{}}\PYG{p}{,} \PYG{n}{train\PYGZus{}index}\PYG{o}{.}\PYG{n}{size}\PYG{p}{)} \PYG{c+c1}{\PYGZsh{} visiualize cross\PYGZus{}validation structure for reference}
+            \PYG{n+nb}{print}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}TEST:\PYGZdq{}}\PYG{p}{,} \PYG{n}{test\PYGZus{}index}\PYG{o}{.}\PYG{n}{size}\PYG{p}{)}
+            \PYG{n+nb}{print}\PYG{p}{()}
+
+
+\PYG{c+c1}{\PYGZsh{} In[52]:}
+
+
+\PYG{n}{ts\PYGZus{}diff} \PYG{o}{=} \PYG{n}{ts\PYGZus{}diff}\PYG{p}{[:}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{5}\PYG{p}{]} \PYG{c+c1}{\PYGZsh{} need the \PYGZhy{}5 to get testsets for 24 months/2 years}
+\PYG{n}{display\PYGZus{}cross\PYGZus{}validation}\PYG{p}{(}\PYG{n}{ts\PYGZus{}diff}\PYG{p}{,} \PYG{l+m+mi}{18}\PYG{p}{)}
+\PYG{n}{tscv\PYGZus{}diff} \PYG{o}{=} \PYG{n}{TimeSeriesSplit}\PYG{p}{(}\PYG{n}{n\PYGZus{}splits} \PYG{o}{=} \PYG{l+m+mi}{18}\PYG{p}{)}
+
+
+\PYG{c+c1}{\PYGZsh{} In[53]:}
+
+
+\PYG{n}{display\PYGZus{}cross\PYGZus{}validation}\PYG{p}{(}\PYG{n}{ts\PYGZus{}diff\PYGZus{}seasonal}\PYG{p}{,} \PYG{l+m+mi}{18}\PYG{p}{)}
+\PYG{n}{tscv\PYGZus{}diff\PYGZus{}seasonal} \PYG{o}{=} \PYG{n}{TimeSeriesSplit}\PYG{p}{(}\PYG{n}{n\PYGZus{}splits} \PYG{o}{=} \PYG{l+m+mi}{18}\PYG{p}{)}
+
+
+\PYG{c+c1}{\PYGZsh{} \PYGZsh{} ARIMA}
+
+\PYG{c+c1}{\PYGZsh{} \PYGZsh{}\PYGZsh{} random walk differencing}
+
+\PYG{c+c1}{\PYGZsh{} \PYGZsh{}\PYGZsh{}\PYGZsh{} Determine hyperparameters}
+
+\PYG{c+c1}{\PYGZsh{} In[20]:}
+
+
+\PYG{c+c1}{\PYGZsh{} ARIMA}
+\PYG{k+kn}{from} \PYG{n+nn}{statsmodels.tsa.arima\PYGZus{}model} \PYG{k+kn}{import} \PYG{n}{ARIMA}
+\PYG{k+kn}{import} \PYG{n+nn}{itertools}
+\PYG{k+kn}{import} \PYG{n+nn}{warnings}
+\PYG{k+kn}{import} \PYG{n+nn}{sys}
+\PYG{k+kn}{from} \PYG{n+nn}{sklearn.metrics} \PYG{k+kn}{import} \PYG{n}{mean\PYGZus{}absolute\PYGZus{}error}
+
+
+
+\PYG{c+c1}{\PYGZsh{} Define the p, d and q parameters to take any value between 0 and 2}
+\PYG{n}{p} \PYG{o}{=} \PYG{n}{q} \PYG{o}{=} \PYG{n+nb}{range}\PYG{p}{(}\PYG{l+m+mi}{0}\PYG{p}{,} \PYG{l+m+mi}{5}\PYG{p}{)}
+\PYG{n}{d} \PYG{o}{=} \PYG{n+nb}{range}\PYG{p}{(}\PYG{l+m+mi}{0}\PYG{p}{,}\PYG{l+m+mi}{3}\PYG{p}{)}
+
+\PYG{c+c1}{\PYGZsh{} Generate all different combinations of p, q and q triplets}
+\PYG{n}{pdq} \PYG{o}{=} \PYG{n+nb}{list}\PYG{p}{(}\PYG{n}{itertools}\PYG{o}{.}\PYG{n}{product}\PYG{p}{(}\PYG{n}{p}\PYG{p}{,} \PYG{n}{d}\PYG{p}{,} \PYG{n}{q}\PYG{p}{))}
+\PYG{n}{best\PYGZus{}pdq} \PYG{o}{=} \PYG{n}{pdq}
+\PYG{n}{best\PYGZus{}mean\PYGZus{}mae} \PYG{o}{=} \PYG{n}{np}\PYG{o}{.}\PYG{n}{inf}
+\PYG{n}{warnings}\PYG{o}{.}\PYG{n}{filterwarnings}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}ignore\PYGZdq{}}\PYG{p}{)} \PYG{c+c1}{\PYGZsh{} specify to ignore warning messages}
+\PYG{k}{for} \PYG{n}{param} \PYG{o+ow}{in} \PYG{n}{pdq}\PYG{p}{:}
+    \PYG{n+nb}{print}\PYG{p}{(}\PYG{n}{param}\PYG{p}{)}
+    \PYG{k}{try}\PYG{p}{:}   \PYG{c+c1}{\PYGZsh{} some parametercombinations might lead to crash, so catch exceptions and continue}
+        \PYG{n}{maes} \PYG{o}{=} \PYG{p}{[]}
+        \PYG{k}{for} \PYG{n}{train\PYGZus{}index}\PYG{p}{,} \PYG{n}{test\PYGZus{}index} \PYG{o+ow}{in} \PYG{n}{tscv\PYGZus{}diff}\PYG{o}{.}\PYG{n}{split}\PYG{p}{(}\PYG{n}{ts\PYGZus{}diff}\PYG{p}{):}
+            \PYG{k}{if} \PYG{n}{train\PYGZus{}index}\PYG{o}{.}\PYG{n}{size} \PYG{o}{\PYGZgt{}} \PYG{l+m+mi}{300}\PYG{p}{:}
+                \PYG{c+c1}{\PYGZsh{} initialize cross validation train and test sets}
+                \PYG{n}{cv\PYGZus{}train}\PYG{p}{,} \PYG{n}{cv\PYGZus{}test} \PYG{o}{=} \PYG{n}{ts\PYGZus{}diff}\PYG{o}{.}\PYG{n}{iloc}\PYG{p}{[}\PYG{n}{train\PYGZus{}index}\PYG{p}{],} \PYG{n}{ts\PYGZus{}diff}\PYG{o}{.}\PYG{n}{iloc}\PYG{p}{[}\PYG{n}{test\PYGZus{}index}\PYG{p}{]}
+
+                \PYG{c+c1}{\PYGZsh{} build model}
+                \PYG{n}{model} \PYG{o}{=} \PYG{n}{ARIMA}\PYG{p}{(}\PYG{n}{cv\PYGZus{}train}\PYG{p}{,} \PYG{n}{order}\PYG{o}{=}\PYG{p}{(}\PYG{n}{param}\PYG{p}{))}
+                \PYG{n}{model\PYGZus{}fit} \PYG{o}{=} \PYG{n}{model}\PYG{o}{.}\PYG{n}{fit}\PYG{p}{()}
+
+                \PYG{c+c1}{\PYGZsh{} make predictions}
+                \PYG{n}{predictions} \PYG{o}{=}  \PYG{n}{model\PYGZus{}fit}\PYG{o}{.}\PYG{n}{predict}\PYG{p}{(}\PYG{n}{start}\PYG{o}{=}\PYG{n+nb}{len}\PYG{p}{(}\PYG{n}{cv\PYGZus{}train}\PYG{p}{),} \PYG{n}{end}\PYG{o}{=}\PYG{n+nb}{len}\PYG{p}{(}\PYG{n}{cv\PYGZus{}train}\PYG{p}{)}\PYG{o}{+}\PYG{n}{cv\PYGZus{}test}\PYG{o}{.}\PYG{n}{size}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{,} \PYG{n}{dynamic}\PYG{o}{=}\PYG{k+kc}{False}\PYG{p}{)}
+                \PYG{n}{prediction\PYGZus{}values} \PYG{o}{=} \PYG{n}{predictions}\PYG{o}{.}\PYG{n}{values}
+                \PYG{n}{true\PYGZus{}values} \PYG{o}{=} \PYG{n}{cv\PYGZus{}test}\PYG{o}{.}\PYG{n}{values}
+                \PYG{c+c1}{\PYGZsh{} error calc}
+                \PYG{c+c1}{\PYGZsh{}     print(true\PYGZus{}values)}
+                \PYG{c+c1}{\PYGZsh{}     print(predictions.values)}
+                \PYG{n}{maes}\PYG{o}{.}\PYG{n}{append}\PYG{p}{(}\PYG{n}{mean\PYGZus{}absolute\PYGZus{}error}\PYG{p}{(}\PYG{n}{true\PYGZus{}values}\PYG{p}{,} \PYG{n}{prediction\PYGZus{}values}\PYG{p}{))}
+
+
+        \PYG{n}{mean\PYGZus{}mae} \PYG{o}{=} \PYG{n}{np}\PYG{o}{.}\PYG{n}{mean}\PYG{p}{(}\PYG{n}{maes}\PYG{p}{)}
+        \PYG{n+nb}{print}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}MAE: \PYGZsq{}} \PYG{o}{+} \PYG{n+nb}{str}\PYG{p}{(}\PYG{n}{mean\PYGZus{}mae}\PYG{p}{))}
+
+        \PYG{k}{if} \PYG{n}{mean\PYGZus{}mae} \PYG{o}{\PYGZlt{}} \PYG{n}{best\PYGZus{}mean\PYGZus{}mae}\PYG{p}{:}
+            \PYG{n}{best\PYGZus{}mean\PYGZus{}mae} \PYG{o}{=} \PYG{n}{mean\PYGZus{}mae}
+            \PYG{n}{best\PYGZus{}maes} \PYG{o}{=} \PYG{n}{maes}
+            \PYG{n}{best\PYGZus{}pdq} \PYG{o}{=} \PYG{n}{param}
+            \PYG{n}{best\PYGZus{}predictions} \PYG{o}{=} \PYG{n}{prediction\PYGZus{}values}
+    \PYG{k}{except} \PYG{n+ne}{Exception} \PYG{k}{as} \PYG{n}{e}\PYG{p}{:}
+        \PYG{n+nb}{print}\PYG{p}{(}\PYG{n}{e}\PYG{p}{)}
+        \PYG{k}{continue}
+
+\PYG{n+nb}{print}\PYG{p}{()}
+\PYG{n+nb}{print}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}Best MAE = \PYGZsq{}} \PYG{o}{+} \PYG{n+nb}{str}\PYG{p}{(}\PYG{n}{best\PYGZus{}mean\PYGZus{}mae}\PYG{p}{))}
+\PYG{n+nb}{print}\PYG{p}{(}\PYG{n}{best\PYGZus{}pdq}\PYG{p}{)}
+
+
+\PYG{c+c1}{\PYGZsh{} best range(0,10)}
+\PYG{c+c1}{\PYGZsh{} Best MAE = 0.23763938034311669}
+\PYG{c+c1}{\PYGZsh{} (8, 0, 9)}
+\PYG{c+c1}{\PYGZsh{} Wall time: 1h 32min 14s}
+
+
+\PYG{c+c1}{\PYGZsh{} In[54]:}
+
+
+\PYG{c+c1}{\PYGZsh{} best\PYGZus{}pdq = (8, 0, 9) \PYGZsh{} range 10}
+\PYG{n}{best\PYGZus{}pdq} \PYG{o}{=} \PYG{p}{(}\PYG{l+m+mi}{3}\PYG{p}{,}\PYG{l+m+mi}{0}\PYG{p}{,}\PYG{l+m+mi}{3}\PYG{p}{)}
+
+
+\PYG{c+c1}{\PYGZsh{} \PYGZsh{}\PYGZsh{}\PYGZsh{} Final result}
+
+\PYG{c+c1}{\PYGZsh{} In[55]:}
+
+
+\PYG{k+kn}{from} \PYG{n+nn}{statsmodels.tsa.arima\PYGZus{}model} \PYG{k+kn}{import} \PYG{n}{ARIMA}
+\PYG{k+kn}{from} \PYG{n+nn}{sklearn.metrics} \PYG{k+kn}{import} \PYG{n}{mean\PYGZus{}absolute\PYGZus{}error}
+
+
+\PYG{n}{start\PYGZus{}time} \PYG{o}{=} \PYG{n}{timeit}\PYG{o}{.}\PYG{n}{default\PYGZus{}timer}\PYG{p}{()}
+
+\PYG{n}{warnings}\PYG{o}{.}\PYG{n}{filterwarnings}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}ignore\PYGZdq{}}\PYG{p}{)} \PYG{c+c1}{\PYGZsh{} specify to ignore warning messages}
+
+\PYG{n+nb}{print}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZdq{}}\PYG{p}{)}
+
+\PYG{n}{maes} \PYG{o}{=} \PYG{p}{[]}
+
+\PYG{k}{for} \PYG{n}{train\PYGZus{}index}\PYG{p}{,} \PYG{n}{test\PYGZus{}index} \PYG{o+ow}{in} \PYG{n}{tscv\PYGZus{}diff}\PYG{o}{.}\PYG{n}{split}\PYG{p}{(}\PYG{n}{ts\PYGZus{}diff}\PYG{p}{):}
+    \PYG{k}{if} \PYG{n}{train\PYGZus{}index}\PYG{o}{.}\PYG{n}{size} \PYG{o}{\PYGZgt{}} \PYG{l+m+mi}{300}\PYG{p}{:}
+        \PYG{c+c1}{\PYGZsh{} initialize cross validation train and test sets}
+        \PYG{n}{cv\PYGZus{}train}\PYG{p}{,} \PYG{n}{cv\PYGZus{}test} \PYG{o}{=} \PYG{n}{ts\PYGZus{}diff}\PYG{o}{.}\PYG{n}{iloc}\PYG{p}{[}\PYG{n}{train\PYGZus{}index}\PYG{p}{],} \PYG{n}{ts\PYGZus{}diff}\PYG{o}{.}\PYG{n}{iloc}\PYG{p}{[}\PYG{n}{test\PYGZus{}index}\PYG{p}{]}
+
+        \PYG{c+c1}{\PYGZsh{} build model}
+        \PYG{n}{model} \PYG{o}{=} \PYG{n}{ARIMA}\PYG{p}{(}\PYG{n}{cv\PYGZus{}train}\PYG{p}{,} \PYG{n}{order}\PYG{o}{=}\PYG{p}{(}\PYG{n}{best\PYGZus{}pdq}\PYG{p}{))}
+        \PYG{n}{model\PYGZus{}fit} \PYG{o}{=} \PYG{n}{model}\PYG{o}{.}\PYG{n}{fit}\PYG{p}{()}
+
+        \PYG{c+c1}{\PYGZsh{} make predictions}
+        \PYG{n}{predictions} \PYG{o}{=}  \PYG{n}{model\PYGZus{}fit}\PYG{o}{.}\PYG{n}{predict}\PYG{p}{(}\PYG{n}{start}\PYG{o}{=}\PYG{n+nb}{len}\PYG{p}{(}\PYG{n}{cv\PYGZus{}train}\PYG{p}{),} \PYG{n}{end}\PYG{o}{=}\PYG{n+nb}{len}\PYG{p}{(}\PYG{n}{cv\PYGZus{}train}\PYG{p}{)}\PYG{o}{+}\PYG{n}{cv\PYGZus{}test}\PYG{o}{.}\PYG{n}{size}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{,} \PYG{n}{dynamic}\PYG{o}{=}\PYG{k+kc}{False}\PYG{p}{)}
+        \PYG{n}{prediction\PYGZus{}values} \PYG{o}{=} \PYG{n}{predictions}\PYG{o}{.}\PYG{n}{values}
+        \PYG{n}{true\PYGZus{}values} \PYG{o}{=} \PYG{n}{cv\PYGZus{}test}\PYG{o}{.}\PYG{n}{values}
+
+        \PYG{c+c1}{\PYGZsh{} error calc}
+    \PYG{c+c1}{\PYGZsh{}     print(true\PYGZus{}values)}
+    \PYG{c+c1}{\PYGZsh{}     print(predictions.values)}
+        \PYG{n}{maes}\PYG{o}{.}\PYG{n}{append}\PYG{p}{(}\PYG{n}{mean\PYGZus{}absolute\PYGZus{}error}\PYG{p}{(}\PYG{n}{true\PYGZus{}values}\PYG{p}{,} \PYG{n}{prediction\PYGZus{}values}\PYG{p}{))}
+
+        \PYG{n+nb}{print}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}I\PYGZdq{}}\PYG{p}{,}\PYG{n}{end}\PYG{o}{=}\PYG{l+s+s2}{\PYGZdq{}\PYGZdq{}}\PYG{p}{)}
+
+\PYG{n}{time\PYGZus{}ARIMA} \PYG{o}{=} \PYG{n}{timeit}\PYG{o}{.}\PYG{n}{default\PYGZus{}timer}\PYG{p}{()} \PYG{o}{\PYGZhy{}} \PYG{n}{start\PYGZus{}time}
+\PYG{n}{mae\PYGZus{}mean} \PYG{o}{=} \PYG{n}{np}\PYG{o}{.}\PYG{n}{mean}\PYG{p}{(}\PYG{n}{maes}\PYG{p}{)}
+\PYG{n}{MAE\PYGZus{}ARIMA} \PYG{o}{=} \PYG{n}{mae\PYGZus{}mean}
+\PYG{n}{last\PYGZus{}MAE\PYGZus{}ARIMA} \PYG{o}{=} \PYG{n}{maes}\PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{]}
+\PYG{n}{last\PYGZus{}prediction\PYGZus{}ARIMA} \PYG{o}{=} \PYG{n}{prediction\PYGZus{}values}
+
+\PYG{n+nb}{print}\PYG{p}{()}
+\PYG{n+nb}{print}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}Mean MAE: }\PYG{l+s+si}{\PYGZpc{}.3f}\PYG{l+s+s1}{ x 1 000 000 km}\PYG{l+s+se}{\PYGZbs{}u00b2}\PYG{l+s+s1}{\PYGZsq{}} \PYG{o}{\PYGZpc{}} \PYG{n}{MAE\PYGZus{}ARIMA}\PYG{p}{)}
+\PYG{n+nb}{print}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}MAE of last prediction: }\PYG{l+s+si}{\PYGZpc{}.3f}\PYG{l+s+s1}{ x 1 000 000 km}\PYG{l+s+se}{\PYGZbs{}u00b2}\PYG{l+s+s1}{\PYGZsq{}} \PYG{o}{\PYGZpc{}} \PYG{n}{last\PYGZus{}MAE\PYGZus{}ARIMA}\PYG{p}{)}
+\PYG{n+nb}{print}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}Execution time: }\PYG{l+s+si}{\PYGZpc{}.3f}\PYG{l+s+s1}{ seconds\PYGZsq{}} \PYG{o}{\PYGZpc{}} \PYG{n}{time\PYGZus{}ARIMA}\PYG{p}{)}
+
+\PYG{n}{reverted\PYGZus{}prediction\PYGZus{}values} \PYG{o}{=} \PYG{n}{revert\PYGZus{}diff}\PYG{p}{(}\PYG{n}{last\PYGZus{}prediction\PYGZus{}ARIMA}\PYG{p}{,} \PYG{n}{ts}\PYG{p}{[:}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{5}\PYG{p}{])}
+\PYG{n}{full\PYGZus{}graph}\PYG{p}{(}\PYG{n}{reverted\PYGZus{}prediction\PYGZus{}values}\PYG{p}{,} \PYG{n}{ts}\PYG{p}{[:}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{5}\PYG{p}{],}\PYG{l+s+s1}{\PYGZsq{}Last 2 year prediction ARIMA with regular differencing\PYGZsq{}}\PYG{p}{)}
+\PYG{n+nb}{print}\PYG{p}{(}\PYG{n}{maes}\PYG{p}{)}
+
+
+\PYG{c+c1}{\PYGZsh{} \PYGZsh{}\PYGZsh{} Seasonal differencing}
+
+\PYG{c+c1}{\PYGZsh{} \PYGZsh{}\PYGZsh{}\PYGZsh{} Determine hyperparameters}
+
+\PYG{c+c1}{\PYGZsh{} In[22]:}
+
+
+\PYG{c+c1}{\PYGZsh{} ARIMA}
+\PYG{k+kn}{from} \PYG{n+nn}{statsmodels.tsa.arima\PYGZus{}model} \PYG{k+kn}{import} \PYG{n}{ARIMA}
+\PYG{k+kn}{import} \PYG{n+nn}{itertools}
+\PYG{k+kn}{import} \PYG{n+nn}{warnings}
+\PYG{k+kn}{import} \PYG{n+nn}{sys}
+\PYG{k+kn}{from} \PYG{n+nn}{sklearn.metrics} \PYG{k+kn}{import} \PYG{n}{mean\PYGZus{}absolute\PYGZus{}error}
+
+
+
+\PYG{c+c1}{\PYGZsh{} Define the p, d and q parameters to take any value between 0 and 2}
+\PYG{n}{p} \PYG{o}{=} \PYG{n}{q} \PYG{o}{=} \PYG{n+nb}{range}\PYG{p}{(}\PYG{l+m+mi}{0}\PYG{p}{,} \PYG{l+m+mi}{5}\PYG{p}{)}
+\PYG{n}{d} \PYG{o}{=} \PYG{n+nb}{range}\PYG{p}{(}\PYG{l+m+mi}{0}\PYG{p}{,}\PYG{l+m+mi}{3}\PYG{p}{)}
+
+\PYG{c+c1}{\PYGZsh{} Generate all different combinations of p, q and q triplets}
+\PYG{n}{pdq} \PYG{o}{=} \PYG{n+nb}{list}\PYG{p}{(}\PYG{n}{itertools}\PYG{o}{.}\PYG{n}{product}\PYG{p}{(}\PYG{n}{p}\PYG{p}{,} \PYG{n}{d}\PYG{p}{,} \PYG{n}{q}\PYG{p}{))}
+\PYG{n}{best\PYGZus{}pdq} \PYG{o}{=} \PYG{n}{pdq}
+\PYG{n}{best\PYGZus{}mean\PYGZus{}mae} \PYG{o}{=} \PYG{n}{np}\PYG{o}{.}\PYG{n}{inf}
+\PYG{n}{warnings}\PYG{o}{.}\PYG{n}{filterwarnings}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}ignore\PYGZdq{}}\PYG{p}{)} \PYG{c+c1}{\PYGZsh{} specify to ignore warning messages}
+\PYG{k}{for} \PYG{n}{param} \PYG{o+ow}{in} \PYG{n}{pdq}\PYG{p}{:}
+    \PYG{n+nb}{print}\PYG{p}{(}\PYG{n}{param}\PYG{p}{)}
+    \PYG{k}{try}\PYG{p}{:}   \PYG{c+c1}{\PYGZsh{} some parametercombinations might lead to crash, so catch exceptions and continue}
+        \PYG{n}{maes} \PYG{o}{=} \PYG{p}{[]}
+        \PYG{k}{for} \PYG{n}{train\PYGZus{}index}\PYG{p}{,} \PYG{n}{test\PYGZus{}index} \PYG{o+ow}{in} \PYG{n}{tscv\PYGZus{}diff\PYGZus{}seasonal}\PYG{o}{.}\PYG{n}{split}\PYG{p}{(}\PYG{n}{ts\PYGZus{}diff\PYGZus{}seasonal}\PYG{p}{):}
+            \PYG{k}{if} \PYG{n}{train\PYGZus{}index}\PYG{o}{.}\PYG{n}{size} \PYG{o}{\PYGZgt{}} \PYG{l+m+mi}{300}\PYG{p}{:}
+                \PYG{c+c1}{\PYGZsh{} initialize cross validation train and test sets}
+                \PYG{n}{cv\PYGZus{}train}\PYG{p}{,} \PYG{n}{cv\PYGZus{}test} \PYG{o}{=} \PYG{n}{ts\PYGZus{}diff\PYGZus{}seasonal}\PYG{o}{.}\PYG{n}{iloc}\PYG{p}{[}\PYG{n}{train\PYGZus{}index}\PYG{p}{],} \PYG{n}{ts\PYGZus{}diff\PYGZus{}seasonal}\PYG{o}{.}\PYG{n}{iloc}\PYG{p}{[}\PYG{n}{test\PYGZus{}index}\PYG{p}{]}
+
+                \PYG{c+c1}{\PYGZsh{} build model}
+                \PYG{n}{model} \PYG{o}{=} \PYG{n}{ARIMA}\PYG{p}{(}\PYG{n}{cv\PYGZus{}train}\PYG{p}{,} \PYG{n}{order}\PYG{o}{=}\PYG{p}{(}\PYG{n}{param}\PYG{p}{))}
+                \PYG{n}{model\PYGZus{}fit} \PYG{o}{=} \PYG{n}{model}\PYG{o}{.}\PYG{n}{fit}\PYG{p}{()}
+
+                \PYG{c+c1}{\PYGZsh{} make predictions}
+                \PYG{n}{predictions} \PYG{o}{=}  \PYG{n}{model\PYGZus{}fit}\PYG{o}{.}\PYG{n}{predict}\PYG{p}{(}\PYG{n}{start}\PYG{o}{=}\PYG{n+nb}{len}\PYG{p}{(}\PYG{n}{cv\PYGZus{}train}\PYG{p}{),} \PYG{n}{end}\PYG{o}{=}\PYG{n+nb}{len}\PYG{p}{(}\PYG{n}{cv\PYGZus{}train}\PYG{p}{)}\PYG{o}{+}\PYG{n}{cv\PYGZus{}test}\PYG{o}{.}\PYG{n}{size}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{,} \PYG{n}{dynamic}\PYG{o}{=}\PYG{k+kc}{False}\PYG{p}{)}
+                \PYG{n}{prediction\PYGZus{}values} \PYG{o}{=} \PYG{n}{predictions}\PYG{o}{.}\PYG{n}{values}
+                \PYG{n}{true\PYGZus{}values} \PYG{o}{=} \PYG{n}{cv\PYGZus{}test}\PYG{o}{.}\PYG{n}{values}
+                \PYG{c+c1}{\PYGZsh{} error calc}
+                \PYG{c+c1}{\PYGZsh{}     print(true\PYGZus{}values)}
+                \PYG{c+c1}{\PYGZsh{}     print(predictions.values)}
+                \PYG{n}{maes}\PYG{o}{.}\PYG{n}{append}\PYG{p}{(}\PYG{n}{mean\PYGZus{}absolute\PYGZus{}error}\PYG{p}{(}\PYG{n}{true\PYGZus{}values}\PYG{p}{,} \PYG{n}{prediction\PYGZus{}values}\PYG{p}{))}
+
+
+        \PYG{n}{mean\PYGZus{}mae} \PYG{o}{=} \PYG{n}{np}\PYG{o}{.}\PYG{n}{mean}\PYG{p}{(}\PYG{n}{maes}\PYG{p}{)}
+        \PYG{n+nb}{print}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}MAE: \PYGZsq{}} \PYG{o}{+} \PYG{n+nb}{str}\PYG{p}{(}\PYG{n}{mean\PYGZus{}mae}\PYG{p}{))}
+
+        \PYG{k}{if} \PYG{n}{mean\PYGZus{}mae} \PYG{o}{\PYGZlt{}} \PYG{n}{best\PYGZus{}mean\PYGZus{}mae}\PYG{p}{:}
+            \PYG{n}{best\PYGZus{}mean\PYGZus{}mae} \PYG{o}{=} \PYG{n}{mean\PYGZus{}mae}
+            \PYG{n}{best\PYGZus{}maes} \PYG{o}{=} \PYG{n}{maes}
+            \PYG{n}{best\PYGZus{}pdq} \PYG{o}{=} \PYG{n}{param}
+            \PYG{n}{best\PYGZus{}predictions} \PYG{o}{=} \PYG{n}{prediction\PYGZus{}values}
+    \PYG{k}{except} \PYG{n+ne}{Exception} \PYG{k}{as} \PYG{n}{e}\PYG{p}{:}
+        \PYG{n+nb}{print}\PYG{p}{(}\PYG{n}{e}\PYG{p}{)}
+        \PYG{k}{continue}
+
+\PYG{n+nb}{print}\PYG{p}{()}
+\PYG{n+nb}{print}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}Best MAE = \PYGZsq{}} \PYG{o}{+} \PYG{n+nb}{str}\PYG{p}{(}\PYG{n}{best\PYGZus{}mean\PYGZus{}mae}\PYG{p}{))}
+\PYG{n+nb}{print}\PYG{p}{(}\PYG{n}{best\PYGZus{}pdq}\PYG{p}{)}
+
+
+
+\PYG{c+c1}{\PYGZsh{} \PYGZsh{}\PYGZsh{}\PYGZsh{} Final result}
+
+\PYG{c+c1}{\PYGZsh{} In[56]:}
+
+
+\PYG{n}{best\PYGZus{}pdq}\PYG{o}{=}\PYG{p}{(}\PYG{l+m+mi}{3}\PYG{p}{,}\PYG{l+m+mi}{0}\PYG{p}{,}\PYG{l+m+mi}{3}\PYG{p}{)} \PYG{c+c1}{\PYGZsh{} pq range 4}
+\PYG{c+c1}{\PYGZsh{} best\PYGZus{}pdq=(8, 0, 6) \PYGZsh{} pq range 10}
+
+
+\PYG{c+c1}{\PYGZsh{} In[57]:}
+
+
+\PYG{k+kn}{from} \PYG{n+nn}{statsmodels.tsa.arima\PYGZus{}model} \PYG{k+kn}{import} \PYG{n}{ARIMA}
+\PYG{k+kn}{from} \PYG{n+nn}{sklearn.metrics} \PYG{k+kn}{import} \PYG{n}{mean\PYGZus{}absolute\PYGZus{}error}
+
+
+\PYG{n}{start\PYGZus{}time} \PYG{o}{=} \PYG{n}{timeit}\PYG{o}{.}\PYG{n}{default\PYGZus{}timer}\PYG{p}{()}
+
+\PYG{n}{warnings}\PYG{o}{.}\PYG{n}{filterwarnings}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}ignore\PYGZdq{}}\PYG{p}{)} \PYG{c+c1}{\PYGZsh{} specify to ignore warning messages}
+
+\PYG{n+nb}{print}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZdq{}}\PYG{p}{)}
+
+\PYG{n}{maes} \PYG{o}{=} \PYG{p}{[]}
+
+\PYG{k}{for} \PYG{n}{train\PYGZus{}index}\PYG{p}{,} \PYG{n}{test\PYGZus{}index} \PYG{o+ow}{in} \PYG{n}{tscv\PYGZus{}diff\PYGZus{}seasonal}\PYG{o}{.}\PYG{n}{split}\PYG{p}{(}\PYG{n}{ts\PYGZus{}diff\PYGZus{}seasonal}\PYG{p}{):}
+    \PYG{k}{if} \PYG{n}{train\PYGZus{}index}\PYG{o}{.}\PYG{n}{size} \PYG{o}{\PYGZgt{}} \PYG{l+m+mi}{300}\PYG{p}{:}
+        \PYG{c+c1}{\PYGZsh{} initialize cross validation train and test sets}
+        \PYG{n}{cv\PYGZus{}train}\PYG{p}{,} \PYG{n}{cv\PYGZus{}test} \PYG{o}{=} \PYG{n}{ts\PYGZus{}diff\PYGZus{}seasonal}\PYG{o}{.}\PYG{n}{iloc}\PYG{p}{[}\PYG{n}{train\PYGZus{}index}\PYG{p}{],} \PYG{n}{ts\PYGZus{}diff\PYGZus{}seasonal}\PYG{o}{.}\PYG{n}{iloc}\PYG{p}{[}\PYG{n}{test\PYGZus{}index}\PYG{p}{]}
+
+        \PYG{c+c1}{\PYGZsh{} build model}
+        \PYG{n}{model} \PYG{o}{=} \PYG{n}{ARIMA}\PYG{p}{(}\PYG{n}{cv\PYGZus{}train}\PYG{p}{,} \PYG{n}{order}\PYG{o}{=}\PYG{p}{(}\PYG{n}{best\PYGZus{}pdq}\PYG{p}{))}
+        \PYG{n}{model\PYGZus{}fit} \PYG{o}{=} \PYG{n}{model}\PYG{o}{.}\PYG{n}{fit}\PYG{p}{()}
+
+        \PYG{c+c1}{\PYGZsh{} make predictions}
+        \PYG{n}{predictions} \PYG{o}{=}  \PYG{n}{model\PYGZus{}fit}\PYG{o}{.}\PYG{n}{predict}\PYG{p}{(}\PYG{n}{start}\PYG{o}{=}\PYG{n+nb}{len}\PYG{p}{(}\PYG{n}{cv\PYGZus{}train}\PYG{p}{),} \PYG{n}{end}\PYG{o}{=}\PYG{n+nb}{len}\PYG{p}{(}\PYG{n}{cv\PYGZus{}train}\PYG{p}{)}\PYG{o}{+}\PYG{n}{cv\PYGZus{}test}\PYG{o}{.}\PYG{n}{size}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{,} \PYG{n}{dynamic}\PYG{o}{=}\PYG{k+kc}{False}\PYG{p}{)}
+        \PYG{n}{prediction\PYGZus{}values} \PYG{o}{=} \PYG{n}{predictions}\PYG{o}{.}\PYG{n}{values}
+        \PYG{n}{true\PYGZus{}values} \PYG{o}{=} \PYG{n}{cv\PYGZus{}test}\PYG{o}{.}\PYG{n}{values}
+
+        \PYG{c+c1}{\PYGZsh{} error calc}
+    \PYG{c+c1}{\PYGZsh{}     print(true\PYGZus{}values)}
+    \PYG{c+c1}{\PYGZsh{}     print(predictions.values)}
+        \PYG{n}{maes}\PYG{o}{.}\PYG{n}{append}\PYG{p}{(}\PYG{n}{mean\PYGZus{}absolute\PYGZus{}error}\PYG{p}{(}\PYG{n}{true\PYGZus{}values}\PYG{p}{,} \PYG{n}{prediction\PYGZus{}values}\PYG{p}{))}
+
+        \PYG{n+nb}{print}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}I\PYGZdq{}}\PYG{p}{,}\PYG{n}{end}\PYG{o}{=}\PYG{l+s+s2}{\PYGZdq{}\PYGZdq{}}\PYG{p}{)}
+
+\PYG{n}{time\PYGZus{}ARIMA\PYGZus{}seasonal} \PYG{o}{=} \PYG{n}{timeit}\PYG{o}{.}\PYG{n}{default\PYGZus{}timer}\PYG{p}{()} \PYG{o}{\PYGZhy{}} \PYG{n}{start\PYGZus{}time}
+\PYG{n}{mae\PYGZus{}mean} \PYG{o}{=} \PYG{n}{np}\PYG{o}{.}\PYG{n}{mean}\PYG{p}{(}\PYG{n}{maes}\PYG{p}{)}
+\PYG{n}{MAE\PYGZus{}ARIMA\PYGZus{}seasonal} \PYG{o}{=} \PYG{n}{mae\PYGZus{}mean}
+\PYG{n}{last\PYGZus{}MAE\PYGZus{}ARIMA\PYGZus{}seasonal} \PYG{o}{=} \PYG{n}{maes}\PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{]}
+\PYG{n}{last\PYGZus{}prediction\PYGZus{}ARIMA\PYGZus{}seasonal} \PYG{o}{=} \PYG{n}{prediction\PYGZus{}values}
+
+\PYG{n+nb}{print}\PYG{p}{()}
+\PYG{n+nb}{print}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}Mean MAE: }\PYG{l+s+si}{\PYGZpc{}.3f}\PYG{l+s+s1}{ x 1 000 000 km}\PYG{l+s+se}{\PYGZbs{}u00b2}\PYG{l+s+s1}{\PYGZsq{}} \PYG{o}{\PYGZpc{}} \PYG{n}{MAE\PYGZus{}ARIMA\PYGZus{}seasonal}\PYG{p}{)}
+\PYG{n+nb}{print}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}MAE of last prediction: }\PYG{l+s+si}{\PYGZpc{}.3f}\PYG{l+s+s1}{ x 1 000 000 km}\PYG{l+s+se}{\PYGZbs{}u00b2}\PYG{l+s+s1}{\PYGZsq{}} \PYG{o}{\PYGZpc{}} \PYG{n}{last\PYGZus{}MAE\PYGZus{}ARIMA\PYGZus{}seasonal}\PYG{p}{)}
+\PYG{n+nb}{print}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}Execution time: }\PYG{l+s+si}{\PYGZpc{}.3f}\PYG{l+s+s1}{ seconds\PYGZsq{}} \PYG{o}{\PYGZpc{}} \PYG{n}{time\PYGZus{}ARIMA\PYGZus{}seasonal}\PYG{p}{)}
+
+\PYG{n}{reverted\PYGZus{}prediction\PYGZus{}values} \PYG{o}{=} \PYG{n}{revert\PYGZus{}diff\PYGZus{}seasonal}\PYG{p}{(}\PYG{n}{last\PYGZus{}prediction\PYGZus{}ARIMA\PYGZus{}seasonal}\PYG{p}{,} \PYG{n}{ts}\PYG{p}{)}
+\PYG{n}{full\PYGZus{}graph}\PYG{p}{(}\PYG{n}{reverted\PYGZus{}prediction\PYGZus{}values}\PYG{p}{,} \PYG{n}{ts}\PYG{p}{,}\PYG{l+s+s1}{\PYGZsq{}Last 2 year prediction ARIMA with seasonal differencing\PYGZsq{}}\PYG{p}{)}
+\PYG{n+nb}{print}\PYG{p}{(}\PYG{n}{maes}\PYG{p}{)}
+
+
+\PYG{c+c1}{\PYGZsh{} \PYGZsh{} SARIMAX}
+
+\PYG{c+c1}{\PYGZsh{} \PYGZsh{}\PYGZsh{} Random walk differencing}
+
+\PYG{c+c1}{\PYGZsh{} In[76]:}
+
+
+\PYG{c+c1}{\PYGZsh{} SARIMAX}
+
+\PYG{k+kn}{import} \PYG{n+nn}{itertools}
+\PYG{k+kn}{import} \PYG{n+nn}{warnings}
+\PYG{k+kn}{import} \PYG{n+nn}{sys}
+\PYG{k+kn}{from} \PYG{n+nn}{statsmodels.tsa.statespace.sarimax} \PYG{k+kn}{import} \PYG{n}{SARIMAX}
+
+
+\PYG{c+c1}{\PYGZsh{} Define the p, d and q parameters to take any value between 0 and 2}
+\PYG{n}{p} \PYG{o}{=} \PYG{n}{q} \PYG{o}{=} \PYG{n}{P} \PYG{o}{=} \PYG{n}{D} \PYG{o}{=} \PYG{n}{Q} \PYG{o}{=} \PYG{n+nb}{range}\PYG{p}{(}\PYG{l+m+mi}{0}\PYG{p}{,} \PYG{l+m+mi}{3}\PYG{p}{)}
+\PYG{n}{d} \PYG{o}{=} \PYG{n}{D} \PYG{o}{=} \PYG{n+nb}{range}\PYG{p}{(}\PYG{l+m+mi}{0}\PYG{p}{,} \PYG{l+m+mi}{2}\PYG{p}{)}
+
+\PYG{c+c1}{\PYGZsh{} Generate all different combinations of p, q and q triplets}
+\PYG{n}{pdqPDQ} \PYG{o}{=} \PYG{n+nb}{list}\PYG{p}{(}\PYG{n}{itertools}\PYG{o}{.}\PYG{n}{product}\PYG{p}{(}\PYG{n}{p}\PYG{p}{,} \PYG{n}{d}\PYG{p}{,} \PYG{n}{q} \PYG{p}{,} \PYG{n}{P}\PYG{p}{,} \PYG{n}{D}\PYG{p}{,} \PYG{n}{Q}\PYG{p}{))}
+\PYG{n}{best\PYGZus{}pdqPDQ} \PYG{o}{=} \PYG{n}{pdqPDQ}
+\PYG{n}{best\PYGZus{}mean\PYGZus{}mae} \PYG{o}{=} \PYG{n}{np}\PYG{o}{.}\PYG{n}{inf}
+\PYG{n}{warnings}\PYG{o}{.}\PYG{n}{filterwarnings}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}ignore\PYGZdq{}}\PYG{p}{)} \PYG{c+c1}{\PYGZsh{} specify to ignore warning messages}
+\PYG{k}{for} \PYG{n}{param} \PYG{o+ow}{in} \PYG{n}{pdqPDQ}\PYG{p}{:}
+    \PYG{n+nb}{print}\PYG{p}{(}\PYG{n}{param}\PYG{p}{)}
+    \PYG{k}{try}\PYG{p}{:}   \PYG{c+c1}{\PYGZsh{} some parametercombinations might lead to crash, so catch exceptions and continue}
+        \PYG{n}{maes} \PYG{o}{=} \PYG{p}{[]}
+        \PYG{k}{for} \PYG{n}{train\PYGZus{}index}\PYG{p}{,} \PYG{n}{test\PYGZus{}index} \PYG{o+ow}{in} \PYG{n}{tscv\PYGZus{}diff}\PYG{o}{.}\PYG{n}{split}\PYG{p}{(}\PYG{n}{ts\PYGZus{}diff}\PYG{p}{):}
+            \PYG{k}{if} \PYG{n}{train\PYGZus{}index}\PYG{o}{.}\PYG{n}{size} \PYG{o}{\PYGZgt{}} \PYG{l+m+mi}{300}\PYG{p}{:}
+                \PYG{c+c1}{\PYGZsh{} initialize cross validation train and test sets}
+                \PYG{n}{cv\PYGZus{}train}\PYG{p}{,} \PYG{n}{cv\PYGZus{}test} \PYG{o}{=} \PYG{n}{ts\PYGZus{}diff}\PYG{o}{.}\PYG{n}{iloc}\PYG{p}{[}\PYG{n}{train\PYGZus{}index}\PYG{p}{],} \PYG{n}{ts\PYGZus{}diff}\PYG{o}{.}\PYG{n}{iloc}\PYG{p}{[}\PYG{n}{test\PYGZus{}index}\PYG{p}{]}
+
+                \PYG{c+c1}{\PYGZsh{} build model}
+                \PYG{n}{model} \PYG{o}{=} \PYG{n}{SARIMAX}\PYG{p}{(}\PYG{n}{cv\PYGZus{}train}\PYG{p}{,}
+                \PYG{n}{order}\PYG{o}{=}\PYG{n}{param}\PYG{p}{[:}\PYG{l+m+mi}{3}\PYG{p}{],}
+                \PYG{n}{seasonal\PYGZus{}order}\PYG{o}{=}\PYG{p}{(}\PYG{l+m+mi}{12}\PYG{p}{,)}\PYG{o}{+}\PYG{n}{param}\PYG{p}{[}\PYG{l+m+mi}{3}\PYG{p}{:])}
+                \PYG{n}{model\PYGZus{}fit} \PYG{o}{=} \PYG{n}{model}\PYG{o}{.}\PYG{n}{fit}\PYG{p}{()}
+
+                \PYG{c+c1}{\PYGZsh{} make predictions}
+\PYG{c+c1}{\PYGZsh{}                 predictions =  model\PYGZus{}fit.predict(start=len(cv\PYGZus{}train), end=len(cv\PYGZus{}train)+cv\PYGZus{}test.size\PYGZhy{}1, dynamic=False)}
+                \PYG{n}{predictions} \PYG{o}{=}  \PYG{n}{model\PYGZus{}fit}\PYG{o}{.}\PYG{n}{forecast}\PYG{p}{(}\PYG{n}{steps}\PYG{o}{=}\PYG{l+m+mi}{24}\PYG{p}{)}
+                \PYG{n}{prediction\PYGZus{}values} \PYG{o}{=} \PYG{n}{predictions}\PYG{o}{.}\PYG{n}{values}
+                \PYG{n}{true\PYGZus{}values} \PYG{o}{=} \PYG{n}{cv\PYGZus{}test}\PYG{o}{.}\PYG{n}{values}
+                \PYG{c+c1}{\PYGZsh{} error calc}
+                \PYG{c+c1}{\PYGZsh{}     print(true\PYGZus{}values)}
+                \PYG{c+c1}{\PYGZsh{}     print(predictions.values)}
+                \PYG{n}{maes}\PYG{o}{.}\PYG{n}{append}\PYG{p}{(}\PYG{n}{mean\PYGZus{}absolute\PYGZus{}error}\PYG{p}{(}\PYG{n}{true\PYGZus{}values}\PYG{p}{,} \PYG{n}{prediction\PYGZus{}values}\PYG{p}{))}
+
+
+        \PYG{n}{mean\PYGZus{}mae} \PYG{o}{=} \PYG{n}{np}\PYG{o}{.}\PYG{n}{mean}\PYG{p}{(}\PYG{n}{maes}\PYG{p}{)}
+        \PYG{n+nb}{print}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}MAE: \PYGZsq{}} \PYG{o}{+} \PYG{n+nb}{str}\PYG{p}{(}\PYG{n}{mean\PYGZus{}mae}\PYG{p}{))}
+
+        \PYG{k}{if} \PYG{n}{mean\PYGZus{}mae} \PYG{o}{\PYGZlt{}} \PYG{n}{best\PYGZus{}mean\PYGZus{}mae}\PYG{p}{:}
+            \PYG{n}{best\PYGZus{}mean\PYGZus{}mae} \PYG{o}{=} \PYG{n}{mean\PYGZus{}mae}
+            \PYG{n}{best\PYGZus{}maes} \PYG{o}{=} \PYG{n}{maes}
+            \PYG{n}{best\PYGZus{}pdqPDQ} \PYG{o}{=} \PYG{n}{param}
+            \PYG{n}{best\PYGZus{}predictions} \PYG{o}{=} \PYG{n}{prediction\PYGZus{}values}
+    \PYG{k}{except} \PYG{n+ne}{Exception} \PYG{k}{as} \PYG{n}{e}\PYG{p}{:}
+        \PYG{n+nb}{print}\PYG{p}{(}\PYG{n}{e}\PYG{p}{)}
+        \PYG{k}{continue}
+
+\PYG{n+nb}{print}\PYG{p}{(}\PYG{n}{best\PYGZus{}predictions}\PYG{o}{.}\PYG{n}{size}\PYG{p}{)}
+\PYG{n+nb}{print}\PYG{p}{(}\PYG{n}{data\PYGZus{}test}\PYG{o}{.}\PYG{n}{index}\PYG{o}{.}\PYG{n}{size}\PYG{p}{)}
+
+
+\PYG{n}{predictions\PYGZus{}df} \PYG{o}{=} \PYG{n}{pd}\PYG{o}{.}\PYG{n}{DataFrame}\PYG{p}{(}\PYG{n}{best\PYGZus{}predictions}\PYG{p}{)}\PYG{o}{.}\PYG{n}{set\PYGZus{}index}\PYG{p}{(}\PYG{n}{keys}\PYG{o}{=}\PYG{n}{data\PYGZus{}test}\PYG{o}{.}\PYG{n}{index}\PYG{p}{)}
+
+\PYG{c+c1}{\PYGZsh{} plot}
+\PYG{n+nb}{print}\PYG{p}{()}
+\PYG{n+nb}{print}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}Best MAE = \PYGZsq{}} \PYG{o}{+} \PYG{n+nb}{str}\PYG{p}{(}\PYG{n}{best\PYGZus{}mean\PYGZus{}mae}\PYG{p}{))}
+\PYG{n+nb}{print}\PYG{p}{(}\PYG{n}{best\PYGZus{}pdqPDQ}\PYG{p}{)}
+\PYG{n}{plt}\PYG{o}{.}\PYG{n}{plot}\PYG{p}{(}\PYG{n}{data\PYGZus{}test}\PYG{p}{,}\PYG{n}{color}\PYG{o}{=}\PYG{l+s+s1}{\PYGZsq{}blue\PYGZsq{}}\PYG{p}{)}
+\PYG{n}{plt}\PYG{o}{.}\PYG{n}{plot}\PYG{p}{(}\PYG{n}{predictions\PYGZus{}df}\PYG{p}{,} \PYG{n}{color}\PYG{o}{=}\PYG{l+s+s1}{\PYGZsq{}red\PYGZsq{}}\PYG{p}{)}
+\PYG{n}{plt}\PYG{o}{.}\PYG{n}{show}\PYG{p}{()}
+
+\PYG{c+c1}{\PYGZsh{} best range(0,2):}
+\PYG{c+c1}{\PYGZsh{} Best MAE = 0.2524024604742092}
+\PYG{c+c1}{\PYGZsh{} (1, 0, 1, 1, 1, 1)}
+\PYG{c+c1}{\PYGZsh{} Wall time: 14min 50s}
+
+\PYG{c+c1}{\PYGZsh{} best range(0,2):}
+
+\PYG{c+c1}{\PYGZsh{} Best MAE = 0.22780663319275937}
+\PYG{c+c1}{\PYGZsh{} (1, 0, 2, 0, 1, 2)}
+\PYG{c+c1}{\PYGZsh{} Wall time: 2h 6min 26s}
+
+
+\PYG{c+c1}{\PYGZsh{} In[58]:}
+
+
+\PYG{n}{best\PYGZus{}pdqPDQ} \PYG{o}{=} \PYG{p}{(}\PYG{l+m+mi}{1}\PYG{p}{,} \PYG{l+m+mi}{0}\PYG{p}{,} \PYG{l+m+mi}{2}\PYG{p}{,} \PYG{l+m+mi}{0}\PYG{p}{,} \PYG{l+m+mi}{1}\PYG{p}{,} \PYG{l+m+mi}{2}\PYG{p}{)}
+
+
+\PYG{c+c1}{\PYGZsh{} In[59]:}
+
+
+\PYG{k+kn}{from} \PYG{n+nn}{sklearn.metrics} \PYG{k+kn}{import} \PYG{n}{mean\PYGZus{}absolute\PYGZus{}error}
+\PYG{k+kn}{from} \PYG{n+nn}{statsmodels.tsa.statespace.sarimax} \PYG{k+kn}{import} \PYG{n}{SARIMAX}
+
+
+\PYG{n}{start\PYGZus{}time} \PYG{o}{=} \PYG{n}{timeit}\PYG{o}{.}\PYG{n}{default\PYGZus{}timer}\PYG{p}{()}
+
+\PYG{n}{warnings}\PYG{o}{.}\PYG{n}{filterwarnings}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}ignore\PYGZdq{}}\PYG{p}{)} \PYG{c+c1}{\PYGZsh{} specify to ignore warning messages}
+
+\PYG{n+nb}{print}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZdq{}}\PYG{p}{)}
+
+\PYG{n}{maes} \PYG{o}{=} \PYG{p}{[]}
+
+\PYG{k}{for} \PYG{n}{train\PYGZus{}index}\PYG{p}{,} \PYG{n}{test\PYGZus{}index} \PYG{o+ow}{in} \PYG{n}{tscv\PYGZus{}diff}\PYG{o}{.}\PYG{n}{split}\PYG{p}{(}\PYG{n}{ts\PYGZus{}diff}\PYG{p}{):}
+    \PYG{k}{if} \PYG{n}{train\PYGZus{}index}\PYG{o}{.}\PYG{n}{size} \PYG{o}{\PYGZgt{}} \PYG{l+m+mi}{300}\PYG{p}{:}
+
+        \PYG{c+c1}{\PYGZsh{} initialize cross validation train and test sets}
+        \PYG{n}{cv\PYGZus{}train}\PYG{p}{,} \PYG{n}{cv\PYGZus{}test} \PYG{o}{=} \PYG{n}{ts\PYGZus{}diff}\PYG{o}{.}\PYG{n}{iloc}\PYG{p}{[}\PYG{n}{train\PYGZus{}index}\PYG{p}{],} \PYG{n}{ts\PYGZus{}diff}\PYG{o}{.}\PYG{n}{iloc}\PYG{p}{[}\PYG{n}{test\PYGZus{}index}\PYG{p}{]}
+
+        \PYG{c+c1}{\PYGZsh{} build model}
+        \PYG{n}{model} \PYG{o}{=} \PYG{n}{SARIMAX}\PYG{p}{(}\PYG{n}{cv\PYGZus{}train}\PYG{p}{,}
+                \PYG{n}{order}\PYG{o}{=}\PYG{n}{best\PYGZus{}pdqPDQ}\PYG{p}{[:}\PYG{l+m+mi}{3}\PYG{p}{],}
+                \PYG{n}{seasonal\PYGZus{}order}\PYG{o}{=}\PYG{p}{(}\PYG{n}{best\PYGZus{}pdqPDQ}\PYG{p}{[}\PYG{l+m+mi}{3}\PYG{p}{:]}\PYG{o}{+}\PYG{p}{(}\PYG{l+m+mi}{12}\PYG{p}{,)))}
+        \PYG{n}{model\PYGZus{}fit} \PYG{o}{=} \PYG{n}{model}\PYG{o}{.}\PYG{n}{fit}\PYG{p}{()}
+
+        \PYG{c+c1}{\PYGZsh{} make predictions}
+        \PYG{n}{predictions} \PYG{o}{=}  \PYG{n}{model\PYGZus{}fit}\PYG{o}{.}\PYG{n}{predict}\PYG{p}{(}\PYG{n}{start}\PYG{o}{=}\PYG{n+nb}{len}\PYG{p}{(}\PYG{n}{cv\PYGZus{}train}\PYG{p}{),} \PYG{n}{end}\PYG{o}{=}\PYG{n+nb}{len}\PYG{p}{(}\PYG{n}{cv\PYGZus{}train}\PYG{p}{)}\PYG{o}{+}\PYG{n}{cv\PYGZus{}test}\PYG{o}{.}\PYG{n}{size}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{,} \PYG{n}{dynamic}\PYG{o}{=}\PYG{k+kc}{False}\PYG{p}{)}
+        \PYG{n}{prediction\PYGZus{}values} \PYG{o}{=} \PYG{n}{predictions}\PYG{o}{.}\PYG{n}{values}
+        \PYG{n}{true\PYGZus{}values} \PYG{o}{=} \PYG{n}{cv\PYGZus{}test}\PYG{o}{.}\PYG{n}{values}
+
+        \PYG{c+c1}{\PYGZsh{} error calc}
+    \PYG{c+c1}{\PYGZsh{}     print(true\PYGZus{}values)}
+    \PYG{c+c1}{\PYGZsh{}     print(predictions.values)}
+        \PYG{n}{maes}\PYG{o}{.}\PYG{n}{append}\PYG{p}{(}\PYG{n}{mean\PYGZus{}absolute\PYGZus{}error}\PYG{p}{(}\PYG{n}{true\PYGZus{}values}\PYG{p}{,} \PYG{n}{prediction\PYGZus{}values}\PYG{p}{))}
+        \PYG{n+nb}{print}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}I\PYGZdq{}}\PYG{p}{,}\PYG{n}{end}\PYG{o}{=}\PYG{l+s+s2}{\PYGZdq{}\PYGZdq{}}\PYG{p}{)}
+
+
+
+\PYG{n}{time\PYGZus{}SARIMA} \PYG{o}{=} \PYG{n}{timeit}\PYG{o}{.}\PYG{n}{default\PYGZus{}timer}\PYG{p}{()} \PYG{o}{\PYGZhy{}} \PYG{n}{start\PYGZus{}time}
+\PYG{n}{mae\PYGZus{}mean} \PYG{o}{=} \PYG{n}{np}\PYG{o}{.}\PYG{n}{mean}\PYG{p}{(}\PYG{n}{maes}\PYG{p}{)}
+\PYG{n}{MAE\PYGZus{}SARIMA} \PYG{o}{=} \PYG{n}{mae\PYGZus{}mean}
+\PYG{n}{last\PYGZus{}MAE\PYGZus{}SARIMA} \PYG{o}{=} \PYG{n}{maes}\PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{]}
+\PYG{n}{last\PYGZus{}prediction\PYGZus{}SARIMA} \PYG{o}{=} \PYG{n}{prediction\PYGZus{}values}
+
+
+\PYG{n+nb}{print}\PYG{p}{()}
+\PYG{n+nb}{print}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}Mean MAE: }\PYG{l+s+si}{\PYGZpc{}.3f}\PYG{l+s+s1}{ x 1 000 000 km}\PYG{l+s+se}{\PYGZbs{}u00b2}\PYG{l+s+s1}{\PYGZsq{}} \PYG{o}{\PYGZpc{}} \PYG{n}{MAE\PYGZus{}SARIMA}\PYG{p}{)}
+\PYG{n+nb}{print}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}MAE of last prediction: }\PYG{l+s+si}{\PYGZpc{}.3f}\PYG{l+s+s1}{ x 1 000 000 km}\PYG{l+s+se}{\PYGZbs{}u00b2}\PYG{l+s+s1}{\PYGZsq{}} \PYG{o}{\PYGZpc{}} \PYG{n}{last\PYGZus{}MAE\PYGZus{}SARIMA}\PYG{p}{)}
+\PYG{n+nb}{print}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}Execution time: }\PYG{l+s+si}{\PYGZpc{}.3f}\PYG{l+s+s1}{ seconds\PYGZsq{}} \PYG{o}{\PYGZpc{}} \PYG{n}{time\PYGZus{}SARIMA}\PYG{p}{)}
+
+\PYG{n}{reverted\PYGZus{}prediction\PYGZus{}values} \PYG{o}{=} \PYG{n}{revert\PYGZus{}diff}\PYG{p}{(}\PYG{n}{last\PYGZus{}prediction\PYGZus{}SARIMA}\PYG{p}{,} \PYG{n}{ts}\PYG{p}{[:}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{5}\PYG{p}{])}
+\PYG{n}{full\PYGZus{}graph}\PYG{p}{(}\PYG{n}{reverted\PYGZus{}prediction\PYGZus{}values}\PYG{p}{,} \PYG{n}{ts}\PYG{p}{[:}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{5}\PYG{p}{],}\PYG{l+s+s1}{\PYGZsq{}Last 2 year prediction SARIMAX\PYGZsq{}}\PYG{p}{)}
+\PYG{n+nb}{print}\PYG{p}{(}\PYG{n}{maes}\PYG{p}{)}
+
+
+\PYG{c+c1}{\PYGZsh{} \PYGZsh{}\PYGZsh{} Seasonal differencing}
+
+\PYG{c+c1}{\PYGZsh{} \PYGZsh{}\PYGZsh{}\PYGZsh{} Determine hyperparameters}
+
+\PYG{c+c1}{\PYGZsh{} In[79]:}
+
+
+\PYG{c+c1}{\PYGZsh{} SARIMAX}
+
+\PYG{k+kn}{import} \PYG{n+nn}{itertools}
+\PYG{k+kn}{import} \PYG{n+nn}{warnings}
+\PYG{k+kn}{import} \PYG{n+nn}{sys}
+\PYG{k+kn}{from} \PYG{n+nn}{statsmodels.tsa.statespace.sarimax} \PYG{k+kn}{import} \PYG{n}{SARIMAX}
+
+
+\PYG{c+c1}{\PYGZsh{} Define the p, d and q parameters to take any value between 0 and 2}
+\PYG{n}{p} \PYG{o}{=} \PYG{n}{q} \PYG{o}{=} \PYG{n}{P} \PYG{o}{=} \PYG{n}{D} \PYG{o}{=} \PYG{n}{Q} \PYG{o}{=} \PYG{n+nb}{range}\PYG{p}{(}\PYG{l+m+mi}{0}\PYG{p}{,} \PYG{l+m+mi}{3}\PYG{p}{)}
+\PYG{n}{d} \PYG{o}{=} \PYG{n}{D} \PYG{o}{=} \PYG{n+nb}{range}\PYG{p}{(}\PYG{l+m+mi}{0}\PYG{p}{,} \PYG{l+m+mi}{2}\PYG{p}{)}
+
+\PYG{c+c1}{\PYGZsh{} Generate all different combinations of p, q and q triplets}
+\PYG{n}{pdqPDQ} \PYG{o}{=} \PYG{n+nb}{list}\PYG{p}{(}\PYG{n}{itertools}\PYG{o}{.}\PYG{n}{product}\PYG{p}{(}\PYG{n}{p}\PYG{p}{,} \PYG{n}{d}\PYG{p}{,} \PYG{n}{q} \PYG{p}{,} \PYG{n}{P}\PYG{p}{,} \PYG{n}{D}\PYG{p}{,} \PYG{n}{Q}\PYG{p}{))}
+\PYG{n}{best\PYGZus{}pdqPDQ} \PYG{o}{=} \PYG{n}{pdqPDQ}
+\PYG{n}{best\PYGZus{}mean\PYGZus{}mae} \PYG{o}{=} \PYG{n}{np}\PYG{o}{.}\PYG{n}{inf}
+\PYG{n}{warnings}\PYG{o}{.}\PYG{n}{filterwarnings}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}ignore\PYGZdq{}}\PYG{p}{)} \PYG{c+c1}{\PYGZsh{} specify to ignore warning messages}
+\PYG{k}{for} \PYG{n}{param} \PYG{o+ow}{in} \PYG{n}{pdqPDQ}\PYG{p}{:}
+    \PYG{n+nb}{print}\PYG{p}{(}\PYG{n}{param}\PYG{p}{)}
+    \PYG{k}{try}\PYG{p}{:}   \PYG{c+c1}{\PYGZsh{} some parametercombinations might lead to crash, so catch exceptions and continue}
+        \PYG{n}{maes} \PYG{o}{=} \PYG{p}{[]}
+        \PYG{k}{for} \PYG{n}{train\PYGZus{}index}\PYG{p}{,} \PYG{n}{test\PYGZus{}index} \PYG{o+ow}{in} \PYG{n}{tscv\PYGZus{}diff\PYGZus{}seasonal}\PYG{o}{.}\PYG{n}{split}\PYG{p}{(}\PYG{n}{ts\PYGZus{}diff\PYGZus{}seasonal}\PYG{p}{):}
+            \PYG{k}{if} \PYG{n}{train\PYGZus{}index}\PYG{o}{.}\PYG{n}{size} \PYG{o}{\PYGZgt{}} \PYG{l+m+mi}{300}\PYG{p}{:}
+                \PYG{c+c1}{\PYGZsh{} initialize cross validation train and test sets}
+                \PYG{n}{cv\PYGZus{}train}\PYG{p}{,} \PYG{n}{cv\PYGZus{}test} \PYG{o}{=} \PYG{n}{ts\PYGZus{}diff\PYGZus{}seasonal}\PYG{o}{.}\PYG{n}{iloc}\PYG{p}{[}\PYG{n}{train\PYGZus{}index}\PYG{p}{],} \PYG{n}{ts\PYGZus{}diff\PYGZus{}seasonal}\PYG{o}{.}\PYG{n}{iloc}\PYG{p}{[}\PYG{n}{test\PYGZus{}index}\PYG{p}{]}
+
+                \PYG{c+c1}{\PYGZsh{} build model}
+                \PYG{n}{model} \PYG{o}{=} \PYG{n}{SARIMAX}\PYG{p}{(}\PYG{n}{cv\PYGZus{}train}\PYG{p}{,}
+                \PYG{n}{order}\PYG{o}{=}\PYG{n}{param}\PYG{p}{[:}\PYG{l+m+mi}{3}\PYG{p}{],}
+                \PYG{n}{seasonal\PYGZus{}order}\PYG{o}{=}\PYG{p}{(}\PYG{l+m+mi}{12}\PYG{p}{,)}\PYG{o}{+}\PYG{n}{param}\PYG{p}{[}\PYG{l+m+mi}{3}\PYG{p}{:])}
+                \PYG{n}{model\PYGZus{}fit} \PYG{o}{=} \PYG{n}{model}\PYG{o}{.}\PYG{n}{fit}\PYG{p}{()}
+
+                \PYG{c+c1}{\PYGZsh{} make predictions}
+\PYG{c+c1}{\PYGZsh{}                 predictions =  model\PYGZus{}fit.predict(start=len(cv\PYGZus{}train), end=len(cv\PYGZus{}train)+cv\PYGZus{}test.size\PYGZhy{}1, dynamic=False)}
+                \PYG{n}{predictions} \PYG{o}{=}  \PYG{n}{model\PYGZus{}fit}\PYG{o}{.}\PYG{n}{forecast}\PYG{p}{(}\PYG{n}{steps}\PYG{o}{=}\PYG{l+m+mi}{24}\PYG{p}{)}
+                \PYG{n}{prediction\PYGZus{}values} \PYG{o}{=} \PYG{n}{predictions}\PYG{o}{.}\PYG{n}{values}
+                \PYG{n}{true\PYGZus{}values} \PYG{o}{=} \PYG{n}{cv\PYGZus{}test}\PYG{o}{.}\PYG{n}{values}
+                \PYG{c+c1}{\PYGZsh{} error calc}
+                \PYG{c+c1}{\PYGZsh{}     print(true\PYGZus{}values)}
+                \PYG{c+c1}{\PYGZsh{}     print(predictions.values)}
+                \PYG{n}{maes}\PYG{o}{.}\PYG{n}{append}\PYG{p}{(}\PYG{n}{mean\PYGZus{}absolute\PYGZus{}error}\PYG{p}{(}\PYG{n}{true\PYGZus{}values}\PYG{p}{,} \PYG{n}{prediction\PYGZus{}values}\PYG{p}{))}
+
+
+        \PYG{n}{mean\PYGZus{}mae} \PYG{o}{=} \PYG{n}{np}\PYG{o}{.}\PYG{n}{mean}\PYG{p}{(}\PYG{n}{maes}\PYG{p}{)}
+        \PYG{n+nb}{print}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}MAE: \PYGZsq{}} \PYG{o}{+} \PYG{n+nb}{str}\PYG{p}{(}\PYG{n}{mean\PYGZus{}mae}\PYG{p}{))}
+
+        \PYG{k}{if} \PYG{n}{mean\PYGZus{}mae} \PYG{o}{\PYGZlt{}} \PYG{n}{best\PYGZus{}mean\PYGZus{}mae}\PYG{p}{:}
+            \PYG{n}{best\PYGZus{}mean\PYGZus{}mae} \PYG{o}{=} \PYG{n}{mean\PYGZus{}mae}
+            \PYG{n}{best\PYGZus{}maes} \PYG{o}{=} \PYG{n}{maes}
+            \PYG{n}{best\PYGZus{}pdqPDQ} \PYG{o}{=} \PYG{n}{param}
+            \PYG{n}{best\PYGZus{}predictions} \PYG{o}{=} \PYG{n}{prediction\PYGZus{}values}
+    \PYG{k}{except} \PYG{n+ne}{Exception} \PYG{k}{as} \PYG{n}{e}\PYG{p}{:}
+        \PYG{n+nb}{print}\PYG{p}{(}\PYG{n}{e}\PYG{p}{)}
+        \PYG{k}{continue}
+
+\PYG{n+nb}{print}\PYG{p}{(}\PYG{n}{best\PYGZus{}predictions}\PYG{o}{.}\PYG{n}{size}\PYG{p}{)}
+\PYG{n+nb}{print}\PYG{p}{(}\PYG{n}{data\PYGZus{}test}\PYG{o}{.}\PYG{n}{index}\PYG{o}{.}\PYG{n}{size}\PYG{p}{)}
+
+
+\PYG{n}{predictions\PYGZus{}df} \PYG{o}{=} \PYG{n}{pd}\PYG{o}{.}\PYG{n}{DataFrame}\PYG{p}{(}\PYG{n}{best\PYGZus{}predictions}\PYG{p}{)}\PYG{o}{.}\PYG{n}{set\PYGZus{}index}\PYG{p}{(}\PYG{n}{keys}\PYG{o}{=}\PYG{n}{data\PYGZus{}test}\PYG{o}{.}\PYG{n}{index}\PYG{p}{)}
+
+\PYG{c+c1}{\PYGZsh{} plot}
+\PYG{n+nb}{print}\PYG{p}{()}
+\PYG{n+nb}{print}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}Best MAE = \PYGZsq{}} \PYG{o}{+} \PYG{n+nb}{str}\PYG{p}{(}\PYG{n}{best\PYGZus{}mean\PYGZus{}mae}\PYG{p}{))}
+\PYG{n+nb}{print}\PYG{p}{(}\PYG{n}{best\PYGZus{}pdqPDQ}\PYG{p}{)}
+\PYG{n}{plt}\PYG{o}{.}\PYG{n}{plot}\PYG{p}{(}\PYG{n}{data\PYGZus{}test}\PYG{p}{,}\PYG{n}{color}\PYG{o}{=}\PYG{l+s+s1}{\PYGZsq{}blue\PYGZsq{}}\PYG{p}{)}
+\PYG{n}{plt}\PYG{o}{.}\PYG{n}{plot}\PYG{p}{(}\PYG{n}{predictions\PYGZus{}df}\PYG{p}{,} \PYG{n}{color}\PYG{o}{=}\PYG{l+s+s1}{\PYGZsq{}red\PYGZsq{}}\PYG{p}{)}
+\PYG{n}{plt}\PYG{o}{.}\PYG{n}{show}\PYG{p}{()}
+
+\PYG{c+c1}{\PYGZsh{} best range(0,2):}
+\PYG{c+c1}{\PYGZsh{} Best MAE = 0.2524024604742092}
+\PYG{c+c1}{\PYGZsh{} (1, 0, 1, 1, 1, 1)}
+\PYG{c+c1}{\PYGZsh{} Wall time: 14min 50s}
+
+\PYG{c+c1}{\PYGZsh{} best range(0,2):}
+
+\PYG{c+c1}{\PYGZsh{} Best MAE = 0.22780663319275937}
+\PYG{c+c1}{\PYGZsh{} (1, 0, 2, 0, 1, 2)}
+\PYG{c+c1}{\PYGZsh{} Wall time: 2h 6min 26s}
+
+
+\PYG{c+c1}{\PYGZsh{} In[60]:}
+
+
+\PYG{n}{best\PYGZus{}pdqPDQ} \PYG{o}{=} \PYG{p}{(}\PYG{l+m+mi}{1}\PYG{p}{,} \PYG{l+m+mi}{0}\PYG{p}{,} \PYG{l+m+mi}{2}\PYG{p}{,} \PYG{l+m+mi}{0}\PYG{p}{,} \PYG{l+m+mi}{1}\PYG{p}{,} \PYG{l+m+mi}{2}\PYG{p}{)}
+
+
+\PYG{c+c1}{\PYGZsh{} In[61]:}
+
+
+\PYG{k+kn}{from} \PYG{n+nn}{sklearn.metrics} \PYG{k+kn}{import} \PYG{n}{mean\PYGZus{}absolute\PYGZus{}error}
+\PYG{k+kn}{from} \PYG{n+nn}{statsmodels.tsa.statespace.sarimax} \PYG{k+kn}{import} \PYG{n}{SARIMAX}
+
+
+\PYG{n}{start\PYGZus{}time} \PYG{o}{=} \PYG{n}{timeit}\PYG{o}{.}\PYG{n}{default\PYGZus{}timer}\PYG{p}{()}
+
+\PYG{n}{warnings}\PYG{o}{.}\PYG{n}{filterwarnings}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}ignore\PYGZdq{}}\PYG{p}{)} \PYG{c+c1}{\PYGZsh{} specify to ignore warning messages}
+
+\PYG{n+nb}{print}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZdq{}}\PYG{p}{)}
+
+\PYG{n}{maes} \PYG{o}{=} \PYG{p}{[]}
+
+\PYG{k}{for} \PYG{n}{train\PYGZus{}index}\PYG{p}{,} \PYG{n}{test\PYGZus{}index} \PYG{o+ow}{in} \PYG{n}{tscv\PYGZus{}diff\PYGZus{}seasonal}\PYG{o}{.}\PYG{n}{split}\PYG{p}{(}\PYG{n}{ts\PYGZus{}diff\PYGZus{}seasonal}\PYG{p}{):}
+    \PYG{k}{if} \PYG{n}{train\PYGZus{}index}\PYG{o}{.}\PYG{n}{size} \PYG{o}{\PYGZgt{}} \PYG{l+m+mi}{300}\PYG{p}{:}
+
+        \PYG{c+c1}{\PYGZsh{} initialize cross validation train and test sets}
+        \PYG{n}{cv\PYGZus{}train}\PYG{p}{,} \PYG{n}{cv\PYGZus{}test} \PYG{o}{=} \PYG{n}{ts\PYGZus{}diff\PYGZus{}seasonal}\PYG{o}{.}\PYG{n}{iloc}\PYG{p}{[}\PYG{n}{train\PYGZus{}index}\PYG{p}{],} \PYG{n}{ts\PYGZus{}diff\PYGZus{}seasonal}\PYG{o}{.}\PYG{n}{iloc}\PYG{p}{[}\PYG{n}{test\PYGZus{}index}\PYG{p}{]}
+
+        \PYG{c+c1}{\PYGZsh{} build model}
+        \PYG{n}{model} \PYG{o}{=} \PYG{n}{SARIMAX}\PYG{p}{(}\PYG{n}{cv\PYGZus{}train}\PYG{p}{,}
+                \PYG{n}{order}\PYG{o}{=}\PYG{n}{best\PYGZus{}pdqPDQ}\PYG{p}{[:}\PYG{l+m+mi}{3}\PYG{p}{],}
+                \PYG{n}{seasonal\PYGZus{}order}\PYG{o}{=}\PYG{p}{(}\PYG{n}{best\PYGZus{}pdqPDQ}\PYG{p}{[}\PYG{l+m+mi}{3}\PYG{p}{:]}\PYG{o}{+}\PYG{p}{(}\PYG{l+m+mi}{12}\PYG{p}{,)))}
+        \PYG{n}{model\PYGZus{}fit} \PYG{o}{=} \PYG{n}{model}\PYG{o}{.}\PYG{n}{fit}\PYG{p}{()}
+
+        \PYG{c+c1}{\PYGZsh{} make predictions}
+        \PYG{n}{predictions} \PYG{o}{=}  \PYG{n}{model\PYGZus{}fit}\PYG{o}{.}\PYG{n}{predict}\PYG{p}{(}\PYG{n}{start}\PYG{o}{=}\PYG{n+nb}{len}\PYG{p}{(}\PYG{n}{cv\PYGZus{}train}\PYG{p}{),} \PYG{n}{end}\PYG{o}{=}\PYG{n+nb}{len}\PYG{p}{(}\PYG{n}{cv\PYGZus{}train}\PYG{p}{)}\PYG{o}{+}\PYG{n}{cv\PYGZus{}test}\PYG{o}{.}\PYG{n}{size}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{,} \PYG{n}{dynamic}\PYG{o}{=}\PYG{k+kc}{False}\PYG{p}{)}
+        \PYG{n}{prediction\PYGZus{}values} \PYG{o}{=} \PYG{n}{predictions}\PYG{o}{.}\PYG{n}{values}
+        \PYG{n}{true\PYGZus{}values} \PYG{o}{=} \PYG{n}{cv\PYGZus{}test}\PYG{o}{.}\PYG{n}{values}
+
+        \PYG{c+c1}{\PYGZsh{} error calc}
+    \PYG{c+c1}{\PYGZsh{}     print(true\PYGZus{}values)}
+    \PYG{c+c1}{\PYGZsh{}     print(predictions.values)}
+        \PYG{n}{maes}\PYG{o}{.}\PYG{n}{append}\PYG{p}{(}\PYG{n}{mean\PYGZus{}absolute\PYGZus{}error}\PYG{p}{(}\PYG{n}{true\PYGZus{}values}\PYG{p}{,} \PYG{n}{prediction\PYGZus{}values}\PYG{p}{))}
+        \PYG{n+nb}{print}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}I\PYGZdq{}}\PYG{p}{,}\PYG{n}{end}\PYG{o}{=}\PYG{l+s+s2}{\PYGZdq{}\PYGZdq{}}\PYG{p}{)}
+
+
+
+\PYG{n}{time\PYGZus{}SARIMA\PYGZus{}seasonal} \PYG{o}{=} \PYG{n}{timeit}\PYG{o}{.}\PYG{n}{default\PYGZus{}timer}\PYG{p}{()} \PYG{o}{\PYGZhy{}} \PYG{n}{start\PYGZus{}time}
+\PYG{n}{mae\PYGZus{}mean} \PYG{o}{=} \PYG{n}{np}\PYG{o}{.}\PYG{n}{mean}\PYG{p}{(}\PYG{n}{maes}\PYG{p}{)}
+\PYG{n}{MAE\PYGZus{}SARIMA\PYGZus{}seasonal} \PYG{o}{=} \PYG{n}{mae\PYGZus{}mean}
+\PYG{n}{last\PYGZus{}MAE\PYGZus{}SARIMA\PYGZus{}seasonal} \PYG{o}{=} \PYG{n}{maes}\PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{]}
+\PYG{n}{last\PYGZus{}prediction\PYGZus{}SARIMA\PYGZus{}seasonal} \PYG{o}{=} \PYG{n}{prediction\PYGZus{}values}
+
+
+\PYG{n+nb}{print}\PYG{p}{()}
+\PYG{n+nb}{print}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}Mean MAE: }\PYG{l+s+si}{\PYGZpc{}.3f}\PYG{l+s+s1}{ x 1 000 000 km}\PYG{l+s+se}{\PYGZbs{}u00b2}\PYG{l+s+s1}{\PYGZsq{}} \PYG{o}{\PYGZpc{}} \PYG{n}{MAE\PYGZus{}SARIMA\PYGZus{}seasonal}\PYG{p}{)}
+\PYG{n+nb}{print}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}MAE of last prediction: }\PYG{l+s+si}{\PYGZpc{}.3f}\PYG{l+s+s1}{ x 1 000 000 km}\PYG{l+s+se}{\PYGZbs{}u00b2}\PYG{l+s+s1}{\PYGZsq{}} \PYG{o}{\PYGZpc{}} \PYG{n}{last\PYGZus{}MAE\PYGZus{}SARIMA\PYGZus{}seasonal}\PYG{p}{)}
+\PYG{n+nb}{print}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}Execution time: }\PYG{l+s+si}{\PYGZpc{}.3f}\PYG{l+s+s1}{ seconds\PYGZsq{}} \PYG{o}{\PYGZpc{}} \PYG{n}{time\PYGZus{}SARIMA\PYGZus{}seasonal}\PYG{p}{)}
+
+\PYG{n}{reverted\PYGZus{}prediction\PYGZus{}values} \PYG{o}{=} \PYG{n}{revert\PYGZus{}diff\PYGZus{}seasonal}\PYG{p}{(}\PYG{n}{last\PYGZus{}prediction\PYGZus{}SARIMA\PYGZus{}seasonal}\PYG{p}{,} \PYG{n}{ts}\PYG{p}{)}
+\PYG{n}{full\PYGZus{}graph}\PYG{p}{(}\PYG{n}{reverted\PYGZus{}prediction\PYGZus{}values}\PYG{p}{,} \PYG{n}{ts}\PYG{p}{,}\PYG{l+s+s1}{\PYGZsq{}Last 2 year prediction SARIMAX\PYGZsq{}}\PYG{p}{)}
+\PYG{n+nb}{print}\PYG{p}{(}\PYG{n}{maes}\PYG{p}{)}
+
+
+\PYG{c+c1}{\PYGZsh{} \PYGZsh{} LSTM}
+
+\PYG{c+c1}{\PYGZsh{} In[62]:}
+
+
+\PYG{k+kn}{from} \PYG{n+nn}{keras.layers} \PYG{k+kn}{import} \PYG{n}{Dropout}
+\PYG{k+kn}{from} \PYG{n+nn}{numpy} \PYG{k+kn}{import} \PYG{n}{array}
+\PYG{k+kn}{from} \PYG{n+nn}{keras.models} \PYG{k+kn}{import} \PYG{n}{Sequential}
+\PYG{k+kn}{from} \PYG{n+nn}{keras.layers} \PYG{k+kn}{import} \PYG{n}{LSTM}
+\PYG{k+kn}{from} \PYG{n+nn}{keras.layers} \PYG{k+kn}{import} \PYG{n}{Dense}
+
+
+\PYG{c+c1}{\PYGZsh{} split a univariate sequence into samples}
+\PYG{k}{def} \PYG{n+nf}{split\PYGZus{}sequence}\PYG{p}{(}\PYG{n}{sequence}\PYG{p}{,} \PYG{n}{n\PYGZus{}steps\PYGZus{}in}\PYG{p}{,} \PYG{n}{n\PYGZus{}steps\PYGZus{}out}\PYG{p}{):}
+    \PYG{n}{X}\PYG{p}{,} \PYG{n}{y} \PYG{o}{=} \PYG{n+nb}{list}\PYG{p}{(),} \PYG{n+nb}{list}\PYG{p}{()}
+    \PYG{k}{for} \PYG{n}{i} \PYG{o+ow}{in} \PYG{n+nb}{range}\PYG{p}{(}\PYG{n+nb}{len}\PYG{p}{(}\PYG{n}{sequence}\PYG{p}{)):}
+        \PYG{c+c1}{\PYGZsh{} find the end of this pattern}
+        \PYG{n}{end\PYGZus{}ix} \PYG{o}{=} \PYG{n}{i} \PYG{o}{+} \PYG{n}{n\PYGZus{}steps\PYGZus{}in}
+        \PYG{n}{out\PYGZus{}end\PYGZus{}ix} \PYG{o}{=} \PYG{n}{end\PYGZus{}ix} \PYG{o}{+} \PYG{n}{n\PYGZus{}steps\PYGZus{}out}
+
+        \PYG{c+c1}{\PYGZsh{} check if we are beyond the sequence}
+        \PYG{k}{if} \PYG{n}{out\PYGZus{}end\PYGZus{}ix} \PYG{o}{\PYGZgt{}} \PYG{n+nb}{len}\PYG{p}{(}\PYG{n}{sequence}\PYG{p}{):}
+            \PYG{k}{break}
+
+        \PYG{c+c1}{\PYGZsh{} gather input and output parts of the pattern}
+        \PYG{n}{seq\PYGZus{}x}\PYG{p}{,} \PYG{n}{seq\PYGZus{}y} \PYG{o}{=} \PYG{n}{sequence}\PYG{p}{[}\PYG{n}{i}\PYG{p}{:}\PYG{n}{end\PYGZus{}ix}\PYG{p}{],} \PYG{n}{sequence}\PYG{p}{[}\PYG{n}{end\PYGZus{}ix}\PYG{p}{:}\PYG{n}{out\PYGZus{}end\PYGZus{}ix}\PYG{p}{]}
+        \PYG{n}{X}\PYG{o}{.}\PYG{n}{append}\PYG{p}{(}\PYG{n}{seq\PYGZus{}x}\PYG{p}{)}
+        \PYG{n}{y}\PYG{o}{.}\PYG{n}{append}\PYG{p}{(}\PYG{n}{seq\PYGZus{}y}\PYG{p}{)}
+    \PYG{k}{return} \PYG{n}{array}\PYG{p}{(}\PYG{n}{X}\PYG{p}{),} \PYG{n}{array}\PYG{p}{(}\PYG{n}{y}\PYG{p}{)}
+
+\PYG{k}{def} \PYG{n+nf}{build\PYGZus{}model}\PYG{p}{(}\PYG{n}{raw\PYGZus{}seq}\PYG{p}{,} \PYG{n}{n\PYGZus{}steps\PYGZus{}in}\PYG{p}{,} \PYG{n}{n\PYGZus{}steps\PYGZus{}out}\PYG{p}{,} \PYG{n}{n\PYGZus{}features}\PYG{p}{,} \PYG{n}{n\PYGZus{}neurons}\PYG{p}{,} \PYG{n}{dropout}\PYG{p}{,} \PYG{n}{batch\PYGZus{}s}\PYG{p}{):}
+
+    \PYG{c+c1}{\PYGZsh{} split into samples}
+    \PYG{n}{X}\PYG{p}{,} \PYG{n}{y} \PYG{o}{=} \PYG{n}{split\PYGZus{}sequence}\PYG{p}{(}\PYG{n}{raw\PYGZus{}seq}\PYG{o}{.}\PYG{n}{values}\PYG{o}{.}\PYG{n}{flatten}\PYG{p}{(),} \PYG{n}{n\PYGZus{}steps\PYGZus{}in}\PYG{p}{,} \PYG{n}{n\PYGZus{}steps\PYGZus{}out}\PYG{p}{)}
+
+    \PYG{c+c1}{\PYGZsh{} reshape from [samples, timesteps] into [samples, timesteps, features]}
+    \PYG{n}{X} \PYG{o}{=} \PYG{n}{X}\PYG{o}{.}\PYG{n}{reshape}\PYG{p}{((}\PYG{n}{X}\PYG{o}{.}\PYG{n}{shape}\PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{],} \PYG{n}{X}\PYG{o}{.}\PYG{n}{shape}\PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{],} \PYG{n}{n\PYGZus{}features}\PYG{p}{))}
+
+    \PYG{c+c1}{\PYGZsh{} define model}
+    \PYG{n}{model} \PYG{o}{=} \PYG{n}{Sequential}\PYG{p}{()}
+    \PYG{n}{model}\PYG{o}{.}\PYG{n}{add}\PYG{p}{(}\PYG{n}{LSTM}\PYG{p}{(}\PYG{n}{n\PYGZus{}neurons}\PYG{p}{,} \PYG{n}{activation}\PYG{o}{=}\PYG{l+s+s1}{\PYGZsq{}relu\PYGZsq{}}\PYG{p}{))}
+    \PYG{n}{model}\PYG{o}{.}\PYG{n}{add}\PYG{p}{(}\PYG{n}{Dropout}\PYG{p}{(}\PYG{n}{dropout}\PYG{p}{))}
+    \PYG{n}{model}\PYG{o}{.}\PYG{n}{add}\PYG{p}{(}\PYG{n}{Dense}\PYG{p}{(}\PYG{n}{n\PYGZus{}steps\PYGZus{}out}\PYG{p}{))}
+    \PYG{n}{model}\PYG{o}{.}\PYG{n}{compile}\PYG{p}{(}\PYG{n}{optimizer}\PYG{o}{=}\PYG{l+s+s1}{\PYGZsq{}adam\PYGZsq{}}\PYG{p}{,} \PYG{n}{loss}\PYG{o}{=}\PYG{l+s+s1}{\PYGZsq{}mae\PYGZsq{}}\PYG{p}{)}
+
+    \PYG{c+c1}{\PYGZsh{} fit model}
+    \PYG{n}{model}\PYG{o}{.}\PYG{n}{fit}\PYG{p}{(}\PYG{n}{X}\PYG{p}{,} \PYG{n}{y}\PYG{p}{,} \PYG{n}{batch\PYGZus{}size}\PYG{o}{=}\PYG{n}{batch\PYGZus{}s}\PYG{p}{,} \PYG{n}{epochs}\PYG{o}{=}\PYG{l+m+mi}{100}\PYG{p}{,} \PYG{n}{verbose}\PYG{o}{=}\PYG{l+m+mi}{0}\PYG{p}{)}
+
+    \PYG{k}{return} \PYG{n}{model}
+
+
+\PYG{k}{def} \PYG{n+nf}{predict}\PYG{p}{(}\PYG{n}{x\PYGZus{}input}\PYG{p}{,} \PYG{n}{model}\PYG{p}{,} \PYG{n}{n\PYGZus{}features}\PYG{p}{):}
+    \PYG{n}{n\PYGZus{}features} \PYG{o}{=} \PYG{l+m+mi}{1}
+    \PYG{n}{x\PYGZus{}input} \PYG{o}{=} \PYG{n}{x\PYGZus{}input}\PYG{o}{.}\PYG{n}{reshape}\PYG{p}{((}\PYG{l+m+mi}{1}\PYG{p}{,} \PYG{n}{n\PYGZus{}steps\PYGZus{}in}\PYG{p}{,} \PYG{n}{n\PYGZus{}features}\PYG{p}{))}
+    \PYG{n}{yhat} \PYG{o}{=} \PYG{n}{model}\PYG{o}{.}\PYG{n}{predict}\PYG{p}{(}\PYG{n}{x\PYGZus{}input}\PYG{p}{,} \PYG{n}{verbose}\PYG{o}{=}\PYG{l+m+mi}{0}\PYG{p}{)}
+    \PYG{k}{return} \PYG{n}{yhat}
+
+
+\PYG{c+c1}{\PYGZsh{} \PYGZsh{}\PYGZsh{} Regular differencing}
+
+\PYG{c+c1}{\PYGZsh{} In[32]:}
+
+
+\PYG{k+kn}{import} \PYG{n+nn}{timeit}
+\PYG{k+kn}{import} \PYG{n+nn}{tensorflow} \PYG{k}{as} \PYG{n+nn}{tf}
+
+
+\PYG{n}{start\PYGZus{}time} \PYG{o}{=} \PYG{n}{timeit}\PYG{o}{.}\PYG{n}{default\PYGZus{}timer}\PYG{p}{()}
+
+\PYG{c+c1}{\PYGZsh{} Disabled tf warning because of visual clutter}
+\PYG{n}{tf}\PYG{o}{.}\PYG{n}{compat}\PYG{o}{.}\PYG{n}{v1}\PYG{o}{.}\PYG{n}{logging}\PYG{o}{.}\PYG{n}{set\PYGZus{}verbosity}\PYG{p}{(}\PYG{n}{tf}\PYG{o}{.}\PYG{n}{compat}\PYG{o}{.}\PYG{n}{v1}\PYG{o}{.}\PYG{n}{logging}\PYG{o}{.}\PYG{n}{ERROR}\PYG{p}{)}
+
+
+\PYG{c+c1}{\PYGZsh{} constant variables}
+\PYG{n}{n\PYGZus{}steps\PYGZus{}in} \PYG{o}{=} \PYG{l+m+mi}{24}
+\PYG{n}{n\PYGZus{}steps\PYGZus{}out} \PYG{o}{=} \PYG{l+m+mi}{24}
+\PYG{n}{n\PYGZus{}features}  \PYG{o}{=} \PYG{l+m+mi}{1}
+\PYG{n}{maes} \PYG{o}{=} \PYG{p}{[]}
+\PYG{n}{global\PYGZus{}maes} \PYG{o}{=} \PYG{p}{[]}
+
+\PYG{c+c1}{\PYGZsh{} optimizable variables}
+\PYG{n}{n\PYGZus{}neurons\PYGZus{}array} \PYG{o}{=} \PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{,}\PYG{l+m+mi}{10}\PYG{p}{,}\PYG{l+m+mi}{20}\PYG{p}{]}
+\PYG{n}{dropout\PYGZus{}array} \PYG{o}{=} \PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{,}\PYG{l+m+mf}{0.99}\PYG{p}{]}
+\PYG{n}{batch\PYGZus{}size\PYGZus{}array} \PYG{o}{=} \PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{,}\PYG{l+m+mi}{2}\PYG{p}{,}\PYG{l+m+mi}{8}\PYG{p}{]}
+
+\PYG{c+c1}{\PYGZsh{} n\PYGZus{}neurons\PYGZus{}array = [1,20]}
+\PYG{c+c1}{\PYGZsh{} dropout\PYGZus{}array = [0]}
+\PYG{c+c1}{\PYGZsh{} batch\PYGZus{}size\PYGZus{}array = [1,8]}
+
+
+
+\PYG{c+c1}{\PYGZsh{} initialize values}
+\PYG{n}{best\PYGZus{}MAE} \PYG{o}{=} \PYG{l+m+mi}{100}
+\PYG{n}{best\PYGZus{}n\PYGZus{}neurons} \PYG{o}{=} \PYG{l+m+mi}{0}
+\PYG{n}{best\PYGZus{}activation} \PYG{o}{=} \PYG{l+s+s1}{\PYGZsq{}none\PYGZsq{}}
+\PYG{n}{best\PYGZus{}dropout} \PYG{o}{=} \PYG{l+m+mi}{0}
+\PYG{n}{best\PYGZus{}batch\PYGZus{}size} \PYG{o}{=} \PYG{l+m+mi}{0}
+
+\PYG{k}{for} \PYG{n}{n\PYGZus{}neurons} \PYG{o+ow}{in} \PYG{n}{n\PYGZus{}neurons\PYGZus{}array}\PYG{p}{:}
+    \PYG{k}{for} \PYG{n}{dropout} \PYG{o+ow}{in} \PYG{n}{dropout\PYGZus{}array}\PYG{p}{:}
+        \PYG{k}{for} \PYG{n}{batch\PYGZus{}size} \PYG{o+ow}{in} \PYG{n}{batch\PYGZus{}size\PYGZus{}array}\PYG{p}{:}
+            \PYG{n+nb}{print}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZdq{}}\PYG{p}{)}
+\PYG{c+c1}{\PYGZsh{}             tscv = TimeSeriesSplit(n\PYGZus{}splits = 17)}
+            \PYG{k}{for} \PYG{n}{train\PYGZus{}index}\PYG{p}{,} \PYG{n}{test\PYGZus{}index} \PYG{o+ow}{in} \PYG{n}{tscv\PYGZus{}diff}\PYG{o}{.}\PYG{n}{split}\PYG{p}{(}\PYG{n}{ts\PYGZus{}diff}\PYG{p}{):}
+                \PYG{k}{if} \PYG{n}{train\PYGZus{}index}\PYG{o}{.}\PYG{n}{size} \PYG{o}{\PYGZgt{}} \PYG{l+m+mi}{300}\PYG{p}{:}
+                    \PYG{c+c1}{\PYGZsh{} initialize cross validation train and test sets}
+                    \PYG{n}{y\PYGZus{}train}\PYG{p}{,} \PYG{n}{y\PYGZus{}test} \PYG{o}{=} \PYG{n}{ts\PYGZus{}diff}\PYG{o}{.}\PYG{n}{iloc}\PYG{p}{[}\PYG{n}{train\PYGZus{}index}\PYG{p}{],} \PYG{n}{ts\PYGZus{}diff}\PYG{o}{.}\PYG{n}{iloc}\PYG{p}{[}\PYG{n}{test\PYGZus{}index}\PYG{p}{]}
+
+                    \PYG{c+c1}{\PYGZsh{} build model}
+                    \PYG{n}{lstm\PYGZus{}model} \PYG{o}{=} \PYG{n}{build\PYGZus{}model}\PYG{p}{(}\PYG{n}{y\PYGZus{}train}\PYG{p}{,} \PYG{n}{n\PYGZus{}steps\PYGZus{}in}\PYG{p}{,} \PYG{n}{n\PYGZus{}steps\PYGZus{}out}\PYG{p}{,} \PYG{n}{n\PYGZus{}features}\PYG{p}{,} \PYG{n}{n\PYGZus{}neurons}\PYG{p}{,} \PYG{n}{dropout}\PYG{p}{,} \PYG{n}{batch\PYGZus{}size}\PYG{p}{)}
+
+                    \PYG{c+c1}{\PYGZsh{} make predictions}
+                    \PYG{n}{x\PYGZus{}input} \PYG{o}{=} \PYG{n}{array}\PYG{p}{(}\PYG{n}{y\PYGZus{}test}\PYG{p}{)}
+                    \PYG{n}{y\PYGZus{}predicted} \PYG{o}{=} \PYG{n}{predict}\PYG{p}{(}\PYG{n}{x\PYGZus{}input}\PYG{p}{,} \PYG{n}{lstm\PYGZus{}model}\PYG{p}{,} \PYG{n}{n\PYGZus{}features}\PYG{p}{)}\PYG{o}{.}\PYG{n}{flatten}\PYG{p}{()}
+                    \PYG{n}{y\PYGZus{}actual} \PYG{o}{=} \PYG{n}{y\PYGZus{}test}\PYG{o}{.}\PYG{n}{values}
+
+                    \PYG{c+c1}{\PYGZsh{} error calc}
+                    \PYG{n}{maes}\PYG{o}{.}\PYG{n}{append}\PYG{p}{(}\PYG{n}{mean\PYGZus{}absolute\PYGZus{}error}\PYG{p}{(}\PYG{n}{y\PYGZus{}actual}\PYG{p}{,} \PYG{n}{y\PYGZus{}predicted}\PYG{p}{))}
+
+                    \PYG{n+nb}{print}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}I\PYGZdq{}}\PYG{p}{,}\PYG{n}{end}\PYG{o}{=}\PYG{l+s+s2}{\PYGZdq{}\PYGZdq{}}\PYG{p}{)}
+
+                    \PYG{c+c1}{\PYGZsh{} last actual prediction}
+                    \PYG{n}{last\PYGZus{}prediction\PYGZus{}LSTM} \PYG{o}{=} \PYG{n}{y\PYGZus{}predicted}
+
+            \PYG{n}{time\PYGZus{}LSTM} \PYG{o}{=} \PYG{n}{timeit}\PYG{o}{.}\PYG{n}{default\PYGZus{}timer}\PYG{p}{()} \PYG{o}{\PYGZhy{}} \PYG{n}{start\PYGZus{}time}
+            \PYG{n}{MAE\PYGZus{}LSTM} \PYG{o}{=} \PYG{n}{np}\PYG{o}{.}\PYG{n}{mean}\PYG{p}{(}\PYG{n}{maes}\PYG{p}{)}
+            \PYG{n}{last\PYGZus{}MAE\PYGZus{}LSTM} \PYG{o}{=} \PYG{n}{maes}\PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{]}
+            \PYG{n}{global\PYGZus{}maes}\PYG{o}{.}\PYG{n}{append}\PYG{p}{(}\PYG{n}{MAE\PYGZus{}LSTM}\PYG{p}{)}
+
+            \PYG{k}{if} \PYG{n}{best\PYGZus{}MAE} \PYG{o}{\PYGZgt{}} \PYG{n}{MAE\PYGZus{}LSTM}\PYG{p}{:}
+                \PYG{n}{best\PYGZus{}n\PYGZus{}neurons} \PYG{o}{=} \PYG{n}{n\PYGZus{}neurons}
+                \PYG{n}{best\PYGZus{}dropout} \PYG{o}{=} \PYG{n}{dropout}
+                \PYG{n}{best\PYGZus{}batch\PYGZus{}size} \PYG{o}{=} \PYG{n}{batch\PYGZus{}size}
+                \PYG{n}{best\PYGZus{}MAE} \PYG{o}{=} \PYG{n}{MAE\PYGZus{}LSTM}
+
+            \PYG{n+nb}{print}\PYG{p}{()}
+            \PYG{n+nb}{print}\PYG{p}{(}\PYG{n}{n\PYGZus{}neurons}\PYG{p}{)}
+            \PYG{n+nb}{print}\PYG{p}{(}\PYG{n}{dropout}\PYG{p}{)}
+            \PYG{n+nb}{print}\PYG{p}{(}\PYG{n}{batch\PYGZus{}size}\PYG{p}{)}
+            \PYG{n+nb}{print}\PYG{p}{(}\PYG{n}{MAE\PYGZus{}LSTM}\PYG{p}{)}
+            \PYG{n+nb}{print}\PYG{p}{()}
+
+\PYG{n+nb}{print}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}Best:\PYGZsq{}}\PYG{p}{)}
+\PYG{n+nb}{print}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}N neurons\PYGZsq{}}\PYG{p}{)}
+\PYG{n+nb}{print}\PYG{p}{(}\PYG{n}{best\PYGZus{}n\PYGZus{}neurons}\PYG{p}{)}
+\PYG{n+nb}{print}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}Dropout rate\PYGZsq{}}\PYG{p}{)}
+\PYG{n+nb}{print}\PYG{p}{(}\PYG{n}{best\PYGZus{}dropout}\PYG{p}{)}
+\PYG{n+nb}{print}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}Batch size\PYGZsq{}}\PYG{p}{)}
+\PYG{n+nb}{print}\PYG{p}{(}\PYG{n}{best\PYGZus{}batch\PYGZus{}size}\PYG{p}{)}
+\PYG{n+nb}{print}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}MAE\PYGZsq{}}\PYG{p}{)}
+\PYG{n+nb}{print}\PYG{p}{(}\PYG{n}{best\PYGZus{}MAE}\PYG{p}{)}
+\PYG{n}{plt}\PYG{o}{.}\PYG{n}{bar}\PYG{p}{(}\PYG{n+nb}{range}\PYG{p}{(}\PYG{l+m+mi}{0}\PYG{p}{,}\PYG{n+nb}{len}\PYG{p}{(}\PYG{n}{global\PYGZus{}maes}\PYG{p}{)),} \PYG{n}{global\PYGZus{}maes}\PYG{p}{)}
+
+
+\PYG{c+c1}{\PYGZsh{} In[63]:}
+
+
+\PYG{n}{best\PYGZus{}n\PYGZus{}neurons}\PYG{p}{,} \PYG{n}{best\PYGZus{}dropout}\PYG{p}{,} \PYG{n}{best\PYGZus{}batch\PYGZus{}size} \PYG{o}{=} \PYG{l+m+mi}{1}\PYG{p}{,} \PYG{l+m+mi}{0}\PYG{p}{,} \PYG{l+m+mi}{1} \PYG{c+c1}{\PYGZsh{} actual best params}
+
+
+\PYG{c+c1}{\PYGZsh{} In[64]:}
+
+
+\PYG{k+kn}{import} \PYG{n+nn}{timeit}
+\PYG{k+kn}{import} \PYG{n+nn}{tensorflow} \PYG{k}{as} \PYG{n+nn}{tf}
+
+
+\PYG{n}{start\PYGZus{}time} \PYG{o}{=} \PYG{n}{timeit}\PYG{o}{.}\PYG{n}{default\PYGZus{}timer}\PYG{p}{()}
+
+\PYG{c+c1}{\PYGZsh{} Disabled tf warning because of visual clutter}
+\PYG{n}{tf}\PYG{o}{.}\PYG{n}{compat}\PYG{o}{.}\PYG{n}{v1}\PYG{o}{.}\PYG{n}{logging}\PYG{o}{.}\PYG{n}{set\PYGZus{}verbosity}\PYG{p}{(}\PYG{n}{tf}\PYG{o}{.}\PYG{n}{compat}\PYG{o}{.}\PYG{n}{v1}\PYG{o}{.}\PYG{n}{logging}\PYG{o}{.}\PYG{n}{ERROR}\PYG{p}{)}
+
+
+\PYG{c+c1}{\PYGZsh{} constant variables}
+\PYG{n}{n\PYGZus{}steps\PYGZus{}in} \PYG{o}{=} \PYG{l+m+mi}{24}
+\PYG{n}{n\PYGZus{}steps\PYGZus{}out} \PYG{o}{=} \PYG{l+m+mi}{24}
+\PYG{n}{n\PYGZus{}features}  \PYG{o}{=} \PYG{l+m+mi}{1}
+\PYG{n}{maes} \PYG{o}{=} \PYG{p}{[]}
+\PYG{n}{global\PYGZus{}maes} \PYG{o}{=} \PYG{p}{[]}
+
+\PYG{n+nb}{print}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZdq{}}\PYG{p}{)}
+\PYG{n}{tscv} \PYG{o}{=} \PYG{n}{TimeSeriesSplit}\PYG{p}{(}\PYG{n}{n\PYGZus{}splits} \PYG{o}{=} \PYG{l+m+mi}{18}\PYG{p}{)}
+\PYG{k}{for} \PYG{n}{train\PYGZus{}index}\PYG{p}{,} \PYG{n}{test\PYGZus{}index} \PYG{o+ow}{in} \PYG{n}{tscv}\PYG{o}{.}\PYG{n}{split}\PYG{p}{(}\PYG{n}{ts\PYGZus{}diff}\PYG{p}{):}
+    \PYG{k}{if} \PYG{n}{train\PYGZus{}index}\PYG{o}{.}\PYG{n}{size} \PYG{o}{\PYGZgt{}} \PYG{l+m+mi}{300}\PYG{p}{:}
+        \PYG{c+c1}{\PYGZsh{} initialize cross validation train and test sets}
+        \PYG{n}{y\PYGZus{}train}\PYG{p}{,} \PYG{n}{y\PYGZus{}test} \PYG{o}{=} \PYG{n}{ts\PYGZus{}diff}\PYG{o}{.}\PYG{n}{iloc}\PYG{p}{[}\PYG{n}{train\PYGZus{}index}\PYG{p}{],} \PYG{n}{ts\PYGZus{}diff}\PYG{o}{.}\PYG{n}{iloc}\PYG{p}{[}\PYG{n}{test\PYGZus{}index}\PYG{p}{]}
+
+        \PYG{c+c1}{\PYGZsh{} build model}
+        \PYG{n}{lstm\PYGZus{}model} \PYG{o}{=} \PYG{n}{build\PYGZus{}model}\PYG{p}{(}\PYG{n}{y\PYGZus{}train}\PYG{p}{,} \PYG{n}{n\PYGZus{}steps\PYGZus{}in}\PYG{p}{,} \PYG{n}{n\PYGZus{}steps\PYGZus{}out}\PYG{p}{,} \PYG{n}{n\PYGZus{}features}\PYG{p}{,} \PYG{n}{best\PYGZus{}n\PYGZus{}neurons}\PYG{p}{,} \PYG{n}{best\PYGZus{}dropout}\PYG{p}{,} \PYG{n}{best\PYGZus{}batch\PYGZus{}size}\PYG{p}{)}
+
+        \PYG{c+c1}{\PYGZsh{} make predictions}
+        \PYG{n}{x\PYGZus{}input} \PYG{o}{=} \PYG{n}{array}\PYG{p}{(}\PYG{n}{y\PYGZus{}test}\PYG{p}{)}
+        \PYG{n}{y\PYGZus{}predicted} \PYG{o}{=} \PYG{n}{predict}\PYG{p}{(}\PYG{n}{x\PYGZus{}input}\PYG{p}{,} \PYG{n}{lstm\PYGZus{}model}\PYG{p}{,} \PYG{n}{n\PYGZus{}features}\PYG{p}{)}\PYG{o}{.}\PYG{n}{flatten}\PYG{p}{()}
+        \PYG{n}{y\PYGZus{}actual} \PYG{o}{=} \PYG{n}{y\PYGZus{}test}\PYG{o}{.}\PYG{n}{values}
+
+        \PYG{c+c1}{\PYGZsh{} error calc}
+        \PYG{n}{maes}\PYG{o}{.}\PYG{n}{append}\PYG{p}{(}\PYG{n}{mean\PYGZus{}absolute\PYGZus{}error}\PYG{p}{(}\PYG{n}{y\PYGZus{}actual}\PYG{p}{,} \PYG{n}{y\PYGZus{}predicted}\PYG{p}{))}
+
+        \PYG{n+nb}{print}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}I\PYGZdq{}}\PYG{p}{,}\PYG{n}{end}\PYG{o}{=}\PYG{l+s+s2}{\PYGZdq{}\PYGZdq{}}\PYG{p}{)}
+
+\PYG{n}{time\PYGZus{}LSTM} \PYG{o}{=} \PYG{n}{timeit}\PYG{o}{.}\PYG{n}{default\PYGZus{}timer}\PYG{p}{()} \PYG{o}{\PYGZhy{}} \PYG{n}{start\PYGZus{}time}
+\PYG{n}{MAE\PYGZus{}LSTM} \PYG{o}{=} \PYG{n}{np}\PYG{o}{.}\PYG{n}{mean}\PYG{p}{(}\PYG{n}{maes}\PYG{p}{)}
+\PYG{n}{last\PYGZus{}MAE\PYGZus{}LSTM} \PYG{o}{=} \PYG{n}{maes}\PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{]}
+\PYG{n}{global\PYGZus{}maes}\PYG{o}{.}\PYG{n}{append}\PYG{p}{(}\PYG{n}{MAE\PYGZus{}LSTM}\PYG{p}{)}
+\PYG{n}{last\PYGZus{}prediction\PYGZus{}LSTM} \PYG{o}{=} \PYG{n}{y\PYGZus{}predicted}
+
+\PYG{c+c1}{\PYGZsh{} print(\PYGZsq{}Best:\PYGZsq{})}
+\PYG{c+c1}{\PYGZsh{} print(\PYGZsq{}N neurons\PYGZsq{})}
+\PYG{c+c1}{\PYGZsh{} print(best\PYGZus{}n\PYGZus{}neurons)}
+\PYG{c+c1}{\PYGZsh{} print(\PYGZsq{}Dropout rate\PYGZsq{})}
+\PYG{c+c1}{\PYGZsh{} print(best\PYGZus{}dropout)}
+\PYG{c+c1}{\PYGZsh{} print(\PYGZsq{}Batch size\PYGZsq{})}
+\PYG{c+c1}{\PYGZsh{} print(best\PYGZus{}batch\PYGZus{}size)}
+\PYG{c+c1}{\PYGZsh{} print(\PYGZsq{}MAE\PYGZsq{})}
+\PYG{c+c1}{\PYGZsh{} print(best\PYGZus{}MAE)}
+\PYG{c+c1}{\PYGZsh{} plt.bar(range(0,len(global\PYGZus{}maes)), global\PYGZus{}maes)}
+
+\PYG{c+c1}{\PYGZsh{} time\PYGZus{}ARIMA = timeit.default\PYGZus{}timer() \PYGZhy{} start\PYGZus{}time}
+\PYG{c+c1}{\PYGZsh{} mae\PYGZus{}mean = np.mean(maes)}
+\PYG{c+c1}{\PYGZsh{} MAE\PYGZus{}ARIMA = mae\PYGZus{}mean}
+\PYG{c+c1}{\PYGZsh{} last\PYGZus{}MAE\PYGZus{}ARIMA = maes[\PYGZhy{}1]}
+
+\PYG{n+nb}{print}\PYG{p}{()}
+\PYG{n+nb}{print}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}Mean MAE: }\PYG{l+s+si}{\PYGZpc{}.3f}\PYG{l+s+s1}{ x 1 000 000 km}\PYG{l+s+se}{\PYGZbs{}u00b2}\PYG{l+s+s1}{\PYGZsq{}} \PYG{o}{\PYGZpc{}} \PYG{n}{MAE\PYGZus{}LSTM}\PYG{p}{)}
+\PYG{n+nb}{print}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}MAE of last prediction: }\PYG{l+s+si}{\PYGZpc{}.3f}\PYG{l+s+s1}{ x 1 000 000 km}\PYG{l+s+se}{\PYGZbs{}u00b2}\PYG{l+s+s1}{\PYGZsq{}} \PYG{o}{\PYGZpc{}} \PYG{n}{last\PYGZus{}MAE\PYGZus{}LSTM}\PYG{p}{)}
+\PYG{n+nb}{print}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}Execution time: }\PYG{l+s+si}{\PYGZpc{}.3f}\PYG{l+s+s1}{ seconds\PYGZsq{}} \PYG{o}{\PYGZpc{}} \PYG{n}{time\PYGZus{}LSTM}\PYG{p}{)}
+
+\PYG{n}{reverted\PYGZus{}prediction\PYGZus{}values} \PYG{o}{=} \PYG{n}{revert\PYGZus{}diff\PYGZus{}seasonal}\PYG{p}{(}\PYG{n}{last\PYGZus{}prediction\PYGZus{}LSTM}\PYG{p}{,} \PYG{n}{ts}\PYG{p}{)}
+\PYG{n}{full\PYGZus{}graph}\PYG{p}{(}\PYG{n}{reverted\PYGZus{}prediction\PYGZus{}values}\PYG{p}{,} \PYG{n}{ts}\PYG{p}{,}\PYG{l+s+s1}{\PYGZsq{}Last 2 year prediction LSTM random walk differencing\PYGZsq{}}\PYG{p}{)}
+
+\PYG{n+nb}{print}\PYG{p}{(}\PYG{n}{maes}\PYG{p}{)}
+
+
+\PYG{c+c1}{\PYGZsh{} \PYGZsh{}\PYGZsh{} Seasonal differencing}
+
+\PYG{c+c1}{\PYGZsh{} In[99]:}
+
+
+\PYG{c+c1}{\PYGZsh{} initialize values}
+\PYG{n}{best\PYGZus{}n\PYGZus{}neurons} \PYG{o}{=} \PYG{l+m+mi}{1}
+\PYG{n}{best\PYGZus{}dropout} \PYG{o}{=} \PYG{l+m+mi}{0}
+\PYG{n}{best\PYGZus{}batch\PYGZus{}size} \PYG{o}{=} \PYG{l+m+mi}{1}
+
+
+\PYG{c+c1}{\PYGZsh{} In[100]:}
+
+
+\PYG{k+kn}{import} \PYG{n+nn}{timeit}
+\PYG{k+kn}{import} \PYG{n+nn}{tensorflow} \PYG{k}{as} \PYG{n+nn}{tf}
+
+
+\PYG{n}{start\PYGZus{}time} \PYG{o}{=} \PYG{n}{timeit}\PYG{o}{.}\PYG{n}{default\PYGZus{}timer}\PYG{p}{()}
+
+\PYG{c+c1}{\PYGZsh{} Disabled tf warning because of visual clutter}
+\PYG{n}{tf}\PYG{o}{.}\PYG{n}{compat}\PYG{o}{.}\PYG{n}{v1}\PYG{o}{.}\PYG{n}{logging}\PYG{o}{.}\PYG{n}{set\PYGZus{}verbosity}\PYG{p}{(}\PYG{n}{tf}\PYG{o}{.}\PYG{n}{compat}\PYG{o}{.}\PYG{n}{v1}\PYG{o}{.}\PYG{n}{logging}\PYG{o}{.}\PYG{n}{ERROR}\PYG{p}{)}
+
+
+\PYG{c+c1}{\PYGZsh{} constant variables}
+\PYG{n}{n\PYGZus{}steps\PYGZus{}in} \PYG{o}{=} \PYG{l+m+mi}{24}
+\PYG{n}{n\PYGZus{}steps\PYGZus{}out} \PYG{o}{=} \PYG{l+m+mi}{24}
+\PYG{n}{n\PYGZus{}features}  \PYG{o}{=} \PYG{l+m+mi}{1}
+\PYG{n}{maes} \PYG{o}{=} \PYG{p}{[]}
+\PYG{n}{global\PYGZus{}maes} \PYG{o}{=} \PYG{p}{[]}
+
+\PYG{c+c1}{\PYGZsh{} optimizable variables}
+\PYG{n}{n\PYGZus{}neurons\PYGZus{}array} \PYG{o}{=} \PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{,}\PYG{l+m+mi}{5}\PYG{p}{,}\PYG{l+m+mi}{10}\PYG{p}{,}\PYG{l+m+mi}{20}\PYG{p}{]}
+\PYG{n}{dropout\PYGZus{}array} \PYG{o}{=} \PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{,}\PYG{l+m+mf}{0.5}\PYG{p}{,}\PYG{l+m+mf}{0.99}\PYG{p}{]}
+\PYG{n}{batch\PYGZus{}size\PYGZus{}array} \PYG{o}{=} \PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{,}\PYG{l+m+mi}{2}\PYG{p}{,}\PYG{l+m+mi}{4}\PYG{p}{,}\PYG{l+m+mi}{8}\PYG{p}{]}
+\PYG{c+c1}{\PYGZsh{}\PYGZsh{} set\PYGZsh{}2}
+\PYG{c+c1}{\PYGZsh{} n\PYGZus{}neurons\PYGZus{}array = [1,20]2}
+\PYG{c+c1}{\PYGZsh{} dropout\PYGZus{}array = [0]}
+\PYG{c+c1}{\PYGZsh{} batch\PYGZus{}size\PYGZus{}array = [1,8]}
+
+
+
+\PYG{c+c1}{\PYGZsh{} initialize values}
+\PYG{n}{best\PYGZus{}MAE} \PYG{o}{=} \PYG{l+m+mi}{100}
+\PYG{n}{best\PYGZus{}n\PYGZus{}neurons} \PYG{o}{=} \PYG{l+m+mi}{0}
+\PYG{n}{best\PYGZus{}activation} \PYG{o}{=} \PYG{l+s+s1}{\PYGZsq{}none\PYGZsq{}}
+\PYG{n}{best\PYGZus{}dropout} \PYG{o}{=} \PYG{l+m+mi}{0}
+\PYG{n}{best\PYGZus{}batch\PYGZus{}size} \PYG{o}{=} \PYG{l+m+mi}{0}
+
+\PYG{k}{for} \PYG{n}{n\PYGZus{}neurons} \PYG{o+ow}{in} \PYG{n}{n\PYGZus{}neurons\PYGZus{}array}\PYG{p}{:}
+    \PYG{k}{for} \PYG{n}{dropout} \PYG{o+ow}{in} \PYG{n}{dropout\PYGZus{}array}\PYG{p}{:}
+        \PYG{k}{for} \PYG{n}{batch\PYGZus{}size} \PYG{o+ow}{in} \PYG{n}{batch\PYGZus{}size\PYGZus{}array}\PYG{p}{:}
+            \PYG{n+nb}{print}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZdq{}}\PYG{p}{)}
+\PYG{c+c1}{\PYGZsh{}             tscv = TimeSeriesSplit(n\PYGZus{}splits = 17)}
+            \PYG{k}{for} \PYG{n}{train\PYGZus{}index}\PYG{p}{,} \PYG{n}{test\PYGZus{}index} \PYG{o+ow}{in} \PYG{n}{tscv\PYGZus{}diff}\PYG{o}{.}\PYG{n}{split}\PYG{p}{(}\PYG{n}{ts\PYGZus{}diff\PYGZus{}seasonal}\PYG{p}{):}
+                \PYG{k}{if} \PYG{n}{train\PYGZus{}index}\PYG{o}{.}\PYG{n}{size} \PYG{o}{\PYGZgt{}} \PYG{l+m+mi}{300}\PYG{p}{:}
+                    \PYG{c+c1}{\PYGZsh{} initialize cross validation train and test sets}
+                    \PYG{n}{y\PYGZus{}train}\PYG{p}{,} \PYG{n}{y\PYGZus{}test} \PYG{o}{=} \PYG{n}{ts\PYGZus{}diff\PYGZus{}seasonal}\PYG{o}{.}\PYG{n}{iloc}\PYG{p}{[}\PYG{n}{train\PYGZus{}index}\PYG{p}{],} \PYG{n}{ts\PYGZus{}diff\PYGZus{}seasonal}\PYG{o}{.}\PYG{n}{iloc}\PYG{p}{[}\PYG{n}{test\PYGZus{}index}\PYG{p}{]}
+
+                    \PYG{c+c1}{\PYGZsh{} build model}
+                    \PYG{n}{lstm\PYGZus{}model} \PYG{o}{=} \PYG{n}{build\PYGZus{}model}\PYG{p}{(}\PYG{n}{y\PYGZus{}train}\PYG{p}{,} \PYG{n}{n\PYGZus{}steps\PYGZus{}in}\PYG{p}{,} \PYG{n}{n\PYGZus{}steps\PYGZus{}out}\PYG{p}{,} \PYG{n}{n\PYGZus{}features}\PYG{p}{,} \PYG{n}{n\PYGZus{}neurons}\PYG{p}{,} \PYG{n}{dropout}\PYG{p}{,} \PYG{n}{batch\PYGZus{}size}\PYG{p}{)}
+
+                    \PYG{c+c1}{\PYGZsh{} make predictions}
+                    \PYG{n}{x\PYGZus{}input} \PYG{o}{=} \PYG{n}{array}\PYG{p}{(}\PYG{n}{y\PYGZus{}test}\PYG{p}{)}
+                    \PYG{n}{y\PYGZus{}predicted} \PYG{o}{=} \PYG{n}{predict}\PYG{p}{(}\PYG{n}{x\PYGZus{}input}\PYG{p}{,} \PYG{n}{lstm\PYGZus{}model}\PYG{p}{,} \PYG{n}{n\PYGZus{}features}\PYG{p}{)}\PYG{o}{.}\PYG{n}{flatten}\PYG{p}{()}
+                    \PYG{n}{y\PYGZus{}actual} \PYG{o}{=} \PYG{n}{y\PYGZus{}test}\PYG{o}{.}\PYG{n}{values}
+
+                    \PYG{c+c1}{\PYGZsh{} error calc}
+                    \PYG{n}{maes}\PYG{o}{.}\PYG{n}{append}\PYG{p}{(}\PYG{n}{mean\PYGZus{}absolute\PYGZus{}error}\PYG{p}{(}\PYG{n}{y\PYGZus{}actual}\PYG{p}{,} \PYG{n}{y\PYGZus{}predicted}\PYG{p}{))}
+
+                    \PYG{n+nb}{print}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}I\PYGZdq{}}\PYG{p}{,}\PYG{n}{end}\PYG{o}{=}\PYG{l+s+s2}{\PYGZdq{}\PYGZdq{}}\PYG{p}{)}
+
+                    \PYG{c+c1}{\PYGZsh{} last actual prediction}
+                    \PYG{n}{last\PYGZus{}prediction\PYGZus{}LSTM} \PYG{o}{=} \PYG{n}{y\PYGZus{}predicted}
+
+            \PYG{n}{time\PYGZus{}LSTM} \PYG{o}{=} \PYG{n}{timeit}\PYG{o}{.}\PYG{n}{default\PYGZus{}timer}\PYG{p}{()} \PYG{o}{\PYGZhy{}} \PYG{n}{start\PYGZus{}time}
+            \PYG{n}{MAE\PYGZus{}LSTM} \PYG{o}{=} \PYG{n}{np}\PYG{o}{.}\PYG{n}{mean}\PYG{p}{(}\PYG{n}{maes}\PYG{p}{)}
+            \PYG{n}{last\PYGZus{}MAE\PYGZus{}LSTM} \PYG{o}{=} \PYG{n}{maes}\PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{]}
+            \PYG{n}{global\PYGZus{}maes}\PYG{o}{.}\PYG{n}{append}\PYG{p}{(}\PYG{n}{MAE\PYGZus{}LSTM}\PYG{p}{)}
+
+            \PYG{k}{if} \PYG{n}{best\PYGZus{}MAE} \PYG{o}{\PYGZgt{}} \PYG{n}{MAE\PYGZus{}LSTM}\PYG{p}{:}
+                \PYG{n}{best\PYGZus{}n\PYGZus{}neurons} \PYG{o}{=} \PYG{n}{n\PYGZus{}neurons}
+                \PYG{n}{best\PYGZus{}dropout} \PYG{o}{=} \PYG{n}{dropout}
+                \PYG{n}{best\PYGZus{}batch\PYGZus{}size} \PYG{o}{=} \PYG{n}{batch\PYGZus{}size}
+                \PYG{n}{best\PYGZus{}MAE} \PYG{o}{=} \PYG{n}{MAE\PYGZus{}LSTM}
+
+            \PYG{n+nb}{print}\PYG{p}{()}
+            \PYG{n+nb}{print}\PYG{p}{(}\PYG{n}{n\PYGZus{}neurons}\PYG{p}{)}
+            \PYG{n+nb}{print}\PYG{p}{(}\PYG{n}{dropout}\PYG{p}{)}
+            \PYG{n+nb}{print}\PYG{p}{(}\PYG{n}{batch\PYGZus{}size}\PYG{p}{)}
+            \PYG{n+nb}{print}\PYG{p}{(}\PYG{n}{MAE\PYGZus{}LSTM}\PYG{p}{)}
+            \PYG{n+nb}{print}\PYG{p}{()}
+
+\PYG{n+nb}{print}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}Best:\PYGZsq{}}\PYG{p}{)}
+\PYG{n+nb}{print}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}N neurons\PYGZsq{}}\PYG{p}{)}
+\PYG{n+nb}{print}\PYG{p}{(}\PYG{n}{best\PYGZus{}n\PYGZus{}neurons}\PYG{p}{)}
+\PYG{n+nb}{print}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}Dropout rate\PYGZsq{}}\PYG{p}{)}
+\PYG{n+nb}{print}\PYG{p}{(}\PYG{n}{best\PYGZus{}dropout}\PYG{p}{)}
+\PYG{n+nb}{print}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}Batch size\PYGZsq{}}\PYG{p}{)}
+\PYG{n+nb}{print}\PYG{p}{(}\PYG{n}{best\PYGZus{}batch\PYGZus{}size}\PYG{p}{)}
+\PYG{n+nb}{print}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}MAE\PYGZsq{}}\PYG{p}{)}
+\PYG{n+nb}{print}\PYG{p}{(}\PYG{n}{best\PYGZus{}MAE}\PYG{p}{)}
+\PYG{n}{plt}\PYG{o}{.}\PYG{n}{bar}\PYG{p}{(}\PYG{n+nb}{range}\PYG{p}{(}\PYG{l+m+mi}{0}\PYG{p}{,}\PYG{n+nb}{len}\PYG{p}{(}\PYG{n}{global\PYGZus{}maes}\PYG{p}{)),} \PYG{n}{global\PYGZus{}maes}\PYG{p}{)}
+
+
+\PYG{c+c1}{\PYGZsh{} In[65]:}
+
+
+\PYG{n}{best\PYGZus{}n\PYGZus{}neurons}\PYG{p}{,} \PYG{n}{best\PYGZus{}dropout}\PYG{p}{,} \PYG{n}{best\PYGZus{}batch\PYGZus{}size} \PYG{o}{=} \PYG{l+m+mi}{1}\PYG{p}{,} \PYG{l+m+mf}{0.99}\PYG{p}{,} \PYG{l+m+mi}{8} \PYG{c+c1}{\PYGZsh{} ran for 5 hours}
+
+
+\PYG{c+c1}{\PYGZsh{} In[66]:}
+
+
+\PYG{k+kn}{import} \PYG{n+nn}{timeit}
+\PYG{k+kn}{import} \PYG{n+nn}{tensorflow} \PYG{k}{as} \PYG{n+nn}{tf}
+
+
+\PYG{n}{start\PYGZus{}time} \PYG{o}{=} \PYG{n}{timeit}\PYG{o}{.}\PYG{n}{default\PYGZus{}timer}\PYG{p}{()}
+
+\PYG{c+c1}{\PYGZsh{} Disabled tf warning because of visual clutter}
+\PYG{n}{tf}\PYG{o}{.}\PYG{n}{compat}\PYG{o}{.}\PYG{n}{v1}\PYG{o}{.}\PYG{n}{logging}\PYG{o}{.}\PYG{n}{set\PYGZus{}verbosity}\PYG{p}{(}\PYG{n}{tf}\PYG{o}{.}\PYG{n}{compat}\PYG{o}{.}\PYG{n}{v1}\PYG{o}{.}\PYG{n}{logging}\PYG{o}{.}\PYG{n}{ERROR}\PYG{p}{)}
+
+
+\PYG{c+c1}{\PYGZsh{} constant variables}
+\PYG{n}{n\PYGZus{}steps\PYGZus{}in} \PYG{o}{=} \PYG{l+m+mi}{24}
+\PYG{n}{n\PYGZus{}steps\PYGZus{}out} \PYG{o}{=} \PYG{l+m+mi}{24}
+\PYG{n}{n\PYGZus{}features}  \PYG{o}{=} \PYG{l+m+mi}{1}
+\PYG{n}{maes} \PYG{o}{=} \PYG{p}{[]}
+\PYG{n}{global\PYGZus{}maes} \PYG{o}{=} \PYG{p}{[]}
+
+\PYG{n+nb}{print}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZdq{}}\PYG{p}{)}
+\PYG{n}{tscv} \PYG{o}{=} \PYG{n}{TimeSeriesSplit}\PYG{p}{(}\PYG{n}{n\PYGZus{}splits} \PYG{o}{=} \PYG{l+m+mi}{18}\PYG{p}{)}
+\PYG{k}{for} \PYG{n}{train\PYGZus{}index}\PYG{p}{,} \PYG{n}{test\PYGZus{}index} \PYG{o+ow}{in} \PYG{n}{tscv}\PYG{o}{.}\PYG{n}{split}\PYG{p}{(}\PYG{n}{ts\PYGZus{}diff\PYGZus{}seasonal}\PYG{p}{):}
+    \PYG{k}{if} \PYG{n}{train\PYGZus{}index}\PYG{o}{.}\PYG{n}{size} \PYG{o}{\PYGZgt{}} \PYG{l+m+mi}{300}\PYG{p}{:}
+        \PYG{c+c1}{\PYGZsh{} initialize cross validation train and test sets}
+        \PYG{n}{y\PYGZus{}train}\PYG{p}{,} \PYG{n}{y\PYGZus{}test} \PYG{o}{=} \PYG{n}{ts\PYGZus{}diff\PYGZus{}seasonal}\PYG{o}{.}\PYG{n}{iloc}\PYG{p}{[}\PYG{n}{train\PYGZus{}index}\PYG{p}{],} \PYG{n}{ts\PYGZus{}diff\PYGZus{}seasonal}\PYG{o}{.}\PYG{n}{iloc}\PYG{p}{[}\PYG{n}{test\PYGZus{}index}\PYG{p}{]}
+
+        \PYG{c+c1}{\PYGZsh{} build model}
+        \PYG{n}{lstm\PYGZus{}model} \PYG{o}{=} \PYG{n}{build\PYGZus{}model}\PYG{p}{(}\PYG{n}{y\PYGZus{}train}\PYG{p}{,} \PYG{n}{n\PYGZus{}steps\PYGZus{}in}\PYG{p}{,} \PYG{n}{n\PYGZus{}steps\PYGZus{}out}\PYG{p}{,} \PYG{n}{n\PYGZus{}features}\PYG{p}{,} \PYG{n}{best\PYGZus{}n\PYGZus{}neurons}\PYG{p}{,} \PYG{n}{best\PYGZus{}dropout}\PYG{p}{,} \PYG{n}{best\PYGZus{}batch\PYGZus{}size}\PYG{p}{)}
+
+        \PYG{c+c1}{\PYGZsh{} make predictions}
+        \PYG{n}{x\PYGZus{}input} \PYG{o}{=} \PYG{n}{array}\PYG{p}{(}\PYG{n}{y\PYGZus{}test}\PYG{p}{)}
+        \PYG{n}{y\PYGZus{}predicted} \PYG{o}{=} \PYG{n}{predict}\PYG{p}{(}\PYG{n}{x\PYGZus{}input}\PYG{p}{,} \PYG{n}{lstm\PYGZus{}model}\PYG{p}{,} \PYG{n}{n\PYGZus{}features}\PYG{p}{)}\PYG{o}{.}\PYG{n}{flatten}\PYG{p}{()}
+        \PYG{n}{y\PYGZus{}actual} \PYG{o}{=} \PYG{n}{y\PYGZus{}test}\PYG{o}{.}\PYG{n}{values}
+
+        \PYG{c+c1}{\PYGZsh{} error calc}
+        \PYG{n}{maes}\PYG{o}{.}\PYG{n}{append}\PYG{p}{(}\PYG{n}{mean\PYGZus{}absolute\PYGZus{}error}\PYG{p}{(}\PYG{n}{y\PYGZus{}actual}\PYG{p}{,} \PYG{n}{y\PYGZus{}predicted}\PYG{p}{))}
+
+        \PYG{n+nb}{print}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}I\PYGZdq{}}\PYG{p}{,}\PYG{n}{end}\PYG{o}{=}\PYG{l+s+s2}{\PYGZdq{}\PYGZdq{}}\PYG{p}{)}
+
+
+
+\PYG{n}{time\PYGZus{}LSTM\PYGZus{}seasonal} \PYG{o}{=} \PYG{n}{timeit}\PYG{o}{.}\PYG{n}{default\PYGZus{}timer}\PYG{p}{()} \PYG{o}{\PYGZhy{}} \PYG{n}{start\PYGZus{}time}
+\PYG{n}{MAE\PYGZus{}LSTM\PYGZus{}seasonal} \PYG{o}{=} \PYG{n}{np}\PYG{o}{.}\PYG{n}{mean}\PYG{p}{(}\PYG{n}{maes}\PYG{p}{)}
+\PYG{n}{last\PYGZus{}MAE\PYGZus{}LSTM\PYGZus{}seasonal} \PYG{o}{=} \PYG{n}{maes}\PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{]}
+\PYG{n}{global\PYGZus{}maes}\PYG{o}{.}\PYG{n}{append}\PYG{p}{(}\PYG{n}{MAE\PYGZus{}LSTM\PYGZus{}seasonal}\PYG{p}{)}
+\PYG{n}{last\PYGZus{}prediction\PYGZus{}LSTM\PYGZus{}seasonal} \PYG{o}{=} \PYG{n}{y\PYGZus{}predicted}
+\PYG{c+c1}{\PYGZsh{} print(\PYGZsq{}Best:\PYGZsq{})}
+\PYG{c+c1}{\PYGZsh{} print(\PYGZsq{}N neurons\PYGZsq{})}
+\PYG{c+c1}{\PYGZsh{} print(best\PYGZus{}n\PYGZus{}neurons)}
+\PYG{c+c1}{\PYGZsh{} print(\PYGZsq{}Dropout rate\PYGZsq{})}
+\PYG{c+c1}{\PYGZsh{} print(best\PYGZus{}dropout)}
+\PYG{c+c1}{\PYGZsh{} print(\PYGZsq{}Batch size\PYGZsq{})}
+\PYG{c+c1}{\PYGZsh{} print(best\PYGZus{}batch\PYGZus{}size)}
+\PYG{c+c1}{\PYGZsh{} print(\PYGZsq{}MAE\PYGZsq{})}
+\PYG{c+c1}{\PYGZsh{} print(best\PYGZus{}MAE)}
+\PYG{c+c1}{\PYGZsh{} plt.bar(range(0,len(global\PYGZus{}maes)), global\PYGZus{}maes)}
+
+\PYG{c+c1}{\PYGZsh{} time\PYGZus{}ARIMA = timeit.default\PYGZus{}timer() \PYGZhy{} start\PYGZus{}time}
+\PYG{c+c1}{\PYGZsh{} mae\PYGZus{}mean = np.mean(maes)}
+\PYG{c+c1}{\PYGZsh{} MAE\PYGZus{}ARIMA = mae\PYGZus{}mean}
+\PYG{c+c1}{\PYGZsh{} last\PYGZus{}MAE\PYGZus{}ARIMA = maes[\PYGZhy{}1]}
+
+\PYG{n+nb}{print}\PYG{p}{()}
+\PYG{n+nb}{print}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}Mean MAE: }\PYG{l+s+si}{\PYGZpc{}.3f}\PYG{l+s+s1}{ x 1 000 000 km}\PYG{l+s+se}{\PYGZbs{}u00b2}\PYG{l+s+s1}{\PYGZsq{}} \PYG{o}{\PYGZpc{}} \PYG{n}{MAE\PYGZus{}LSTM\PYGZus{}seasonal}\PYG{p}{)}
+\PYG{n+nb}{print}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}MAE of last prediction: }\PYG{l+s+si}{\PYGZpc{}.3f}\PYG{l+s+s1}{ x 1 000 000 km}\PYG{l+s+se}{\PYGZbs{}u00b2}\PYG{l+s+s1}{\PYGZsq{}} \PYG{o}{\PYGZpc{}} \PYG{n}{last\PYGZus{}MAE\PYGZus{}LSTM\PYGZus{}seasonal}\PYG{p}{)}
+\PYG{n+nb}{print}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}Execution time: }\PYG{l+s+si}{\PYGZpc{}.3f}\PYG{l+s+s1}{ seconds\PYGZsq{}} \PYG{o}{\PYGZpc{}} \PYG{n}{time\PYGZus{}LSTM\PYGZus{}seasonal}\PYG{p}{)}
+
+\PYG{n}{reverted\PYGZus{}prediction\PYGZus{}values} \PYG{o}{=} \PYG{n}{revert\PYGZus{}diff\PYGZus{}seasonal}\PYG{p}{(}\PYG{n}{last\PYGZus{}prediction\PYGZus{}LSTM\PYGZus{}seasonal}\PYG{p}{,} \PYG{n}{ts}\PYG{p}{)}
+\PYG{n}{full\PYGZus{}graph}\PYG{p}{(}\PYG{n}{reverted\PYGZus{}prediction\PYGZus{}values}\PYG{p}{,} \PYG{n}{ts}\PYG{p}{,}\PYG{l+s+s1}{\PYGZsq{}Last 2 year prediction LSTM Seasonal\PYGZsq{}}\PYG{p}{)}
+
+\PYG{n+nb}{print}\PYG{p}{(}\PYG{n}{maes}\PYG{p}{)}
+
+
+\PYG{c+c1}{\PYGZsh{} \PYGZsh{} Prophet}
+
+\PYG{c+c1}{\PYGZsh{} In[67]:}
+
+
+\PYG{n}{ts\PYGZus{}diff}\PYG{o}{.}\PYG{n}{reset\PYGZus{}index}\PYG{p}{()}
+
+
+\PYG{c+c1}{\PYGZsh{} In[68]:}
+
+
+\PYG{c+c1}{\PYGZsh{} formatting dataframe}
+\PYG{n}{ts\PYGZus{}formated\PYGZus{}prophet} \PYG{o}{=} \PYG{n}{ts\PYGZus{}diff}\PYG{o}{.}\PYG{n}{reset\PYGZus{}index}\PYG{p}{()}\PYG{o}{.}\PYG{n}{rename}\PYG{p}{(}\PYG{n}{columns} \PYG{o}{=} \PYG{p}{\PYGZob{}}\PYG{l+s+s1}{\PYGZsq{}date\PYGZsq{}} \PYG{p}{:} \PYG{l+s+s1}{\PYGZsq{}ds\PYGZsq{}}\PYG{p}{,} \PYG{l+s+s1}{\PYGZsq{}ice\PYGZus{}extent\PYGZsq{}} \PYG{p}{:} \PYG{l+s+s1}{\PYGZsq{}y\PYGZsq{}}\PYG{p}{\PYGZcb{})}
+\PYG{n}{ts\PYGZus{}formated\PYGZus{}prophet}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}ds\PYGZsq{}}\PYG{p}{]} \PYG{o}{=} \PYG{n}{pd}\PYG{o}{.}\PYG{n}{DataFrame}\PYG{p}{(}\PYG{n}{pd}\PYG{o}{.}\PYG{n}{to\PYGZus{}datetime}\PYG{p}{(}\PYG{n}{ts\PYGZus{}formated\PYGZus{}prophet}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}ds\PYGZsq{}}\PYG{p}{]}\PYG{o}{.}\PYG{n}{astype}\PYG{p}{(}\PYG{n+nb}{str}\PYG{p}{),} \PYG{n+nb}{format}\PYG{o}{=}\PYG{l+s+s1}{\PYGZsq{}\PYGZpc{}Y\PYGZhy{}\PYGZpc{}m\PYGZhy{}}\PYG{l+s+si}{\PYGZpc{}d}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{))}
+
+
+\PYG{c+c1}{\PYGZsh{} In[69]:}
+
+
+\PYG{c+c1}{\PYGZsh{} initialize TimeSeriesSplit object}
+\PYG{n}{tscv\PYGZus{}prophet} \PYG{o}{=} \PYG{n}{TimeSeriesSplit}\PYG{p}{(}\PYG{n}{n\PYGZus{}splits} \PYG{o}{=} \PYG{l+m+mi}{18}\PYG{p}{)}
+
+\PYG{c+c1}{\PYGZsh{} loop trough all split time series that have a trainingsset with more than 20 values}
+\PYG{k}{for} \PYG{n}{train\PYGZus{}index}\PYG{p}{,} \PYG{n}{test\PYGZus{}index} \PYG{o+ow}{in} \PYG{n}{tscv\PYGZus{}prophet}\PYG{o}{.}\PYG{n}{split}\PYG{p}{(}\PYG{n}{ts\PYGZus{}formated\PYGZus{}prophet}\PYG{p}{):}
+    \PYG{k}{if} \PYG{n}{train\PYGZus{}index}\PYG{o}{.}\PYG{n}{size} \PYG{o}{\PYGZgt{}} \PYG{l+m+mi}{300}\PYG{p}{:}
+
+        \PYG{c+c1}{\PYGZsh{} initialize cross validation train and test sets}
+        \PYG{n}{cv\PYGZus{}train}\PYG{p}{,} \PYG{n}{cv\PYGZus{}test} \PYG{o}{=} \PYG{n}{ts\PYGZus{}diff}\PYG{o}{.}\PYG{n}{iloc}\PYG{p}{[}\PYG{n}{train\PYGZus{}index}\PYG{p}{],} \PYG{n}{ts\PYGZus{}diff}\PYG{o}{.}\PYG{n}{iloc}\PYG{p}{[}\PYG{n}{test\PYGZus{}index}\PYG{p}{]}
+
+         \PYG{c+c1}{\PYGZsh{} visiualize cross\PYGZus{}validation structure for reference}
+        \PYG{n+nb}{print}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}TRAIN:\PYGZdq{}}\PYG{p}{,} \PYG{n}{train\PYGZus{}index}\PYG{o}{.}\PYG{n}{size}\PYG{p}{)}
+        \PYG{n+nb}{print}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}TEST:\PYGZdq{}}\PYG{p}{,} \PYG{n}{test\PYGZus{}index}\PYG{o}{.}\PYG{n}{size}\PYG{p}{)}
+        \PYG{n+nb}{print}\PYG{p}{()}
+
+
+\PYG{c+c1}{\PYGZsh{} In[39]:}
+
+
+\PYG{c+c1}{\PYGZsh{} Python}
+\PYG{k+kn}{import} \PYG{n+nn}{itertools}
+\PYG{k+kn}{import} \PYG{n+nn}{numpy} \PYG{k}{as} \PYG{n+nn}{np}
+\PYG{k+kn}{import} \PYG{n+nn}{pandas} \PYG{k}{as} \PYG{n+nn}{pd}
+\PYG{k+kn}{from} \PYG{n+nn}{fbprophet} \PYG{k+kn}{import} \PYG{n}{Prophet}
+\PYG{k+kn}{from} \PYG{n+nn}{sklearn.metrics} \PYG{k+kn}{import} \PYG{n}{mean\PYGZus{}absolute\PYGZus{}error}
+
+
+\PYG{c+c1}{\PYGZsh{} define dataframe}
+\PYG{n}{df} \PYG{o}{=} \PYG{n}{ts\PYGZus{}formated\PYGZus{}prophet}
+
+\PYG{n}{param\PYGZus{}grid} \PYG{o}{=} \PYG{p}{\PYGZob{}}
+    \PYG{l+s+s1}{\PYGZsq{}changepoint\PYGZus{}prior\PYGZus{}scale\PYGZsq{}}\PYG{p}{:} \PYG{p}{[}\PYG{l+m+mf}{0.001}\PYG{p}{,} \PYG{l+m+mf}{0.01}\PYG{p}{,} \PYG{l+m+mf}{0.1}\PYG{p}{,} \PYG{l+m+mf}{0.5}\PYG{p}{,} \PYG{l+m+mf}{0.75}\PYG{p}{,} \PYG{l+m+mi}{1}\PYG{p}{],}
+    \PYG{l+s+s1}{\PYGZsq{}seasonality\PYGZus{}prior\PYGZus{}scale\PYGZsq{}}\PYG{p}{:} \PYG{p}{[}\PYG{l+m+mf}{0.001}\PYG{p}{,} \PYG{l+m+mf}{0.01}\PYG{p}{,} \PYG{l+m+mf}{0.1}\PYG{p}{,} \PYG{l+m+mi}{1}\PYG{p}{,} \PYG{l+m+mi}{2}\PYG{p}{,} \PYG{l+m+mi}{5}\PYG{p}{,} \PYG{l+m+mi}{10}\PYG{p}{],}
+\PYG{p}{\PYGZcb{}}
+
+\PYG{c+c1}{\PYGZsh{} Generate all combinations of parameters}
+\PYG{n}{all\PYGZus{}params} \PYG{o}{=} \PYG{p}{[}\PYG{n+nb}{dict}\PYG{p}{(}\PYG{n+nb}{zip}\PYG{p}{(}\PYG{n}{param\PYGZus{}grid}\PYG{o}{.}\PYG{n}{keys}\PYG{p}{(),} \PYG{n}{v}\PYG{p}{))} \PYG{k}{for} \PYG{n}{v} \PYG{o+ow}{in} \PYG{n}{itertools}\PYG{o}{.}\PYG{n}{product}\PYG{p}{(}\PYG{o}{*}\PYG{n}{param\PYGZus{}grid}\PYG{o}{.}\PYG{n}{values}\PYG{p}{())]}
+
+\PYG{c+c1}{\PYGZsh{} initialize variables}
+\PYG{n}{maes} \PYG{o}{=} \PYG{p}{[]}
+\PYG{n}{global\PYGZus{}maes} \PYG{o}{=} \PYG{p}{[]}
+\PYG{n}{best\PYGZus{}MAE\PYGZus{}prophet} \PYG{o}{=} \PYG{n}{np}\PYG{o}{.}\PYG{n}{inf}
+
+\PYG{c+c1}{\PYGZsh{} Use cross validation to evaluate all parameters}
+\PYG{k}{for} \PYG{n}{params} \PYG{o+ow}{in} \PYG{n}{all\PYGZus{}params}\PYG{p}{:}
+
+    \PYG{c+c1}{\PYGZsh{} loop trough all split time series that have a trainingsset with more than 20 values}
+    \PYG{k}{for} \PYG{n}{train\PYGZus{}index}\PYG{p}{,} \PYG{n}{test\PYGZus{}index} \PYG{o+ow}{in} \PYG{n}{tscv\PYGZus{}prophet}\PYG{o}{.}\PYG{n}{split}\PYG{p}{(}\PYG{n}{ts\PYGZus{}formated\PYGZus{}prophet}\PYG{p}{):}
+        \PYG{k}{if} \PYG{n}{train\PYGZus{}index}\PYG{o}{.}\PYG{n}{size} \PYG{o}{\PYGZgt{}} \PYG{l+m+mi}{300}\PYG{p}{:}
+
+            \PYG{c+c1}{\PYGZsh{} initialize cross validation train and test sets}
+            \PYG{n}{train}  \PYG{o}{=} \PYG{n}{ts\PYGZus{}formated\PYGZus{}prophet}\PYG{o}{.}\PYG{n}{iloc}\PYG{p}{[}\PYG{n}{train\PYGZus{}index}\PYG{p}{]}
+            \PYG{n}{y\PYGZus{}test} \PYG{o}{=} \PYG{n}{ts\PYGZus{}formated\PYGZus{}prophet}\PYG{o}{.}\PYG{n}{iloc}\PYG{p}{[}\PYG{n}{test\PYGZus{}index}\PYG{p}{][[}\PYG{l+s+s1}{\PYGZsq{}y\PYGZsq{}}\PYG{p}{]]}\PYG{o}{.}\PYG{n}{values}\PYG{o}{.}\PYG{n}{flatten}\PYG{p}{()}
+            \PYG{n}{X\PYGZus{}test} \PYG{o}{=} \PYG{n}{ts\PYGZus{}formated\PYGZus{}prophet}\PYG{o}{.}\PYG{n}{iloc}\PYG{p}{[}\PYG{n}{test\PYGZus{}index}\PYG{p}{][[}\PYG{l+s+s1}{\PYGZsq{}ds\PYGZsq{}}\PYG{p}{]]}
+
+            \PYG{c+c1}{\PYGZsh{} Fit model with given params}
+            \PYG{n}{model} \PYG{o}{=} \PYG{n}{Prophet}\PYG{p}{(}\PYG{o}{**}\PYG{n}{params}\PYG{p}{,} \PYG{n}{weekly\PYGZus{}seasonality}\PYG{o}{=}\PYG{k+kc}{False}\PYG{p}{,} \PYG{n}{daily\PYGZus{}seasonality}\PYG{o}{=}\PYG{k+kc}{False}\PYG{p}{)}
+            \PYG{n}{model} \PYG{o}{=} \PYG{n}{model}\PYG{o}{.}\PYG{n}{fit}\PYG{p}{(}\PYG{n}{train}\PYG{p}{)}
+
+            \PYG{c+c1}{\PYGZsh{} make predictions}
+            \PYG{n}{forecast} \PYG{o}{=} \PYG{n}{model}\PYG{o}{.}\PYG{n}{predict}\PYG{p}{(}\PYG{n}{X\PYGZus{}test}\PYG{p}{)}
+            \PYG{n}{y\PYGZus{}pred} \PYG{o}{=} \PYG{n}{forecast}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}yhat\PYGZsq{}}\PYG{p}{]}\PYG{o}{.}\PYG{n}{values}
+
+            \PYG{c+c1}{\PYGZsh{} last actual prediction}
+            \PYG{n}{last\PYGZus{}prediction\PYGZus{}prophet} \PYG{o}{=} \PYG{n}{y\PYGZus{}pred}
+
+            \PYG{c+c1}{\PYGZsh{} error calculation this part of the cross validation}
+            \PYG{n}{maes}\PYG{o}{.}\PYG{n}{append}\PYG{p}{(}\PYG{n}{mean\PYGZus{}absolute\PYGZus{}error}\PYG{p}{(}\PYG{n}{y\PYGZus{}test}\PYG{p}{,} \PYG{n}{y\PYGZus{}pred}\PYG{p}{))}
+
+    \PYG{c+c1}{\PYGZsh{} error calculation for this parameter combination}
+    \PYG{n}{MAE\PYGZus{}prophet} \PYG{o}{=} \PYG{n}{np}\PYG{o}{.}\PYG{n}{mean}\PYG{p}{(}\PYG{n}{maes}\PYG{p}{)}
+    \PYG{n}{last\PYGZus{}MAE\PYGZus{}prophet} \PYG{o}{=} \PYG{n}{maes}\PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{]}
+    \PYG{n}{global\PYGZus{}maes}\PYG{o}{.}\PYG{n}{append}\PYG{p}{(}\PYG{n}{MAE\PYGZus{}prophet}\PYG{p}{)}
+
+    \PYG{c+c1}{\PYGZsh{} logging}
+    \PYG{n+nb}{print}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}changepoint\PYGZus{}prior\PYGZus{}scale: \PYGZsq{}} \PYG{o}{+} \PYG{n+nb}{str}\PYG{p}{(}\PYG{n}{params}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}changepoint\PYGZus{}prior\PYGZus{}scale\PYGZsq{}}\PYG{p}{]))}
+    \PYG{n+nb}{print}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}seasonality\PYGZus{}prior\PYGZus{}scale: \PYGZsq{}} \PYG{o}{+} \PYG{n+nb}{str}\PYG{p}{(}\PYG{n}{params}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}seasonality\PYGZus{}prior\PYGZus{}scale\PYGZsq{}}\PYG{p}{]))}
+    \PYG{n+nb}{print}\PYG{p}{(}\PYG{n}{MAE\PYGZus{}prophet}\PYG{p}{)}
+
+    \PYG{c+c1}{\PYGZsh{} store parameters resulting in the lowest mean MAE}
+    \PYG{k}{if} \PYG{n}{best\PYGZus{}MAE\PYGZus{}prophet} \PYG{o}{\PYGZgt{}} \PYG{n}{MAE\PYGZus{}prophet}\PYG{p}{:}
+        \PYG{n}{best\PYGZus{}params} \PYG{o}{=} \PYG{n}{params}
+        \PYG{n}{best\PYGZus{}MAE\PYGZus{}prophet} \PYG{o}{=} \PYG{n}{MAE\PYGZus{}prophet}
+
+\PYG{c+c1}{\PYGZsh{} log optimal result}
+\PYG{n+nb}{print}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}changepoint\PYGZus{}prior\PYGZus{}scale: \PYGZsq{}} \PYG{o}{+} \PYG{n+nb}{str}\PYG{p}{(}\PYG{n}{best\PYGZus{}params}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}changepoint\PYGZus{}prior\PYGZus{}scale\PYGZsq{}}\PYG{p}{]))}
+\PYG{n+nb}{print}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}seasonality\PYGZus{}prior\PYGZus{}scale: \PYGZsq{}} \PYG{o}{+} \PYG{n+nb}{str}\PYG{p}{(}\PYG{n}{best\PYGZus{}params}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}seasonality\PYGZus{}prior\PYGZus{}scale\PYGZsq{}}\PYG{p}{]))}
+\PYG{n+nb}{print}\PYG{p}{(}\PYG{n}{best\PYGZus{}MAE\PYGZus{}prophet}\PYG{p}{)}
+
+
+
+\PYG{c+c1}{\PYGZsh{} In[77]:}
+
+
+\PYG{n}{best\PYGZus{}params} \PYG{o}{=} \PYG{p}{\PYGZob{}}\PYG{l+s+s1}{\PYGZsq{}changepoint\PYGZus{}prior\PYGZus{}scale\PYGZsq{}}\PYG{p}{:} \PYG{l+m+mf}{0.001}\PYG{p}{,} \PYG{l+s+s1}{\PYGZsq{}seasonality\PYGZus{}prior\PYGZus{}scale\PYGZsq{}}\PYG{p}{:} \PYG{l+m+mi}{10}\PYG{p}{\PYGZcb{}}
+
+
+\PYG{c+c1}{\PYGZsh{} In[78]:}
+
+
+\PYG{k+kn}{from} \PYG{n+nn}{fbprophet} \PYG{k+kn}{import} \PYG{n}{Prophet}
+\PYG{c+c1}{\PYGZsh{} Disabled tf warning because of clutter}
+\PYG{n}{warnings}\PYG{o}{.}\PYG{n}{filterwarnings}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}ignore\PYGZdq{}}\PYG{p}{)} \PYG{c+c1}{\PYGZsh{} specify to ignore warning messages}
+
+\PYG{n}{start\PYGZus{}time} \PYG{o}{=} \PYG{n}{timeit}\PYG{o}{.}\PYG{n}{default\PYGZus{}timer}\PYG{p}{()}
+
+\PYG{c+c1}{\PYGZsh{} initialize variables}
+\PYG{n}{maes} \PYG{o}{=} \PYG{p}{[]}
+
+\PYG{k}{for} \PYG{n}{train\PYGZus{}index}\PYG{p}{,} \PYG{n}{test\PYGZus{}index} \PYG{o+ow}{in} \PYG{n}{tscv\PYGZus{}prophet}\PYG{o}{.}\PYG{n}{split}\PYG{p}{(}\PYG{n}{ts\PYGZus{}formated\PYGZus{}prophet}\PYG{p}{):}
+    \PYG{k}{if} \PYG{n}{train\PYGZus{}index}\PYG{o}{.}\PYG{n}{size} \PYG{o}{\PYGZgt{}} \PYG{l+m+mi}{300}\PYG{p}{:}
+
+        \PYG{c+c1}{\PYGZsh{} initialize cross validation train and test sets}
+        \PYG{n}{train}  \PYG{o}{=} \PYG{n}{ts\PYGZus{}formated\PYGZus{}prophet}\PYG{o}{.}\PYG{n}{iloc}\PYG{p}{[}\PYG{n}{train\PYGZus{}index}\PYG{p}{]}
+        \PYG{n}{y\PYGZus{}test} \PYG{o}{=} \PYG{n}{ts\PYGZus{}formated\PYGZus{}prophet}\PYG{o}{.}\PYG{n}{iloc}\PYG{p}{[}\PYG{n}{test\PYGZus{}index}\PYG{p}{][[}\PYG{l+s+s1}{\PYGZsq{}y\PYGZsq{}}\PYG{p}{]]}\PYG{o}{.}\PYG{n}{values}\PYG{o}{.}\PYG{n}{flatten}\PYG{p}{()}
+        \PYG{n}{X\PYGZus{}test} \PYG{o}{=} \PYG{n}{ts\PYGZus{}formated\PYGZus{}prophet}\PYG{o}{.}\PYG{n}{iloc}\PYG{p}{[}\PYG{n}{test\PYGZus{}index}\PYG{p}{][[}\PYG{l+s+s1}{\PYGZsq{}ds\PYGZsq{}}\PYG{p}{]]}
+
+        \PYG{c+c1}{\PYGZsh{} build model}
+        \PYG{n}{model} \PYG{o}{=} \PYG{n}{Prophet}\PYG{p}{(}\PYG{o}{**}\PYG{n}{best\PYGZus{}params}\PYG{p}{,} \PYG{n}{weekly\PYGZus{}seasonality}\PYG{o}{=}\PYG{k+kc}{False}\PYG{p}{,} \PYG{n}{daily\PYGZus{}seasonality}\PYG{o}{=}\PYG{k+kc}{False}\PYG{p}{)}
+        \PYG{n}{model}\PYG{o}{.}\PYG{n}{fit}\PYG{p}{(}\PYG{n}{train}\PYG{p}{)}
+
+        \PYG{c+c1}{\PYGZsh{} make predictions}
+        \PYG{n}{forecast} \PYG{o}{=} \PYG{n}{model}\PYG{o}{.}\PYG{n}{predict}\PYG{p}{(}\PYG{n}{X\PYGZus{}test}\PYG{p}{)}
+        \PYG{n}{y\PYGZus{}pred} \PYG{o}{=} \PYG{n}{forecast}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}yhat\PYGZsq{}}\PYG{p}{]}\PYG{o}{.}\PYG{n}{values}
+
+        \PYG{c+c1}{\PYGZsh{} error calc}
+        \PYG{n}{maes}\PYG{o}{.}\PYG{n}{append}\PYG{p}{(}\PYG{n}{mean\PYGZus{}absolute\PYGZus{}error}\PYG{p}{(}\PYG{n}{y\PYGZus{}test}\PYG{p}{,} \PYG{n}{y\PYGZus{}pred}\PYG{p}{))}
+
+
+
+
+\PYG{c+c1}{\PYGZsh{} store results}
+\PYG{n}{time\PYGZus{}Prophet} \PYG{o}{=} \PYG{n}{timeit}\PYG{o}{.}\PYG{n}{default\PYGZus{}timer}\PYG{p}{()} \PYG{o}{\PYGZhy{}} \PYG{n}{start\PYGZus{}time}
+\PYG{n}{MAE\PYGZus{}Prophet} \PYG{o}{=} \PYG{n}{np}\PYG{o}{.}\PYG{n}{mean}\PYG{p}{(}\PYG{n}{maes}\PYG{p}{)}
+\PYG{n}{last\PYGZus{}MAE\PYGZus{}Prophet} \PYG{o}{=} \PYG{n}{maes}\PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{]}
+\PYG{n}{last\PYGZus{}prediction\PYGZus{}prophet} \PYG{o}{=} \PYG{n}{y\PYGZus{}pred}
+
+\PYG{c+c1}{\PYGZsh{} visualize results}
+\PYG{n+nb}{print}\PYG{p}{()}
+\PYG{n+nb}{print}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}Mean MAE: }\PYG{l+s+si}{\PYGZpc{}.3f}\PYG{l+s+s1}{ x 1 000 000 km}\PYG{l+s+se}{\PYGZbs{}u00b2}\PYG{l+s+s1}{\PYGZsq{}} \PYG{o}{\PYGZpc{}} \PYG{n}{MAE\PYGZus{}Prophet}\PYG{p}{)}
+\PYG{n+nb}{print}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}MAE of last prediction: }\PYG{l+s+si}{\PYGZpc{}.3f}\PYG{l+s+s1}{ x 1 000 000 km}\PYG{l+s+se}{\PYGZbs{}u00b2}\PYG{l+s+s1}{\PYGZsq{}} \PYG{o}{\PYGZpc{}} \PYG{n}{last\PYGZus{}MAE\PYGZus{}Prophet}\PYG{p}{)}
+\PYG{n+nb}{print}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}Execution time: }\PYG{l+s+si}{\PYGZpc{}.3f}\PYG{l+s+s1}{ seconds\PYGZsq{}} \PYG{o}{\PYGZpc{}} \PYG{n}{time\PYGZus{}Prophet}\PYG{p}{)}
+
+\PYG{n}{reverted\PYGZus{}prediction\PYGZus{}values} \PYG{o}{=} \PYG{n}{revert\PYGZus{}diff\PYGZus{}seasonal}\PYG{p}{(}\PYG{n}{last\PYGZus{}prediction\PYGZus{}prophet}\PYG{p}{,} \PYG{n}{ts}\PYG{p}{)}
+\PYG{n}{full\PYGZus{}graph}\PYG{p}{(}\PYG{n}{reverted\PYGZus{}prediction\PYGZus{}values}\PYG{p}{,} \PYG{n}{ts}\PYG{p}{,} \PYG{l+s+s2}{\PYGZdq{}Last 2 year prediction prophet\PYGZdq{}}\PYG{p}{)}
+\PYG{n+nb}{print}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}Mean average errors\PYGZsq{}}\PYG{p}{)}
+\PYG{n+nb}{print}\PYG{p}{(}\PYG{n}{maes}\PYG{p}{)}
+
+
+\PYG{c+c1}{\PYGZsh{} In[ ]:}
+
+
+\PYG{n}{Mean} \PYG{n}{MAE}\PYG{p}{:} \PYG{l+m+mf}{0.250} \PYG{n}{x} \PYG{l+m+mi}{1} \PYG{l+m+mi}{000} \PYG{l+m+mi}{000} \PYG{n}{km}\PYG{err}{²}
+
+
+\PYG{c+c1}{\PYGZsh{} \PYGZsh{} Evaluation}
+
+\PYG{c+c1}{\PYGZsh{} In[79]:}
+
+
+\PYG{c+c1}{\PYGZsh{} formatting}
+\PYG{n}{results} \PYG{o}{=} \PYG{p}{[[}\PYG{n}{MAE\PYGZus{}ARIMA}\PYG{p}{,} \PYG{n}{time\PYGZus{}ARIMA}\PYG{p}{,} \PYG{n}{last\PYGZus{}MAE\PYGZus{}ARIMA}\PYG{p}{],}
+           \PYG{p}{[}\PYG{n}{MAE\PYGZus{}ARIMA\PYGZus{}seasonal}\PYG{p}{,} \PYG{n}{time\PYGZus{}ARIMA\PYGZus{}seasonal}\PYG{p}{,} \PYG{n}{last\PYGZus{}MAE\PYGZus{}ARIMA\PYGZus{}seasonal}\PYG{p}{],}
+           \PYG{p}{[}\PYG{n}{MAE\PYGZus{}SARIMA}\PYG{p}{,} \PYG{n}{time\PYGZus{}SARIMA}\PYG{p}{,} \PYG{n}{last\PYGZus{}MAE\PYGZus{}SARIMA}\PYG{p}{],}
+           \PYG{p}{[}\PYG{n}{MAE\PYGZus{}SARIMA\PYGZus{}seasonal}\PYG{p}{,} \PYG{n}{time\PYGZus{}SARIMA\PYGZus{}seasonal}\PYG{p}{,} \PYG{n}{last\PYGZus{}MAE\PYGZus{}SARIMA\PYGZus{}seasonal}\PYG{p}{],}
+           \PYG{p}{[}\PYG{n}{MAE\PYGZus{}LSTM}\PYG{p}{,} \PYG{n}{time\PYGZus{}LSTM}\PYG{p}{,} \PYG{n}{last\PYGZus{}MAE\PYGZus{}LSTM}\PYG{p}{],}
+           \PYG{p}{[}\PYG{n}{MAE\PYGZus{}LSTM\PYGZus{}seasonal}\PYG{p}{,} \PYG{n}{time\PYGZus{}LSTM\PYGZus{}seasonal}\PYG{p}{,} \PYG{n}{last\PYGZus{}MAE\PYGZus{}LSTM\PYGZus{}seasonal}\PYG{p}{],}
+           \PYG{p}{[}\PYG{n}{MAE\PYGZus{}Prophet}\PYG{p}{,} \PYG{n}{time\PYGZus{}Prophet}\PYG{p}{,} \PYG{n}{last\PYGZus{}MAE\PYGZus{}Prophet}\PYG{p}{]]}
+
+\PYG{c+c1}{\PYGZsh{} display results}
+\PYG{n}{results} \PYG{o}{=} \PYG{n}{pd}\PYG{o}{.}\PYG{n}{DataFrame}\PYG{p}{(}\PYG{n}{results}\PYG{p}{,} \PYG{n}{columns}\PYG{o}{=}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}Mean MAE (x 1 000 000 km}\PYG{l+s+se}{\PYGZbs{}u00b2}\PYG{l+s+s1}{)\PYGZsq{}}\PYG{p}{,}\PYG{l+s+s1}{\PYGZsq{}Execution time (s)\PYGZsq{}}\PYG{p}{,}\PYG{l+s+s1}{\PYGZsq{}Last MAE (x 1 000 000 km}\PYG{l+s+se}{\PYGZbs{}u00b2}\PYG{l+s+s1}{)\PYGZsq{}}\PYG{p}{]}
+             \PYG{p}{,}\PYG{n}{index}\PYG{o}{=}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}ARIMA\PYGZsq{}}\PYG{p}{,}\PYG{l+s+s1}{\PYGZsq{}ARIMA\PYGZus{}seasonal\PYGZus{}differencing\PYGZsq{}}\PYG{p}{,}\PYG{l+s+s1}{\PYGZsq{}SARIMA\PYGZsq{}}\PYG{p}{,}\PYG{l+s+s1}{\PYGZsq{}SARIMA\PYGZus{}seasonal\PYGZus{}differncing\PYGZsq{}}\PYG{p}{,}\PYG{l+s+s1}{\PYGZsq{}LSTM\PYGZsq{}}\PYG{p}{,}\PYG{l+s+s1}{\PYGZsq{}LSTM\PYGZus{}seasonal\PYGZus{}differencing\PYGZsq{}}\PYG{p}{,}\PYG{l+s+s1}{\PYGZsq{}Prophet\PYGZsq{}}\PYG{p}{])}\PYG{o}{.}\PYG{n}{round}\PYG{p}{(}\PYG{n}{decimals}\PYG{o}{=}\PYG{l+m+mi}{3}\PYG{p}{)}
+\PYG{n}{results}
+
+
+\PYG{c+c1}{\PYGZsh{} In[84]:}
+
+
+\PYG{n}{reverted\PYGZus{}prediction\PYGZus{}values} \PYG{o}{=} \PYG{n}{revert\PYGZus{}diff}\PYG{p}{(}\PYG{n}{last\PYGZus{}prediction\PYGZus{}ARIMA}\PYG{p}{,} \PYG{n}{ts}\PYG{p}{[:}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{5}\PYG{p}{])}
+\PYG{n}{full\PYGZus{}graph}\PYG{p}{(}\PYG{n}{reverted\PYGZus{}prediction\PYGZus{}values}\PYG{p}{,} \PYG{n}{ts}\PYG{p}{[:}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{5}\PYG{p}{],}\PYG{l+s+s1}{\PYGZsq{}Last prediction ARIMA\PYGZsq{}}\PYG{p}{)}
+
+\PYG{n}{reverted\PYGZus{}prediction\PYGZus{}values} \PYG{o}{=} \PYG{n}{revert\PYGZus{}diff\PYGZus{}seasonal}\PYG{p}{(}\PYG{n}{last\PYGZus{}prediction\PYGZus{}ARIMA\PYGZus{}seasonal}\PYG{p}{,} \PYG{n}{ts}\PYG{p}{)}
+\PYG{n}{full\PYGZus{}graph}\PYG{p}{(}\PYG{n}{reverted\PYGZus{}prediction\PYGZus{}values}\PYG{p}{,} \PYG{n}{ts}\PYG{p}{,}\PYG{l+s+s1}{\PYGZsq{}Last prediction ARIMA with seasonal differencing\PYGZsq{}}\PYG{p}{)}
+
+\PYG{n}{reverted\PYGZus{}prediction\PYGZus{}values} \PYG{o}{=} \PYG{n}{revert\PYGZus{}diff}\PYG{p}{(}\PYG{n}{last\PYGZus{}prediction\PYGZus{}SARIMA}\PYG{p}{,} \PYG{n}{ts}\PYG{p}{[:}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{5}\PYG{p}{])}
+\PYG{n}{full\PYGZus{}graph}\PYG{p}{(}\PYG{n}{reverted\PYGZus{}prediction\PYGZus{}values}\PYG{p}{,} \PYG{n}{ts}\PYG{p}{[:}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{5}\PYG{p}{],}\PYG{l+s+s1}{\PYGZsq{}Last prediction SARIMAX\PYGZsq{}}\PYG{p}{)}
+
+\PYG{n}{reverted\PYGZus{}prediction\PYGZus{}values} \PYG{o}{=} \PYG{n}{revert\PYGZus{}diff\PYGZus{}seasonal}\PYG{p}{(}\PYG{n}{last\PYGZus{}prediction\PYGZus{}SARIMA\PYGZus{}seasonal}\PYG{p}{,} \PYG{n}{ts}\PYG{p}{)}
+\PYG{n}{full\PYGZus{}graph}\PYG{p}{(}\PYG{n}{reverted\PYGZus{}prediction\PYGZus{}values}\PYG{p}{,} \PYG{n}{ts}\PYG{p}{,}\PYG{l+s+s1}{\PYGZsq{}Last prediction SARIMAX\PYGZsq{}}\PYG{p}{)}
+
+
+\PYG{c+c1}{\PYGZsh{} In[83]:}
+
+
+
+\PYG{n}{reverted\PYGZus{}prediction\PYGZus{}values} \PYG{o}{=} \PYG{n}{revert\PYGZus{}diff\PYGZus{}seasonal}\PYG{p}{(}\PYG{n}{last\PYGZus{}prediction\PYGZus{}LSTM}\PYG{p}{,} \PYG{n}{ts}\PYG{p}{)}
+\PYG{n}{full\PYGZus{}graph}\PYG{p}{(}\PYG{n}{reverted\PYGZus{}prediction\PYGZus{}values}\PYG{p}{,} \PYG{n}{ts}\PYG{p}{,}\PYG{l+s+s1}{\PYGZsq{}Last prediction LSTM\PYGZsq{}}\PYG{p}{)}
+
+\PYG{n}{reverted\PYGZus{}prediction\PYGZus{}values} \PYG{o}{=} \PYG{n}{revert\PYGZus{}diff\PYGZus{}seasonal}\PYG{p}{(}\PYG{n}{last\PYGZus{}prediction\PYGZus{}LSTM\PYGZus{}seasonal}\PYG{p}{,} \PYG{n}{ts}\PYG{p}{)}
+\PYG{n}{full\PYGZus{}graph}\PYG{p}{(}\PYG{n}{reverted\PYGZus{}prediction\PYGZus{}values}\PYG{p}{,} \PYG{n}{ts}\PYG{p}{,}\PYG{l+s+s1}{\PYGZsq{}Last prediction LSTM Seasonal\PYGZsq{}}\PYG{p}{)}
+
+\PYG{n}{reverted\PYGZus{}prediction\PYGZus{}values} \PYG{o}{=} \PYG{n}{revert\PYGZus{}diff\PYGZus{}seasonal}\PYG{p}{(}\PYG{n}{last\PYGZus{}prediction\PYGZus{}prophet}\PYG{p}{,} \PYG{n}{ts}\PYG{p}{)}
+\PYG{n}{full\PYGZus{}graph}\PYG{p}{(}\PYG{n}{reverted\PYGZus{}prediction\PYGZus{}values}\PYG{p}{,} \PYG{n}{ts}\PYG{p}{,} \PYG{l+s+s2}{\PYGZdq{}Last 2 year prediction Prophet\PYGZdq{}}\PYG{p}{)}
+\end{Verbatim}

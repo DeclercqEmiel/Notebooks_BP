@@ -13,7 +13,7 @@ Zo kan het lijstje nog een hele tijd aangevuld worden, maar de net opgenoemde ge
 
 Een voorbeeld hiervan zou het aantal dagelijks gewandelde kilometers van het afgelopen jaar zijn. Doordat dit een tijdreeks is zouden we het aantal dagelijks gewandelde kilometers van het volgende jaar kunnen voorspellen met behulp van bepaalde modellen. Daaruit zouden we dan bijvoorbeeld kunnen vaststellen dat er in de winter minder gewandeld zal worden. Het nut hiervan zou dan kunnen zijn dat men inziet dat men te weinig lichaamsbeweging zal hebben en daar dan zal op inspelen door een indoorsport te beoefenen zodat men toch nog voldoende lichaamsbeweging heeft. Bij dit voorbeeld is het verband zeer simpel en kan men zich afvragen waarvoor het opstellen van een model nuttig zou zijn aangezien dit vrij makkelijk af te leiden valt met het blote oog. Maar soms zal het verband een pak complexer zijn dan een seizoen waardoor het moeilijk te vatten valt voor het menselijk brein maar praktischer is om te identificeren door middel van een wiskundig model. 
 
-De modellen die onderzocht zullen worden zijn polynomiale regressie, ARIMA/VARMAX modellen en LSTM modellen. Daarnaast zal ook nog rekening gehouden met het aantal invoerparameters. Zo zullen modellen die gebruik maken van 1 invoerparameter benoemd worden als univariate modellen, modellen die gebruik maken van meerdere invoerparameters daarentegen zullen benoemd worden als multivariate modellen. Deze 2 types modellen kunnen dan nog eens onderverdeeld worden in seizoensgebonden data en niet-seizoensgebonden modellen. Seizoen wijst hier echter niet enkel op regelmatige afwijkingen binnen de tijdspanne van 1 jaar maar op cyclische regelmatige afwijkingen doorheen de volledige tijdreeks. Dit betekent dus dat een cyclus ook wekelijks herhaald zou kunnen worden. Naast de cyclische trend zullen er eventueel ook nog andere afwijkingen zijn, zo zou het gemiddelde van elke cyclus op lange termijn kunnen stijgen. Om dit te neutraliseren zou de elke waarde verminderd kunnen worden met een bepaalde stijgende factor die na het voorspellende 
+De modellen die onderzocht zullen worden zijn: ARIMA/SARIMAX/VARMAX-modellen, LSTM-modellen en Prophet-modellen. Daarnaast zal ook nog rekening gehouden met het aantal invoerparameters. Zo zullen modellen die gebruik maken van 1 invoerparameter benoemd worden als univariate modellen, modellen die gebruik maken van meerdere invoerparameters daarentegen zullen benoemd worden als multivariate modellen. Deze 2 types modellen kunnen dan nog eens onderverdeeld worden in seizoensgebonden data en niet-seizoensgebonden modellen. 
 
 \section{\IfLanguageName{dutch}{Probleemstelling}{Problem Statement}}
 \label{sec:probleemstelling}
@@ -25,18 +25,20 @@ Gelukkig zijn er ook problemen waarvan de factoren makkelijker registreerbaar zi
 \section{\IfLanguageName{dutch}{Onderzoeksvraag}{Research question}}
 \label{sec:onderzoeksvraag}
 
-Vergelijkende studie van voorspellingsmodellen voor tijdreeksen
+Vergelijkende studie van ARIMA-, LSTM- en Prophet-voorspellingsmodellen van univariate en multivariate, seizoensgebonden en niet-seizoensgebonden tijdreeksen.
 
 \section{\IfLanguageName{dutch}{Onderzoeksdoelstelling}{Research objective}}
 \label{sec:onderzoeksdoelstelling}
 
 De doelstelling van deze bachelorproef is om te achterhalen welk model van de volgende drie:
 \begin{itemize}
-    \item Lineaire of polynoomregressie
     \item Autoregressie
     \item LSTM
+    \item Prophet
 \end{itemize}
- de beste resultaten halen voor data waarbij een of meerdere onafhankelijke variabelen beschikbaar zijn en/of een seizoensgebonden verband aanwezig is. Dit onderzoek zal ook kunnen dienen als basis voor het opstellen van een voorspellingsmodel van andere tijdreeksen. 
+ de beste resultaten halen voor data van een voorbeeldtijdreeks waarbij een of meerdere onafhankelijke variabelen beschikbaar zijn en/of een seizoensgebonden verband aanwezig is. Dit onderzoek zal ook kunnen dienen als basis voor het opstellen van een voorspellingsmodel van andere tijdreeksen. \\
+ 
+ Er dient echter wel vermeld te worden dat deze resultaten altijd zullen vari\"{e}ren van tijdreeks tot tijdreeks en een optimaal model voor de ene tijdreeks niet altijd de beste keuze zal zijn voor een andere tijdreeks.
 
 \section{\IfLanguageName{dutch}{Opzet van deze bachelorproef}{Structure of this bachelor thesis}}
 \label{sec:opzet-bachelorproef}

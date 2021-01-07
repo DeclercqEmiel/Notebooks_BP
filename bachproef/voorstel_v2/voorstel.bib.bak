@@ -1,0 +1,41 @@
+% Encoding: UTF-8
+@ARTICLE{Doll1954,
+  author = {Doll, Richard and Hill, A Bradford},
+  title = {The mortality of doctors in relation to their smoking habits: a preliminary
+	report},
+  journal = {British Medical Journal},
+  year = {1954},
+  volume = {328},
+  pages = {1529-1533},
+  number = {7455},
+  owner = {jbuy519},
+  timestamp = {2014.03.28}
+}
+
+@BOOK{Moore2002,
+  title = {Introduction to the Practice of Statistics},
+  publisher = {W. H. Freeman},
+  year = {2002},
+  author = {Moore, David and McCabe, George},
+  owner = {jbuy519},
+  timestamp = {2014.01.28}
+}
+
+@BOOK{Smits2011,
+  title = {Onderzoek met SPSS en Excel},
+  publisher = {Pearson Education},
+  year = {2011},
+  author = {Smits, Johan and Edens, Ronald},
+  owner = {jbuy519},
+  timestamp = {2014.01.23}
+}
+
+@ONLINE{
+    author = "Alistair Croll",
+    title = {The most important topics and technologies},
+    url  = {https://medium.com/fwd50/the-most-important-topics-technologies-9cfa31f669da},
+    addendum = "(accessed: 08.12.2019)",
+    keywords = "technology"
+}
+
+@Comment{jabref-meta: databaseType:bibtex;}
