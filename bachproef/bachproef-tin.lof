@@ -5,9 +5,9 @@
 \defcounter {refsection}{0}\relax 
 \addvspace {10\p@ }
 \defcounter {refsection}{0}\relax 
-\contentsline {figure}{\numberline {2.1}{\ignorespaces Grafische weergave sum of least squares~\autocite {Brown2020}\relax }}{21}{figure.caption.5}% 
+\contentsline {figure}{\numberline {2.1}{\ignorespaces Grafische weergaven voorbeelddata voor lineaire regressie~\autocite {Pant2019}\relax }}{20}{figure.caption.6}% 
 \defcounter {refsection}{0}\relax 
-\contentsline {figure}{\numberline {2.2}{\ignorespaces Grafische weergaven voorbeelddata voor lineaire regressie~\autocite {Pant2019}\relax }}{22}{figure.caption.7}% 
+\contentsline {figure}{\numberline {2.2}{\ignorespaces Grafische weergave sum of least squares~\autocite {Brown2020}\relax }}{22}{figure.caption.7}% 
 \defcounter {refsection}{0}\relax 
 \contentsline {figure}{\numberline {2.3}{\ignorespaces Voorbeeldtijdreeksen~\autocite {Hyndman2018}\relax }}{24}{figure.caption.8}% 
 \defcounter {refsection}{0}\relax 
@@ -29,7 +29,7 @@
 \defcounter {refsection}{0}\relax 
 \contentsline {figure}{\numberline {2.12}{\ignorespaces Een stacked LSTM~\autocite {Brownlee2017b}\relax }}{40}{figure.caption.17}% 
 \defcounter {refsection}{0}\relax 
-\contentsline {figure}{\numberline {2.13}{\ignorespaces Weergave van een bidirectioneel LSTM model~\autocite {Colah2015}\relax }}{41}{figure.caption.18}% 
+\contentsline {figure}{\numberline {2.13}{\ignorespaces Weergave van een bidirectioneel LSTM-model~\autocite {Colah2015}\relax }}{41}{figure.caption.18}% 
 \defcounter {refsection}{0}\relax 
 \contentsline {figure}{\numberline {2.14}{\ignorespaces \textbf {(a)} Gewone LSTM cell, \textbf {(b)} Weergave van een ConvLSTM~\autocite {Rahman2019}\relax }}{41}{figure.caption.19}% 
 \defcounter {refsection}{0}\relax 
@@ -43,7 +43,7 @@
 \defcounter {refsection}{0}\relax 
 \contentsline {figure}{\numberline {3.1}{\ignorespaces Ruwe invoerdata\relax }}{49}{figure.caption.23}% 
 \defcounter {refsection}{0}\relax 
-\contentsline {figure}{\numberline {3.2}{\ignorespaces Grafische weergave jaarlijkse temperatuur\relax }}{49}{figure.caption.24}% 
+\contentsline {figure}{\numberline {3.2}{\ignorespaces Grafische weergave jaarlijkse temperatuur\relax }}{50}{figure.caption.24}% 
 \defcounter {refsection}{0}\relax 
 \contentsline {figure}{\numberline {3.3}{\ignorespaces Resultaat van data formatting\relax }}{50}{figure.caption.25}% 
 \defcounter {refsection}{0}\relax 
@@ -59,7 +59,7 @@
 \defcounter {refsection}{0}\relax 
 \contentsline {figure}{\numberline {3.9}{\ignorespaces Resultaat test stationarity\relax }}{58}{figure.caption.31}% 
 \defcounter {refsection}{0}\relax 
-\contentsline {figure}{\numberline {3.10}{\ignorespaces Resultaat test stationarity na random walk differencing\relax }}{58}{figure.caption.32}% 
+\contentsline {figure}{\numberline {3.10}{\ignorespaces Resultaat test stationarity na random walk differentiatie\relax }}{58}{figure.caption.32}% 
 \defcounter {refsection}{0}\relax 
 \contentsline {figure}{\numberline {3.11}{\ignorespaces Resultaat finale iteratie ARIMA\relax }}{62}{figure.caption.33}% 
 \defcounter {refsection}{0}\relax 
@@ -83,43 +83,43 @@
 \defcounter {refsection}{0}\relax 
 \contentsline {figure}{\numberline {3.21}{\ignorespaces Resultaat van ARIMA bij seizoensdifferentiatie\relax }}{79}{figure.caption.43}% 
 \defcounter {refsection}{0}\relax 
-\contentsline {figure}{\numberline {3.22}{\ignorespaces Resultaat SARIMAX bij random walk differentiatie\relax }}{79}{figure.caption.44}% 
+\contentsline {figure}{\numberline {3.22}{\ignorespaces Resultaat SARIMAX bij random walk differentiatie\relax }}{80}{figure.caption.44}% 
 \defcounter {refsection}{0}\relax 
-\contentsline {figure}{\numberline {3.23}{\ignorespaces Resultaat SARIMAX bij seizoensdifferentiatie\relax }}{80}{figure.caption.45}% 
+\contentsline {figure}{\numberline {3.23}{\ignorespaces Resultaat SARIMAX bij seizoensdifferentiatie\relax }}{81}{figure.caption.45}% 
 \defcounter {refsection}{0}\relax 
-\contentsline {figure}{\numberline {3.24}{\ignorespaces Resultaat LSTM bij seizoensdifferentiatie\relax }}{80}{figure.caption.46}% 
+\contentsline {figure}{\numberline {3.24}{\ignorespaces Resultaat LSTM bij seizoensdifferentiatie\relax }}{81}{figure.caption.46}% 
 \defcounter {refsection}{0}\relax 
-\contentsline {figure}{\numberline {3.25}{\ignorespaces Resultaten de voorspellingen voor univariate seizoensgebonden data met Prophet\relax }}{81}{figure.caption.47}% 
+\contentsline {figure}{\numberline {3.25}{\ignorespaces Resultaten de voorspellingen voor univariate seizoensgebonden data met Prophet\relax }}{82}{figure.caption.47}% 
 \defcounter {refsection}{0}\relax 
-\contentsline {figure}{\numberline {3.26}{\ignorespaces Resultaten van de univariate seizoensgebonden voorspellingen\relax }}{82}{figure.caption.48}% 
+\contentsline {figure}{\numberline {3.26}{\ignorespaces Resultaten van de univariate seizoensgebonden voorspellingen\relax }}{83}{figure.caption.48}% 
 \defcounter {refsection}{0}\relax 
-\contentsline {figure}{\numberline {3.27}{\ignorespaces Grafische weergaven van de laatste voorspellingen van univariate seizoensgebonden data (deel 1)\relax }}{83}{figure.caption.49}% 
+\contentsline {figure}{\numberline {3.27}{\ignorespaces Grafische weergaven van de laatste voorspellingen van univariate seizoensgebonden data (deel 1)\relax }}{84}{figure.caption.49}% 
 \defcounter {refsection}{0}\relax 
-\contentsline {figure}{\numberline {3.28}{\ignorespaces Grafische weergaven van de laatste voorspellingen van univariate seizoensgebonden data (deel 2)\relax }}{84}{figure.caption.50}% 
+\contentsline {figure}{\numberline {3.28}{\ignorespaces Grafische weergaven van de laatste voorspellingen van univariate seizoensgebonden data (deel 2)\relax }}{85}{figure.caption.50}% 
 \defcounter {refsection}{0}\relax 
-\contentsline {figure}{\numberline {3.29}{\ignorespaces Grafische weergave multivariate tijdreeks zonder seizoenseffect\relax }}{85}{figure.caption.51}% 
+\contentsline {figure}{\numberline {3.29}{\ignorespaces Grafische weergave multivariate tijdreeks zonder seizoenseffect\relax }}{86}{figure.caption.51}% 
 \defcounter {refsection}{0}\relax 
-\contentsline {figure}{\numberline {3.30}{\ignorespaces Grafische weergave gedifferentieerde multivariate tijdreeks zonder seizoenseffect\relax }}{86}{figure.caption.52}% 
+\contentsline {figure}{\numberline {3.30}{\ignorespaces Grafische weergave gedifferentieerde multivariate tijdreeks zonder seizoenseffect\relax }}{87}{figure.caption.52}% 
 \defcounter {refsection}{0}\relax 
-\contentsline {figure}{\numberline {3.31}{\ignorespaces Resultaat multivariate voorspelling VARMAX\relax }}{86}{figure.caption.53}% 
+\contentsline {figure}{\numberline {3.31}{\ignorespaces Resultaat multivariate voorspelling VARMAX\relax }}{88}{figure.caption.53}% 
 \defcounter {refsection}{0}\relax 
-\contentsline {figure}{\numberline {3.32}{\ignorespaces Resultaat multivariate voorspelling LSTM\relax }}{88}{figure.caption.54}% 
+\contentsline {figure}{\numberline {3.32}{\ignorespaces Resultaat multivariate voorspelling LSTM\relax }}{90}{figure.caption.54}% 
 \defcounter {refsection}{0}\relax 
-\contentsline {figure}{\numberline {3.33}{\ignorespaces Resultaten multivariate voorspelling\relax }}{89}{figure.caption.55}% 
+\contentsline {figure}{\numberline {3.33}{\ignorespaces Resultaten multivariate voorspelling\relax }}{91}{figure.caption.55}% 
 \defcounter {refsection}{0}\relax 
-\contentsline {figure}{\numberline {3.34}{\ignorespaces Grafische weergaven van de laatste voorspellingen van de VARMAX en LSTM modellen\relax }}{89}{figure.caption.56}% 
+\contentsline {figure}{\numberline {3.34}{\ignorespaces Grafische weergaven van de laatste voorspellingen van de VARMAX- en LSTM-modellen\relax }}{91}{figure.caption.56}% 
 \defcounter {refsection}{0}\relax 
-\contentsline {figure}{\numberline {3.35}{\ignorespaces Resultaat VARMAX bij random walk differentiatie\relax }}{90}{figure.caption.57}% 
+\contentsline {figure}{\numberline {3.35}{\ignorespaces Resultaat VARMAX bij random walk differentiatie\relax }}{92}{figure.caption.57}% 
 \defcounter {refsection}{0}\relax 
-\contentsline {figure}{\numberline {3.36}{\ignorespaces Resultaat VARMAX bij seizoensdifferentiatie\relax }}{91}{figure.caption.58}% 
+\contentsline {figure}{\numberline {3.36}{\ignorespaces Resultaat VARMAX bij seizoensdifferentiatie\relax }}{93}{figure.caption.58}% 
 \defcounter {refsection}{0}\relax 
-\contentsline {figure}{\numberline {3.37}{\ignorespaces Resultaat LSTM bij random walk differentiatie\relax }}{91}{figure.caption.59}% 
+\contentsline {figure}{\numberline {3.37}{\ignorespaces Resultaat LSTM bij random walk differentiatie\relax }}{94}{figure.caption.59}% 
 \defcounter {refsection}{0}\relax 
-\contentsline {figure}{\numberline {3.38}{\ignorespaces Resultaat LSTM seizoensdifferentiatie\relax }}{92}{figure.caption.60}% 
+\contentsline {figure}{\numberline {3.38}{\ignorespaces Resultaat LSTM seizoensdifferentiatie\relax }}{95}{figure.caption.60}% 
 \defcounter {refsection}{0}\relax 
-\contentsline {figure}{\numberline {3.39}{\ignorespaces Resultaten multivariate seizoensgebonden voorspellingsmodellen\relax }}{93}{figure.caption.61}% 
+\contentsline {figure}{\numberline {3.39}{\ignorespaces Resultaten multivariate seizoensgebonden voorspellingsmodellen\relax }}{96}{figure.caption.61}% 
 \defcounter {refsection}{0}\relax 
-\contentsline {figure}{\numberline {3.40}{\ignorespaces Grafische weergaven van de laatste voorspellingen van multivariate seizoensgebonden voorspellingsmodellen\relax }}{94}{figure.caption.62}% 
+\contentsline {figure}{\numberline {3.40}{\ignorespaces Grafische weergaven van de laatste voorspellingen van multivariate seizoensgebonden voorspellingsmodellen\relax }}{97}{figure.caption.62}% 
 \defcounter {refsection}{0}\relax 
 \addvspace {10\p@ }
 \defcounter {refsection}{0}\relax 

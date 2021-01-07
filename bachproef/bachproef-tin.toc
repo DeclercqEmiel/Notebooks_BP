@@ -1,207 +1,207 @@
 \boolfalse {citerequest}\boolfalse {citetracker}\boolfalse {pagetracker}\boolfalse {backtracker}\relax 
 \babel@toc {dutch}{}
 \defcounter {refsection}{0}\relax 
-\contentsline {chapter}{\numberline {1}Inleiding}{15}{chapter.1}% 
+\contentsline {chapter}{\numberline {1}Inleiding}{11}{chapter.1}% 
 \defcounter {refsection}{0}\relax 
-\contentsline {section}{\numberline {1.1}Probleemstelling}{16}{section.1.1}% 
+\contentsline {section}{\numberline {1.1}Probleemstelling}{12}{section.1.1}% 
 \defcounter {refsection}{0}\relax 
-\contentsline {section}{\numberline {1.2}Onderzoeksvraag}{16}{section.1.2}% 
+\contentsline {section}{\numberline {1.2}Onderzoeksvraag}{12}{section.1.2}% 
 \defcounter {refsection}{0}\relax 
-\contentsline {section}{\numberline {1.3}Onderzoeksdoelstelling}{16}{section.1.3}% 
+\contentsline {section}{\numberline {1.3}Onderzoeksdoelstelling}{13}{section.1.3}% 
 \defcounter {refsection}{0}\relax 
-\contentsline {section}{\numberline {1.4}Opzet van deze bachelorproef}{17}{section.1.4}% 
+\contentsline {section}{\numberline {1.4}Opzet van deze bachelorproef}{13}{section.1.4}% 
 \defcounter {refsection}{0}\relax 
-\contentsline {chapter}{\numberline {2}Stand van zaken}{19}{chapter.2}% 
+\contentsline {chapter}{\numberline {2}Stand van zaken}{15}{chapter.2}% 
 \defcounter {refsection}{0}\relax 
-\contentsline {section}{\numberline {2.1}Regressieanalyse}{19}{section.2.1}% 
+\contentsline {section}{\numberline {2.1}Regressieanalyse}{15}{section.2.1}% 
 \defcounter {refsection}{0}\relax 
-\contentsline {subsection}{\numberline {2.1.1}Lineaire Regressie}{19}{subsection.2.1.1}% 
+\contentsline {subsection}{\numberline {2.1.1}Lineaire Regressie}{16}{subsection.2.1.1}% 
 \defcounter {refsection}{0}\relax 
-\contentsline {subsection}{\numberline {2.1.2}Polynomiale Regressie}{21}{subsection.2.1.2}% 
+\contentsline {subsection}{\numberline {2.1.2}Polynomiale Regressie}{18}{subsection.2.1.2}% 
 \defcounter {refsection}{0}\relax 
-\contentsline {subsection}{\numberline {2.1.3}Logistische Regressie}{22}{subsection.2.1.3}% 
+\contentsline {subsection}{\numberline {2.1.3}Logistische Regressie}{18}{subsection.2.1.3}% 
 \defcounter {refsection}{0}\relax 
-\contentsline {subsection}{\numberline {2.1.4}Meervoudige lineaire regressie}{23}{subsection.2.1.4}% 
+\contentsline {subsection}{\numberline {2.1.4}Meervoudige lineaire regressie}{19}{subsection.2.1.4}% 
 \defcounter {refsection}{0}\relax 
-\contentsline {subsection}{\numberline {2.1.5}Toepassing}{23}{subsection.2.1.5}% 
+\contentsline {subsection}{\numberline {2.1.5}Toepassing}{19}{subsection.2.1.5}% 
 \defcounter {refsection}{0}\relax 
-\contentsline {section}{\numberline {2.2}ARIMA}{23}{section.2.2}% 
+\contentsline {section}{\numberline {2.2}ARIMA}{20}{section.2.2}% 
 \defcounter {refsection}{0}\relax 
-\contentsline {subsection}{\numberline {2.2.1}Stationariteit}{23}{subsection.2.2.1}% 
+\contentsline {subsection}{\numberline {2.2.1}Stationariteit}{20}{subsection.2.2.1}% 
 \defcounter {refsection}{0}\relax 
-\contentsline {subsection}{\numberline {2.2.2}Seizoenseffect}{24}{subsection.2.2.2}% 
+\contentsline {subsection}{\numberline {2.2.2}Seizoenseffect}{21}{subsection.2.2.2}% 
 \defcounter {refsection}{0}\relax 
-\contentsline {subsection}{\numberline {2.2.3}Differentiatie}{25}{subsection.2.2.3}% 
+\contentsline {subsection}{\numberline {2.2.3}Differentiatie}{21}{subsection.2.2.3}% 
 \defcounter {refsection}{0}\relax 
-\contentsline {subsubsection}{Random walk differentiatie}{25}{subsection.2.2.3}% 
+\contentsline {subsubsection}{Random walk differentiatie}{21}{subsection.2.2.3}% 
 \defcounter {refsection}{0}\relax 
-\contentsline {subsubsection}{Tweedegraadsdifferentiatie}{25}{equation.2.2.7}% 
+\contentsline {subsubsection}{Tweedegraadsdifferentiatie}{22}{equation.2.2.7}% 
 \defcounter {refsection}{0}\relax 
-\contentsline {subsubsection}{Seizoensdifferentiatie}{26}{equation.2.2.8}% 
+\contentsline {subsubsection}{Seizoensdifferentiatie}{22}{equation.2.2.8}% 
 \defcounter {refsection}{0}\relax 
-\contentsline {subsection}{\numberline {2.2.4}Toeliching ARIMA}{26}{subsection.2.2.4}% 
+\contentsline {subsection}{\numberline {2.2.4}Toeliching ARIMA}{23}{subsection.2.2.4}% 
 \defcounter {refsection}{0}\relax 
-\contentsline {subsubsection}{ARIMA(1,0,0)}{27}{equation.2.2.11}% 
+\contentsline {subsubsection}{ARIMA(1,0,0)}{24}{equation.2.2.11}% 
 \defcounter {refsection}{0}\relax 
-\contentsline {subsubsection}{ARIMA(0,1,0)}{28}{equation.2.2.12}% 
+\contentsline {subsubsection}{ARIMA(0,1,0)}{24}{equation.2.2.12}% 
 \defcounter {refsection}{0}\relax 
-\contentsline {subsubsection}{ARIMA(1,1,0)}{28}{equation.2.2.13}% 
+\contentsline {subsubsection}{ARIMA(1,1,0)}{25}{equation.2.2.13}% 
 \defcounter {refsection}{0}\relax 
-\contentsline {subsubsection}{ARIMA(0,1,1)}{29}{equation.2.2.14}% 
+\contentsline {subsubsection}{ARIMA(0,1,1)}{25}{equation.2.2.14}% 
 \defcounter {refsection}{0}\relax 
-\contentsline {subsubsection}{ARIMA(0,2,1) of ARIMA(0,2,2)}{29}{equation.2.2.15}% 
+\contentsline {subsubsection}{ARIMA(0,2,1) of ARIMA(0,2,2)}{25}{equation.2.2.15}% 
 \defcounter {refsection}{0}\relax 
-\contentsline {subsubsection}{ARIMA(1,1,2)}{29}{equation.2.2.16}% 
+\contentsline {subsubsection}{ARIMA(1,1,2)}{26}{equation.2.2.16}% 
 \defcounter {refsection}{0}\relax 
-\contentsline {subsection}{\numberline {2.2.5}Varianten op ARIMA}{30}{subsection.2.2.5}% 
+\contentsline {subsection}{\numberline {2.2.5}Varianten op ARIMA}{27}{subsection.2.2.5}% 
 \defcounter {refsection}{0}\relax 
-\contentsline {subsubsection}{SARIMA}{30}{subsection.2.2.5}% 
+\contentsline {subsubsection}{SARIMA}{27}{subsection.2.2.5}% 
 \defcounter {refsection}{0}\relax 
-\contentsline {subsubsection}{VARMAX}{31}{subsection.2.2.5}% 
+\contentsline {subsubsection}{VARMAX}{27}{subsection.2.2.5}% 
 \defcounter {refsection}{0}\relax 
-\contentsline {section}{\numberline {2.3}Long Short Term Memory}{31}{section.2.3}% 
+\contentsline {section}{\numberline {2.3}Long Short Term Memory}{27}{section.2.3}% 
 \defcounter {refsection}{0}\relax 
-\contentsline {subsection}{\numberline {2.3.1}Theoretische toelichting}{31}{subsection.2.3.1}% 
+\contentsline {subsection}{\numberline {2.3.1}Theoretische toelichting}{28}{subsection.2.3.1}% 
 \defcounter {refsection}{0}\relax 
-\contentsline {paragraph}{Toepassing}{33}{equation.2.3.20}% 
+\contentsline {paragraph}{Toepassing}{29}{equation.2.3.20}% 
 \defcounter {refsection}{0}\relax 
-\contentsline {subparagraph}{Stap 1}{35}{figure.caption.11}% 
+\contentsline {subparagraph}{Stap 1}{31}{figure.caption.10}% 
 \defcounter {refsection}{0}\relax 
-\contentsline {subparagraph}{Stap 2}{35}{figure.caption.12}% 
+\contentsline {subparagraph}{Stap 2}{31}{figure.caption.11}% 
 \defcounter {refsection}{0}\relax 
-\contentsline {subparagraph}{Stap 3}{35}{figure.caption.13}% 
+\contentsline {subparagraph}{Stap 3}{31}{figure.caption.12}% 
 \defcounter {refsection}{0}\relax 
-\contentsline {subparagraph}{Stap 4}{35}{figure.caption.14}% 
+\contentsline {subparagraph}{Stap 4}{31}{figure.caption.13}% 
 \defcounter {refsection}{0}\relax 
-\contentsline {subsection}{\numberline {2.3.2}Praktische toelichting}{36}{subsection.2.3.2}% 
+\contentsline {subsection}{\numberline {2.3.2}Praktische toelichting}{33}{subsection.2.3.2}% 
 \defcounter {refsection}{0}\relax 
-\contentsline {subsubsection}{Univariate LSTM modellen}{36}{subsection.2.3.2}% 
+\contentsline {subsubsection}{Univariate LSTM modellen}{33}{subsection.2.3.2}% 
 \defcounter {refsection}{0}\relax 
-\contentsline {subparagraph}{Datavoorbereiding}{36}{subsection.2.3.2}% 
+\contentsline {subparagraph}{Datavoorbereiding}{33}{subsection.2.3.2}% 
 \defcounter {refsection}{0}\relax 
-\contentsline {paragraph}{Vanilla LSTM}{37}{lstnumber.2.2.5}% 
+\contentsline {paragraph}{Vanilla LSTM}{33}{lstnumber.2.2.5}% 
 \defcounter {refsection}{0}\relax 
-\contentsline {paragraph}{Stacked LSTM}{40}{listing.1}% 
+\contentsline {paragraph}{Stacked LSTM}{37}{listing.1}% 
 \defcounter {refsection}{0}\relax 
-\contentsline {paragraph}{Bidirectionele LSTM}{40}{figure.caption.17}% 
+\contentsline {paragraph}{Bidirectionele LSTM}{37}{figure.caption.16}% 
 \defcounter {refsection}{0}\relax 
-\contentsline {paragraph}{CNN LSTM}{41}{figure.caption.18}% 
+\contentsline {paragraph}{CNN LSTM}{38}{figure.caption.17}% 
 \defcounter {refsection}{0}\relax 
-\contentsline {paragraph}{ConvLSTM}{41}{figure.caption.18}% 
+\contentsline {paragraph}{ConvLSTM}{38}{figure.caption.17}% 
 \defcounter {refsection}{0}\relax 
-\contentsline {subsubsection}{Multivariabele LSTM modellen}{41}{figure.caption.19}% 
+\contentsline {subsubsection}{Multivariabele LSTM modellen}{38}{figure.caption.18}% 
 \defcounter {refsection}{0}\relax 
-\contentsline {paragraph}{Meerdere invoerreeksen}{42}{figure.caption.19}% 
+\contentsline {paragraph}{Meerdere invoerreeksen}{38}{figure.caption.18}% 
 \defcounter {refsection}{0}\relax 
-\contentsline {paragraph}{Meerdere parallelle reeksen}{42}{figure.caption.19}% 
+\contentsline {paragraph}{Meerdere parallelle reeksen}{38}{figure.caption.18}% 
 \defcounter {refsection}{0}\relax 
-\contentsline {subsubsection}{Multi-Step LSTM modellen}{42}{figure.caption.19}% 
+\contentsline {subsubsection}{Multi-Step LSTM modellen}{38}{figure.caption.18}% 
 \defcounter {refsection}{0}\relax 
-\contentsline {paragraph}{Vector output model}{42}{figure.caption.19}% 
+\contentsline {paragraph}{Vector output model}{38}{figure.caption.18}% 
 \defcounter {refsection}{0}\relax 
-\contentsline {paragraph}{Encoder-Decoder Model}{42}{figure.caption.19}% 
+\contentsline {paragraph}{Encoder-Decoder Model}{39}{figure.caption.18}% 
 \defcounter {refsection}{0}\relax 
-\contentsline {subsubsection}{Multivariate Multi-Step LSTM Models LSTM modellen}{42}{figure.caption.20}% 
+\contentsline {subsubsection}{Multivariate Multi-Step LSTM Models LSTM modellen}{39}{figure.caption.19}% 
 \defcounter {refsection}{0}\relax 
-\contentsline {paragraph}{Multiple input Multi-Step Output}{42}{figure.caption.20}% 
+\contentsline {paragraph}{Multiple input Multi-Step Output}{39}{figure.caption.19}% 
 \defcounter {refsection}{0}\relax 
-\contentsline {paragraph}{Multiple Parallel Input and Multi-Step Output}{42}{figure.caption.20}% 
+\contentsline {paragraph}{Multiple Parallel Input and Multi-Step Output}{39}{figure.caption.19}% 
 \defcounter {refsection}{0}\relax 
-\contentsline {section}{\numberline {2.4}Prophet}{43}{section.2.4}% 
+\contentsline {section}{\numberline {2.4}Prophet}{40}{section.2.4}% 
 \defcounter {refsection}{0}\relax 
-\contentsline {section}{\numberline {2.5}Validatietechnieken}{44}{section.2.5}% 
+\contentsline {section}{\numberline {2.5}Validatietechnieken}{41}{section.2.5}% 
 \defcounter {refsection}{0}\relax 
-\contentsline {subsection}{\numberline {2.5.1}Foutmaten}{44}{subsection.2.5.1}% 
+\contentsline {subsection}{\numberline {2.5.1}Foutmaten}{41}{subsection.2.5.1}% 
 \defcounter {refsection}{0}\relax 
-\contentsline {subsubsection}{MAE}{44}{subsection.2.5.1}% 
+\contentsline {subsubsection}{MAE}{41}{subsection.2.5.1}% 
 \defcounter {refsection}{0}\relax 
-\contentsline {subsubsection}{RMSE}{44}{equation.2.5.21}% 
+\contentsline {subsubsection}{RMSE}{41}{equation.2.5.21}% 
 \defcounter {refsection}{0}\relax 
-\contentsline {subsubsection}{MAPE \& RMSPE}{45}{equation.2.5.22}% 
+\contentsline {subsubsection}{MAPE \& RMSPE}{41}{equation.2.5.22}% 
 \defcounter {refsection}{0}\relax 
-\contentsline {subsection}{\numberline {2.5.2}Cross-validation}{45}{subsection.2.5.2}% 
+\contentsline {subsection}{\numberline {2.5.2}Cross-validation}{42}{subsection.2.5.2}% 
 \defcounter {refsection}{0}\relax 
-\contentsline {chapter}{\numberline {3}Methodologie}{47}{chapter.3}% 
+\contentsline {chapter}{\numberline {3}Methodologie}{43}{chapter.3}% 
 \defcounter {refsection}{0}\relax 
-\contentsline {section}{\numberline {3.1}Voorbereiding}{47}{section.3.1}% 
+\contentsline {section}{\numberline {3.1}Voorbereiding}{43}{section.3.1}% 
 \defcounter {refsection}{0}\relax 
-\contentsline {subsection}{\numberline {3.1.1}Datavoorbereiding}{47}{subsection.3.1.1}% 
+\contentsline {subsection}{\numberline {3.1.1}Datavoorbereiding}{43}{subsection.3.1.1}% 
 \defcounter {refsection}{0}\relax 
-\contentsline {subsubsection}{Dataset 1, temperatuur}{47}{subsection.3.1.1}% 
+\contentsline {subsubsection}{Dataset 1, temperatuur}{43}{subsection.3.1.1}% 
 \defcounter {refsection}{0}\relax 
-\contentsline {subsubsection}{Dataset 2, ijsdikte}{51}{figure.caption.25}% 
+\contentsline {subsubsection}{Dataset 2, ijsdikte}{47}{figure.caption.24}% 
 \defcounter {refsection}{0}\relax 
-\contentsline {subsubsection}{Combineren van de datasets}{54}{figure.caption.28}% 
+\contentsline {subsubsection}{Combineren van de datasets}{50}{figure.caption.27}% 
 \defcounter {refsection}{0}\relax 
-\contentsline {section}{\numberline {3.2}Univariate niet-seizoensgebonden}{56}{section.3.2}% 
+\contentsline {section}{\numberline {3.2}Univariate niet-seizoensgebonden}{51}{section.3.2}% 
 \defcounter {refsection}{0}\relax 
-\contentsline {subsection}{\numberline {3.2.1}Algemene methodes}{56}{subsection.3.2.1}% 
+\contentsline {subsection}{\numberline {3.2.1}Algemene methodes}{52}{subsection.3.2.1}% 
 \defcounter {refsection}{0}\relax 
-\contentsline {subsection}{\numberline {3.2.2}Stationariteit}{57}{subsection.3.2.2}% 
+\contentsline {subsection}{\numberline {3.2.2}Stationariteit}{53}{subsection.3.2.2}% 
 \defcounter {refsection}{0}\relax 
-\contentsline {subsection}{\numberline {3.2.3}Cross validation}{59}{subsection.3.2.3}% 
+\contentsline {subsection}{\numberline {3.2.3}Cross-validation}{54}{subsection.3.2.3}% 
 \defcounter {refsection}{0}\relax 
-\contentsline {subsection}{\numberline {3.2.4}ARIMA}{59}{subsection.3.2.4}% 
+\contentsline {subsection}{\numberline {3.2.4}ARIMA}{55}{subsection.3.2.4}% 
 \defcounter {refsection}{0}\relax 
-\contentsline {subsection}{\numberline {3.2.5}LSTM}{63}{subsection.3.2.5}% 
+\contentsline {subsection}{\numberline {3.2.5}LSTM}{59}{subsection.3.2.5}% 
 \defcounter {refsection}{0}\relax 
-\contentsline {subsection}{\numberline {3.2.6}Prophet}{69}{subsection.3.2.6}% 
+\contentsline {subsection}{\numberline {3.2.6}Prophet}{65}{subsection.3.2.6}% 
 \defcounter {refsection}{0}\relax 
-\contentsline {subsection}{\numberline {3.2.7}Evaluatie}{73}{subsection.3.2.7}% 
+\contentsline {subsection}{\numberline {3.2.7}Evaluatie}{69}{subsection.3.2.7}% 
 \defcounter {refsection}{0}\relax 
-\contentsline {section}{\numberline {3.3}Univariate seizoensgebonden}{75}{section.3.3}% 
+\contentsline {section}{\numberline {3.3}Univariate seizoensgebonden}{71}{section.3.3}% 
 \defcounter {refsection}{0}\relax 
-\contentsline {subsection}{\numberline {3.3.1}Algemene methodes}{75}{subsection.3.3.1}% 
+\contentsline {subsection}{\numberline {3.3.1}Algemene methodes}{71}{subsection.3.3.1}% 
 \defcounter {refsection}{0}\relax 
-\contentsline {subsection}{\numberline {3.3.2}Stationariteit}{76}{subsection.3.3.2}% 
+\contentsline {subsection}{\numberline {3.3.2}Stationariteit}{72}{subsection.3.3.2}% 
 \defcounter {refsection}{0}\relax 
-\contentsline {subsection}{\numberline {3.3.3}ARIMA}{78}{subsection.3.3.3}% 
+\contentsline {subsection}{\numberline {3.3.3}ARIMA}{74}{subsection.3.3.3}% 
 \defcounter {refsection}{0}\relax 
-\contentsline {subsubsection}{Random walk differentiatie}{78}{subsection.3.3.3}% 
+\contentsline {subsubsection}{Random walk differentiatie}{74}{subsection.3.3.3}% 
 \defcounter {refsection}{0}\relax 
-\contentsline {subsubsection}{Seizoensdifferentiatie}{78}{figure.caption.42}% 
+\contentsline {subsubsection}{Seizoensdifferentiatie}{75}{figure.caption.41}% 
 \defcounter {refsection}{0}\relax 
-\contentsline {subsection}{\numberline {3.3.4}SARIMA}{78}{subsection.3.3.4}% 
+\contentsline {subsection}{\numberline {3.3.4}SARIMAX}{76}{subsection.3.3.4}% 
 \defcounter {refsection}{0}\relax 
-\contentsline {subsubsection}{Random walk differentiatie}{78}{subsection.3.3.4}% 
+\contentsline {subsubsection}{Random walk differentiatie}{76}{subsection.3.3.4}% 
 \defcounter {refsection}{0}\relax 
-\contentsline {subsubsection}{Seizoensdifferentiatie}{79}{figure.caption.44}% 
+\contentsline {subsubsection}{Seizoensdifferentiatie}{76}{figure.caption.43}% 
 \defcounter {refsection}{0}\relax 
-\contentsline {subsection}{\numberline {3.3.5}LSTM}{80}{subsection.3.3.5}% 
+\contentsline {subsection}{\numberline {3.3.5}LSTM}{76}{subsection.3.3.5}% 
 \defcounter {refsection}{0}\relax 
-\contentsline {subsubsection}{Random walk differentiatie}{80}{subsection.3.3.5}% 
+\contentsline {subsubsection}{Random walk differentiatie}{76}{subsection.3.3.5}% 
 \defcounter {refsection}{0}\relax 
-\contentsline {subsubsection}{Seizoensdifferentiatie}{80}{subsection.3.3.5}% 
+\contentsline {subsubsection}{Seizoensdifferentiatie}{76}{subsection.3.3.5}% 
 \defcounter {refsection}{0}\relax 
-\contentsline {subsection}{\numberline {3.3.6}Prophet}{81}{subsection.3.3.6}% 
+\contentsline {subsection}{\numberline {3.3.6}Prophet}{78}{subsection.3.3.6}% 
 \defcounter {refsection}{0}\relax 
-\contentsline {subsection}{\numberline {3.3.7}Evaluatie}{82}{subsection.3.3.7}% 
+\contentsline {subsection}{\numberline {3.3.7}Evaluatie}{79}{subsection.3.3.7}% 
 \defcounter {refsection}{0}\relax 
 \contentsline {section}{\numberline {3.4}Multivariate niet-seizoensgebonden}{82}{section.3.4}% 
 \defcounter {refsection}{0}\relax 
-\contentsline {subsection}{\numberline {3.4.1}Stationariteit}{85}{subsection.3.4.1}% 
+\contentsline {subsection}{\numberline {3.4.1}Stationariteit}{82}{subsection.3.4.1}% 
 \defcounter {refsection}{0}\relax 
-\contentsline {subsection}{\numberline {3.4.2}VARMAX}{85}{subsection.3.4.2}% 
+\contentsline {subsection}{\numberline {3.4.2}VARMAX}{83}{subsection.3.4.2}% 
 \defcounter {refsection}{0}\relax 
-\contentsline {subsection}{\numberline {3.4.3}LSTM}{87}{subsection.3.4.3}% 
+\contentsline {subsection}{\numberline {3.4.3}LSTM}{85}{subsection.3.4.3}% 
 \defcounter {refsection}{0}\relax 
-\contentsline {subsection}{\numberline {3.4.4}Evaluation}{89}{subsection.3.4.4}% 
+\contentsline {subsection}{\numberline {3.4.4}Evaluation}{87}{subsection.3.4.4}% 
 \defcounter {refsection}{0}\relax 
-\contentsline {section}{\numberline {3.5}Multivariate seizoensgebonden}{89}{section.3.5}% 
+\contentsline {section}{\numberline {3.5}Multivariate seizoensgebonden}{88}{section.3.5}% 
 \defcounter {refsection}{0}\relax 
-\contentsline {subsection}{\numberline {3.5.1}VARMAX}{90}{subsection.3.5.1}% 
+\contentsline {subsection}{\numberline {3.5.1}VARMAX}{88}{subsection.3.5.1}% 
 \defcounter {refsection}{0}\relax 
-\contentsline {subsubsection}{Random walk differentiatie}{90}{subsection.3.5.1}% 
+\contentsline {subsubsection}{Random walk differentiatie}{88}{subsection.3.5.1}% 
 \defcounter {refsection}{0}\relax 
-\contentsline {subsubsection}{Seizoensdifferentiatie}{90}{figure.caption.57}% 
+\contentsline {subsubsection}{Seizoensdifferentiatie}{88}{figure.caption.56}% 
 \defcounter {refsection}{0}\relax 
 \contentsline {subsection}{\numberline {3.5.2}LSTM}{90}{subsection.3.5.2}% 
 \defcounter {refsection}{0}\relax 
 \contentsline {subsubsection}{Random walk differentiatie}{90}{subsection.3.5.2}% 
 \defcounter {refsection}{0}\relax 
-\contentsline {subsubsection}{Seizoensdifferentiatie}{90}{figure.caption.59}% 
+\contentsline {subsubsection}{Seizoensdifferentiatie}{90}{figure.caption.58}% 
 \defcounter {refsection}{0}\relax 
-\contentsline {subsection}{\numberline {3.5.3}Evaluation}{93}{subsection.3.5.3}% 
+\contentsline {subsection}{\numberline {3.5.3}Evaluatie}{92}{subsection.3.5.3}% 
 \defcounter {refsection}{0}\relax 
 \contentsline {chapter}{\numberline {4}Conclusie}{95}{chapter.4}% 
 \defcounter {refsection}{0}\relax 
@@ -221,13 +221,13 @@
 \defcounter {refsection}{0}\relax 
 \contentsline {section}{\numberline {B.1}Broncode datavoorbereiding}{99}{section.B.1}% 
 \defcounter {refsection}{0}\relax 
-\contentsline {section}{\numberline {B.2}Broncode voor het vergelijken van ARIMA, LSTM en Prophet bij univariate, niet-seizoensgebonden tijdreeksen}{104}{section.B.2}% 
+\contentsline {section}{\numberline {B.2}Broncode voor het vergelijken van ARIMA, LSTM en Prophet bij univariate, niet-seizoensgebonden tijdreeksen}{105}{section.B.2}% 
 \defcounter {refsection}{0}\relax 
 \contentsline {section}{\numberline {B.3}Broncode voor het vergelijken van ARIMA, LSTM en Prophet bij univariate, seizoensgebonden tijdreeksen}{118}{section.B.3}% 
 \defcounter {refsection}{0}\relax 
 \contentsline {section}{\numberline {B.4}Broncode voor het vergelijken van ARIMA, LSTM en Prophet bij multivariate, niet-seizoensgebonden tijdreeksen}{144}{section.B.4}% 
 \defcounter {refsection}{0}\relax 
-\contentsline {section}{\numberline {B.5}Broncode voor het vergelijken van ARIMA, LSTM en Prophet bij multivariate, seizoensgebonden tijdreeksen}{156}{section.B.5}% 
+\contentsline {section}{\numberline {B.5}Broncode voor het vergelijken van ARIMA, LSTM en Prophet bij multivariate, seizoensgebonden tijdreeksen}{157}{section.B.5}% 
 \defcounter {refsection}{0}\relax 
-\contentsline {chapter}{Bibliografie}{175}{appendix*.63}% 
+\contentsline {chapter}{Bibliografie}{175}{appendix*.62}% 
 \contentsfinish 

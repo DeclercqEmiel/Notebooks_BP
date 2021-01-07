@@ -28,8 +28,6 @@
 \IfLanguageName{english}{
 \selectlanguage{dutch}
 \chapter*{Samenvatting}
-\lipsum[1-4]
-\selectlanguage{english}
 }{}
 
 %%---------- Samenvatting -----------------------------------------------------
@@ -37,14 +35,14 @@
 
 \chapter*{\IfLanguageName{dutch}{Samenvatting}{Abstract}}
 
-In deze bachelorproef zullen verschillende voorspellingstechnieken voor verschillende types tijdreeksen geanalyseerd worden. Er zal ook getest worden op verschillende types tijdreeksen. Het onderscheid tussen deze types wordt gemaakt op basis van 2 criteria namelijk seizoensgebondenheid en het aantal onafhankelijke variabelen. Deze zullen dan onderverdeeld worden in een al dan niet seizoensgebondenheid en een enkele of meerdere onafhankelijke variabelen. In totaal zullen er dus voorspellingen gemaakt worden voor 4 verschillende types tijdreeksen namelijk.
+In deze bachelorproef zullen verschillende voorspellingstechnieken voor verschillende types tijdreeksen geanalyseerd worden. Het onderscheid tussen deze types wordt gemaakt op basis van 2 criteria namelijk seizoensgebondenheid en het aantal onafhankelijke variabelen. In totaal zullen er 4 types tijdreeksen getest worden hoe deze precies opgesteld worden zal hieronder opgesomd worden.
 \begin{itemize}
     \item Tijdreeksen met enkel de tijd als onafhankelijke variabele en 1 afhankelijke variabele zonder seizoensgebonden verband
     \item Tijdreeksen met enkel de tijd als onafhankelijke variabele en 1 afhankelijke variabele met een seizoensgebonden verband
     \item Tijdreeksen met 2 onafhankelijke variabelen waarvan 1 de tijd en 1 afhankelijke variabele zonder een seizoensgebonden verband
     \item Tijdreeksen met 2 onafhankelijke variabelen waarvan 1 de tijd en 1 afhankelijke variabele met een seizoensgebonden verband
 \end{itemize} De eerste techniek die zal toegepast worden is een
- ARIMA/VARMAX model. Als tweede zal een  recurrent neuraal netwerk van het type LSTM (Long Term Short Memory) op dezelfde data toegepast worden en tenslotte zal ook Prophet gebruikt worden om voorspellingen te maken. Voor elk van deze 4 types tijdreeksen werd bepaald welk modeltype de laagste MAE behaalde bij gebruik van cross validation. Dit werd toegepast een dataset van de poolijsdikte waaruit deze resultaten behaald werden:
+ ARIMA/VARMAX model. Als tweede zal een  recurrent neuraal netwerk van het type LSTM (Long Term Short Memory) op dezelfde data toegepast worden en tenslotte zal ook een Prophet-model gebruikt worden om voorspellingen te maken. Voor elk van deze 4 types tijdreeksen werd bepaald welk modeltype de laagste MAE behaalde bij gebruik van cross validation. Dit werd toegepast een dataset van de poolijsdikte waaruit deze resultaten behaald werden:
  \begin{itemize}
      \item Bij de univariate niet-seizoensgebonden tijdreeks zal het ARIMA-model het beste resultaat behalen.
      \item Bij de univariate seizoensgebonden tijdreeks presteert het SARIMA-model met random walk differentiatie het best.
@@ -52,4 +50,4 @@ In deze bachelorproef zullen verschillende voorspellingstechnieken voor verschil
      \item Bij de multivariate seizoensgebonden tijdreeks zal het LSTM model de beste prestatie leveren.
  \end{itemize}
 
-Tenslotte dient zeker nog vermeld te worden dat dit resultaat zal afhangen van tijdreeks tot tijdreeks en deze modellen niet bij elke reeks het meest optimale resultaat zullen behalen.
+Tenslotte dient zeker nog vermeld te worden dat dit resultaat zal afhangen van tijdreeks tot tijdreeks en deze modellen niet bij elke tijdreeks het meest optimale resultaat zullen behalen.
